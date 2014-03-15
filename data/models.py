@@ -86,13 +86,15 @@ class Player(models.Model):
     position = models.CharField(
         max_length=2, choices=POSITION_CHOICES, default=UNKNOWN)
     birth_date = models.DateField()
-    birth_place = models.CharField(max_length=50, blank=True)
+    birth_place = models.CharField(max_length=50, blank=True, null=True)
     height = models.PositiveSmallIntegerField(
-        blank=True, help_text="Please indicate height in centimeters.")
+        blank=True, default=0,
+        help_text="Please indicate height in centimeters.")
     main_hand = models.CharField(
         max_length=1, choices=HAND_CHOICES, default=UNKNOWN)
     #clubs = models.ManyToManyField(Club, through='PlayerContract')
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
+    retired = models.BooleanField(default=False)
 
     def __unicode__(self):
         return u'%s' % (self.full_name)
@@ -120,8 +122,8 @@ class PlayerContract(models.Model):
     player = models.ForeignKey(Player)
     club = models.ForeignKey(Club)
     from_date = models.DateField()
-    to_date = models.DateField(blank=True)
-    shirt_number = models.PositiveSmallIntegerField(blank=True)
+    to_date = models.DateField(blank=True, null=True)
+    shirt_number = models.PositiveSmallIntegerField(blank=True, default=0)
 
     def __unicode__(self):
         return u'%s in %s (%s)' % (self.player, self.club, self.from_date)
@@ -147,12 +149,15 @@ class Coach(models.Model):
         "Returns the person's full name."
         return '%s %s' % (self.first_name, self.last_name)
 
+    class Meta:
+        verbose_name_plural = 'coaches'
+
 
 class CoachContract(models.Model):
     coach = models.ForeignKey(Coach)
     club = models.ForeignKey(Club)
     from_date = models.DateField()
-    to_date = models.DateField(blank=True)
+    to_date = models.DateField(blank=True, null=True)
 
     def __unicode__(self):
         return u'%s in %s (%s)' % (self.coach, self.club, self.from_date)
@@ -190,4 +195,10 @@ class Round(models.Model):
 
 
 class Match(models.Model):
-    pass
+    home_team = models.ForeignKey(Club, related_name='home_matches')
+    away_team = models.ForeignKey(Club, related_name='away_matches')
+    date = models.DateField(blank=True, null=True)
+    time = models.TimeField(blank=True, null=True)
+    location = models.CharField(max_length=100, blank=True)
+    refereeA = models.CharField(max_length=100, blank=True)
+    refereeB = models.CharField(max_length=100, blank=True)
