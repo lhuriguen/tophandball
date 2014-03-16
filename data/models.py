@@ -1,12 +1,12 @@
+from django.core.urlresolvers import reverse
 from django.db import models
 
 
-# Create your models here.
 class Club(models.Model):
     name = models.CharField(max_length=100)
     short_name = models.CharField(max_length=3)
     country = models.CharField(max_length=3)
-    ehf_id = models.IntegerField(unique=True)
+    ehf_id = models.IntegerField('EHF id', unique=True)
     address = models.CharField(max_length=200, blank=True)
     website = models.URLField(blank=True)
     twitter = models.URLField(blank=True)
@@ -16,6 +16,10 @@ class Club(models.Model):
 
     def __unicode__(self):
         return u'%s' % (self.name)
+
+    def get_absolute_url(self):
+        #return reverse('club_detail', kwargs={'pk': self.pk})
+        return reverse('data:club_detail', kwargs={'pk': self.pk})
 
 
 class Season(models.Model):
@@ -82,7 +86,7 @@ class Player(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     country = models.CharField(max_length=3)
-    ehf_id = models.IntegerField(unique=True)
+    ehf_id = models.IntegerField('EHF id', unique=True)
     position = models.CharField(
         max_length=2, choices=POSITION_CHOICES, default=UNKNOWN)
     birth_date = models.DateField()

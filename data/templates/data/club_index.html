@@ -1,0 +1,18 @@
+<html>
+  <head>
+    <title></title>
+    <meta content="">
+    <style></style>
+  </head>
+  <body>
+  	{% if club_list %}
+    <ul>
+    {% for club in club_list %}
+        <li><a href="{% url 'data:club_detail' club.id %}">{{ club.name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No clubs are available.</p>
+{% endif %}
+  </body>
+</html>

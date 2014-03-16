@@ -1,0 +1,34 @@
+<html>
+  <head>
+    <title></title>
+    <meta content="">
+    <style></style>
+  </head>
+  <body>
+  	<h1>{{ club.name }}</h1>
+
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+    <h2>Players</h2>
+    <ul>
+    {% for player in club.players.all %}
+        <li>{{ player.full_name }}</li>
+    {% endfor %}
+    </ul>
+
+    <h2>Coaches</h2>
+    <ul>
+    {% for coach in club.coaches.all %}
+        <li>{{ coach.full_name }}</li>
+    {% endfor %}
+    </ul>
+
+    <h2>Other names</h2>
+    <ul>
+    {% for clubname in club.clubname_set.all %}
+        <li>{{ clubname.season }} - {{ clubname.name }}</li>
+    {% endfor %}
+    </ul>
+
+  </body>
+</html>
