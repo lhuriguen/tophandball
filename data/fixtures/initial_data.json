@@ -1,0 +1,169 @@
+[{
+    "pk": 1,
+    "model": "data.season",
+    "fields": {
+        "year_to": 1991,
+        "year_from": 1990
+    }
+}, {
+    "pk": 2,
+    "model": "data.season",
+    "fields": {
+        "year_to": 1992,
+        "year_from": 1991
+    }
+}, {
+    "pk": 3,
+    "model": "data.season",
+    "fields": {
+        "year_to": 1993,
+        "year_from": 1992
+    }
+}, {
+    "pk": 4,
+    "model": "data.season",
+    "fields": {
+        "year_to": 1994,
+        "year_from": 1993
+    }
+}, {
+    "pk": 5,
+    "model": "data.season",
+    "fields": {
+        "year_to": 1995,
+        "year_from": 1994
+    }
+}, {
+    "pk": 6,
+    "model": "data.season",
+    "fields": {
+        "year_to": 1996,
+        "year_from": 1995
+    }
+}, {
+    "pk": 7,
+    "model": "data.season",
+    "fields": {
+        "year_to": 1997,
+        "year_from": 1996
+    }
+}, {
+    "pk": 8,
+    "model": "data.season",
+    "fields": {
+        "year_to": 1998,
+        "year_from": 1997
+    }
+}, {
+    "pk": 9,
+    "model": "data.season",
+    "fields": {
+        "year_to": 1999,
+        "year_from": 1998
+    }
+}, {
+    "pk": 10,
+    "model": "data.season",
+    "fields": {
+        "year_to": 2000,
+        "year_from": 1999
+    }
+}, {
+    "pk": 11,
+    "model": "data.season",
+    "fields": {
+        "year_to": 2001,
+        "year_from": 2000
+    }
+}, {
+    "pk": 12,
+    "model": "data.season",
+    "fields": {
+        "year_to": 2002,
+        "year_from": 2001
+    }
+}, {
+    "pk": 13,
+    "model": "data.season",
+    "fields": {
+        "year_to": 2003,
+        "year_from": 2002
+    }
+}, {
+    "pk": 14,
+    "model": "data.season",
+    "fields": {
+        "year_to": 2004,
+        "year_from": 2003
+    }
+}, {
+    "pk": 15,
+    "model": "data.season",
+    "fields": {
+        "year_to": 2005,
+        "year_from": 2004
+    }
+}, {
+    "pk": 16,
+    "model": "data.season",
+    "fields": {
+        "year_to": 2006,
+        "year_from": 2005
+    }
+}, {
+    "pk": 17,
+    "model": "data.season",
+    "fields": {
+        "year_to": 2007,
+        "year_from": 2006
+    }
+}, {
+    "pk": 18,
+    "model": "data.season",
+    "fields": {
+        "year_to": 2008,
+        "year_from": 2007
+    }
+}, {
+    "pk": 19,
+    "model": "data.season",
+    "fields": {
+        "year_to": 2009,
+        "year_from": 2008
+    }
+}, {
+    "pk": 20,
+    "model": "data.season",
+    "fields": {
+        "year_to": 2010,
+        "year_from": 2009
+    }
+}, {
+    "pk": 21,
+    "model": "data.season",
+    "fields": {
+        "year_to": 2011,
+        "year_from": 2010
+    }
+}, {
+    "pk": 22,
+    "model": "data.season",
+    "fields": {
+        "year_to": 2012,
+        "year_from": 2011
+    }
+}, {
+    "pk": 23,
+    "model": "data.season",
+    "fields": {
+        "year_to": 2013,
+        "year_from": 2012
+    }
+}, {
+    "pk": 24,
+    "model": "data.season",
+    "fields": {
+        "year_to": 2014,
+        "year_from": 2013
+    }
+}]

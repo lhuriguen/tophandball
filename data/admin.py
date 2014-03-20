@@ -22,6 +22,11 @@ class CoachContractInline(admin.TabularInline):
     extra = 1
 
 
+class CompetitionSeasonInline(admin.TabularInline):
+    model = CompetitionSeason
+    extra = 1
+
+
 class ClubAdmin(admin.ModelAdmin):
     fieldsets = [
         (None,
@@ -56,7 +61,13 @@ class CoachAdmin(admin.ModelAdmin):
     inlines = [CoachContractInline]
 
 
+class CompetitionAdmin(admin.ModelAdmin):
+    inlines = [CompetitionSeasonInline]
+
+
 admin.site.register(Season)
 admin.site.register(Club, ClubAdmin)
 admin.site.register(Player, PlayerAdmin)
 admin.site.register(Coach, CoachAdmin)
+admin.site.register(Competition, CompetitionAdmin)
+admin.site.register(Round)

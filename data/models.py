@@ -4,7 +4,7 @@ from django.db import models
 
 class Club(models.Model):
     name = models.CharField(max_length=100)
-    short_name = models.CharField(max_length=3)
+    short_name = models.CharField(max_length=3, blank=True)
     country = models.CharField(max_length=3)
     ehf_id = models.IntegerField('EHF id', unique=True)
     address = models.CharField(max_length=200, blank=True)
@@ -44,7 +44,7 @@ class ClubName(models.Model):
     name = models.CharField(max_length=100)
 
     def __unicode__(self):
-        return u'%s - %s (%s)' % (self.club, self.name, self.season)
+        return u'%s (%s)' % (self.name, self.season)
 
 
 class Player(models.Model):
@@ -168,19 +168,23 @@ class CoachContract(models.Model):
 
 
 class Competition(models.Model):
-    LEAGUE = 'L'
-    CUP = 'C'
-    TYPE_CHOICES = (
-        (LEAGUE, 'League'),
-        (CUP, 'Cup')
-        )
+    # LEAGUE = 'L'
+    # CUP = 'C'
+    # TYPE_CHOICES = (
+    #     (LEAGUE, 'League'),
+    #     (CUP, 'Cup')
+    #     )
     name = models.CharField(max_length=50)
     short_name = models.CharField(max_length=5)
     website = models.URLField(blank=True)
-    country = models.CharField(max_length=3)
-    type = models.CharField(max_length=1, choices=TYPE_CHOICES)
+    country = models.CharField(max_length=3, blank=True, null=True)
+    #type = models.CharField(max_length=1, choices=TYPE_CHOICES)
+    is_intenational = models.BooleanField(default=False)
     #level = models.PositiveSmallIntegerField(default=1)
-    #seasons = models.ManyToManyField(Season, through='CompetitionSeason')
+    seasons = models.ManyToManyField(Season, through='CompetitionSeason')
+
+    def __unicode__(self):
+        return u'%s' % (self.name)
 
 
 class CompetitionSeason(models.Model):
@@ -190,12 +194,32 @@ class CompetitionSeason(models.Model):
     end_date = models.DateField()
     has_playoff = models.BooleanField()
 
+    def __unicode__(self):
+        return u'%s' % (self.season.name)
+
     class Meta:
         unique_together = ('competition', 'season')
 
 
 class Round(models.Model):
-    pass
+    """Represents a round or stage in a competition"""
+    comp_season = models.ForeignKey(CompetitionSeason)
+    order = models.PositiveSmallIntegerField('Round order')
+    name = models.CharField(max_length=30)
+
+
+class Group(models.Model):
+    round = models.ForeignKey(Round)
+    order = models.PositiveSmallIntegerField('Group order')
+    name = models.CharField(max_length=30)
+    is_single = models.BooleanField('Is single group?', default=False)
+    teams = models.ManyToManyField(Club)
+
+
+class MatchWeek(models.Model):
+    order = models.PositiveSmallIntegerField('Match week order')
+    start_date = models.DateField()
+    end_date = models.DateField()
 
 
 class Match(models.Model):
