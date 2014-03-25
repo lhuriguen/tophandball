@@ -179,7 +179,7 @@ class Competition(models.Model):
     website = models.URLField(blank=True)
     country = models.CharField(max_length=3, blank=True, null=True)
     #type = models.CharField(max_length=1, choices=TYPE_CHOICES)
-    is_intenational = models.BooleanField(default=False)
+    is_international = models.BooleanField(default=False)
     #level = models.PositiveSmallIntegerField(default=1)
     seasons = models.ManyToManyField(Season, through='CompetitionSeason')
 
@@ -192,37 +192,45 @@ class CompetitionSeason(models.Model):
     season = models.ForeignKey(Season)
     start_date = models.DateField()
     end_date = models.DateField()
-    has_playoff = models.BooleanField()
+    #has_playoff = models.BooleanField()
 
     def __unicode__(self):
-        return u'%s' % (self.season.name)
+        return u'%s %s' % (self.competition.name, self.season.name)
 
     class Meta:
         unique_together = ('competition', 'season')
 
 
-class Round(models.Model):
+class Stage(models.Model):
     """Represents a round or stage in a competition"""
-    comp_season = models.ForeignKey(CompetitionSeason)
-    order = models.PositiveSmallIntegerField('Round order')
+    comp_season = models.ForeignKey(CompetitionSeason,
+                                    verbose_name='Competition Season')
+    order = models.PositiveSmallIntegerField('Stage order')
     name = models.CharField(max_length=30)
+
+    def __unicode__(self):
+        return u'%s %s. %s' % (self.comp_season, self.order, self.name)
 
 
 class Group(models.Model):
-    round = models.ForeignKey(Round)
+    stage = models.ForeignKey(Stage)
     order = models.PositiveSmallIntegerField('Group order')
     name = models.CharField(max_length=30)
     is_single = models.BooleanField('Is single group?', default=False)
     teams = models.ManyToManyField(Club)
 
+    def __unicode__(self):
+        return u'%s - %s' % (self.stage, self.name)
 
-class MatchWeek(models.Model):
-    order = models.PositiveSmallIntegerField('Match week order')
-    start_date = models.DateField()
-    end_date = models.DateField()
+# class MatchWeek(models.Model):
+#     stage = models.ForeignKey(Stage)
+#     order = models.PositiveSmallIntegerField('Match week order')
+#     start_date = models.DateField()
+#     end_date = models.DateField()
 
 
 class Match(models.Model):
+    stage = models.ForeignKey(Stage)
     home_team = models.ForeignKey(Club, related_name='home_matches')
     away_team = models.ForeignKey(Club, related_name='away_matches')
     date = models.DateField(blank=True, null=True)
@@ -230,3 +238,9 @@ class Match(models.Model):
     location = models.CharField(max_length=100, blank=True)
     refereeA = models.CharField(max_length=100, blank=True)
     refereeB = models.CharField(max_length=100, blank=True)
+
+    def __unicode__(self):
+        return u'%s vs %s' % (self.home_team, self.away_team)
+
+    class Meta:
+        verbose_name_plural = 'matches'
