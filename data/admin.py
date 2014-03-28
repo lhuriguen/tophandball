@@ -40,12 +40,12 @@ class GroupInline(admin.TabularInline):
 class MatchInline(admin.StackedInline):
     model = Match
     extra = 1
-    fieldsets = [
-        (None,
-            {'fields': [('home_team', 'away_team'), ('date', 'time'),
-             'location', ('refereeA', 'refereeB')]}
-         )
-    ]
+    # fieldsets = [
+    #     (None,
+    #         {'fields': [('home_team', 'away_team'), ('date', 'time'),
+    #          'location', ('refereeA', 'refereeB')]}
+    #      )
+    # ]
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "home_team" or db_field.name == "away_team":

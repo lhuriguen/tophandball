@@ -30081,4 +30081,188 @@
         "shirt_number": 18,
         "to_date": null
     }
+}, {
+    "pk": 1,
+    "model": "data.competition",
+    "fields": {
+        "website": "http://www.ehfcl.com/women/",
+        "country": null,
+        "name": "EHF Champions League",
+        "short_name": "CL",
+        "is_international": true
+    }
+}, {
+    "pk": 1,
+    "model": "data.competitionseason",
+    "fields": {
+        "season": 24,
+        "end_date": "2014-06-30",
+        "start_date": "2013-07-01",
+        "competition": 1
+    }
+}, {
+    "pk": 1,
+    "model": "data.stage",
+    "fields": {
+        "comp_season": 1,
+        "order": 1,
+        "short_name": "Q1",
+        "name": "Qualification Round 1"
+    }
+}, {
+    "pk": 2,
+    "model": "data.stage",
+    "fields": {
+        "comp_season": 1,
+        "order": 7,
+        "short_name": "FF",
+        "name": "Final Four"
+    }
+}, {
+    "pk": 3,
+    "model": "data.stage",
+    "fields": {
+        "comp_season": 1,
+        "order": 2,
+        "short_name": "Q2",
+        "name": "Qualification Tournaments 2"
+    }
+}, {
+    "pk": 4,
+    "model": "data.stage",
+    "fields": {
+        "comp_season": 1,
+        "order": 5,
+        "short_name": "MR",
+        "name": "Main Round"
+    }
+}, {
+    "pk": 5,
+    "model": "data.stage",
+    "fields": {
+        "comp_season": 1,
+        "order": 3,
+        "short_name": "GM",
+        "name": "Group Matches"
+    }
+}, {
+    "pk": 1,
+    "model": "data.group",
+    "fields": {
+        "is_single": false,
+        "teams": [2, 14],
+        "order": 1,
+        "name": "KO MATCHES",
+        "stage": 1
+    }
+}, {
+    "pk": 2,
+    "model": "data.group",
+    "fields": {
+        "is_single": false,
+        "teams": [12, 15, 16, 29],
+        "order": 1,
+        "name": "KO MATCHES",
+        "stage": 2
+    }
+}, {
+    "pk": 3,
+    "model": "data.group",
+    "fields": {
+        "is_single": false,
+        "teams": [9, 11, 22, 26],
+        "order": 1,
+        "name": "GROUP 1",
+        "stage": 3
+    }
+}, {
+    "pk": 4,
+    "model": "data.group",
+    "fields": {
+        "is_single": false,
+        "teams": [3, 19, 20, 27],
+        "order": 2,
+        "name": "GROUP 2",
+        "stage": 3
+    }
+}, {
+    "pk": 5,
+    "model": "data.group",
+    "fields": {
+        "is_single": false,
+        "teams": [5, 14, 24, 25],
+        "order": 3,
+        "name": "GROUP 3",
+        "stage": 3
+    }
+}, {
+    "pk": 6,
+    "model": "data.group",
+    "fields": {
+        "is_single": false,
+        "teams": [4, 13, 16, 18],
+        "order": 4,
+        "name": "GROUP 4",
+        "stage": 3
+    }
+}, {
+    "pk": 7,
+    "model": "data.group",
+    "fields": {
+        "is_single": false,
+        "teams": [7, 16, 23, 29],
+        "order": 1,
+        "name": "GROUP 1",
+        "stage": 4
+    }
+}, {
+    "pk": 8,
+    "model": "data.group",
+    "fields": {
+        "is_single": false,
+        "teams": [8, 10, 12, 15],
+        "order": 2,
+        "name": "GROUP 2",
+        "stage": 4
+    }
+}, {
+    "pk": 9,
+    "model": "data.group",
+    "fields": {
+        "is_single": false,
+        "teams": [1, 5, 12, 23],
+        "order": 1,
+        "name": "GROUP A",
+        "stage": 5
+    }
+}, {
+    "pk": 10,
+    "model": "data.group",
+    "fields": {
+        "is_single": false,
+        "teams": [6, 15, 20, 29],
+        "order": 2,
+        "name": "GROUP B",
+        "stage": 5
+    }
+}, {
+    "pk": 11,
+    "model": "data.group",
+    "fields": {
+        "is_single": false,
+        "teams": [7, 8, 21, 22],
+        "order": 3,
+        "name": "GROUP C",
+        "stage": 5
+    }
+}, {
+    "pk": 12,
+    "model": "data.group",
+    "fields": {
+        "is_single": false,
+        "teams": [10, 16, 17, 28],
+        "order": 4,
+        "name": "GROUP D",
+        "stage": 5
+    }
 }]

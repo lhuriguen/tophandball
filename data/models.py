@@ -207,6 +207,7 @@ class Stage(models.Model):
                                     verbose_name='Competition Season')
     order = models.PositiveSmallIntegerField('Stage order')
     name = models.CharField(max_length=30)
+    short_name = models.CharField(max_length=5)
 
     def __unicode__(self):
         return u'%s %s. %s' % (self.comp_season, self.order, self.name)
@@ -235,12 +236,77 @@ class Match(models.Model):
     away_team = models.ForeignKey(Club, related_name='away_matches')
     date = models.DateField(blank=True, null=True)
     time = models.TimeField(blank=True, null=True)
+    arena = models.CharField(max_length=100, blank=True)
     location = models.CharField(max_length=100, blank=True)
-    refereeA = models.CharField(max_length=100, blank=True)
-    refereeB = models.CharField(max_length=100, blank=True)
+    spectators = models.PositiveIntegerField(default=0)
+    score_home = models.PositiveSmallIntegerField(default=0)
+    score_away = models.PositiveSmallIntegerField(default=0)
+    score_home_ht = models.PositiveSmallIntegerField(default=0)
+    score_away_ht = models.PositiveSmallIntegerField(default=0)
+    score_home_ft = models.PositiveSmallIntegerField(default=0)
+    score_away_ft = models.PositiveSmallIntegerField(default=0)
+    score_home_et1 = models.PositiveSmallIntegerField(default=0)
+    score_away_et1 = models.PositiveSmallIntegerField(default=0)
+    score_home_et2 = models.PositiveSmallIntegerField(default=0)
+    score_away_et2 = models.PositiveSmallIntegerField(default=0)
+    score_home_7m = models.PositiveSmallIntegerField(default=0)
+    score_away_7m = models.PositiveSmallIntegerField(default=0)
+    given_7m_home = models.PositiveSmallIntegerField(default=0)
+    given_7m_away = models.PositiveSmallIntegerField(default=0)
+    goals_7m_home = models.PositiveSmallIntegerField(default=0)
+    goals_7m_away = models.PositiveSmallIntegerField(default=0)
+    timeouts_home = models.CharField(max_length=100, blank=True)
+    timeouts_away = models.CharField(max_length=100, blank=True)
+    report_url = models.URLField(blank=True)
+    referees = models.ManyToManyField('Referee')
+    delegates = models.ManyToManyField('Delegate')
 
     def __unicode__(self):
-        return u'%s vs %s' % (self.home_team, self.away_team)
+        return u'%s vs %s on %s' % (self.home_team, self.away_team, self.date)
 
     class Meta:
         verbose_name_plural = 'matches'
+
+
+class MatchStats(models.Model):
+    match = models.ForeignKey(Match)
+    club = models.ForeignKey(Club)
+    player = models.ForeignKey(Player)
+    goals = models.PositiveSmallIntegerField(default=0)
+    goals_7m = models.PositiveSmallIntegerField(default=0)
+    goals_shots = models.PositiveSmallIntegerField(default=0)
+    saves = models.PositiveSmallIntegerField(default=0)
+    saves_7m = models.PositiveSmallIntegerField(default=0)
+    saves_shots = models.PositiveSmallIntegerField(default=0)
+    yellow_card = models.BooleanField(default=False)
+    two_minutes = models.PositiveSmallIntegerField(default=0)
+    red_card = models.BooleanField(default=False)
+    #playing_time = models.FloatField(default=0)
+
+    def __unicode__(self):
+        return u'%s for %s in %s' % (self.player, self.club, self.match)
+
+
+class Referee(models.Model):
+    name = models.CharField(max_length=100)
+    country = models.CharField(max_length=3)
+    pair = models.ForeignKey('self',
+                             blank=True,
+                             null=True,
+                             on_delete=models.SET_NULL)
+
+    def __unicode__(self):
+        return u'%s (%s)' % (self.name, self.country)
+
+    def save(self, *args, **kwargs):
+        super(Referee, self).save(*args, **kwargs)
+        if self.pair:
+            self.pair.pair = self
+
+
+class Delegate(models.Model):
+    name = models.CharField(max_length=100)
+    country = models.CharField(max_length=3)
+
+    def __unicode__(self):
+        return u'%s (%s)' % (self.name, self.country)
