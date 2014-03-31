@@ -130,7 +130,8 @@ class PlayerContract(models.Model):
     shirt_number = models.PositiveSmallIntegerField(blank=True, default=0)
 
     def __unicode__(self):
-        return u'%s in %s (%s)' % (self.player, self.club, self.from_date)
+        return u'%s (%s) in %s (%s)' % (
+            self.player, self.player.position, self.club, self.from_date)
 
 
 class Coach(models.Model):
@@ -234,29 +235,16 @@ class Match(models.Model):
     stage = models.ForeignKey(Stage)
     home_team = models.ForeignKey(Club, related_name='home_matches')
     away_team = models.ForeignKey(Club, related_name='away_matches')
+    placeholder = models.CharField(
+        help_text="Placeholder text for use when teams are yet unknown.",
+        blank=True, max_length=150)
     date = models.DateField(blank=True, null=True)
     time = models.TimeField(blank=True, null=True)
     arena = models.CharField(max_length=100, blank=True)
     location = models.CharField(max_length=100, blank=True)
-    spectators = models.PositiveIntegerField(default=0)
-    score_home = models.PositiveSmallIntegerField(default=0)
-    score_away = models.PositiveSmallIntegerField(default=0)
-    score_home_ht = models.PositiveSmallIntegerField(default=0)
-    score_away_ht = models.PositiveSmallIntegerField(default=0)
-    score_home_ft = models.PositiveSmallIntegerField(default=0)
-    score_away_ft = models.PositiveSmallIntegerField(default=0)
-    score_home_et1 = models.PositiveSmallIntegerField(default=0)
-    score_away_et1 = models.PositiveSmallIntegerField(default=0)
-    score_home_et2 = models.PositiveSmallIntegerField(default=0)
-    score_away_et2 = models.PositiveSmallIntegerField(default=0)
-    score_home_7m = models.PositiveSmallIntegerField(default=0)
-    score_away_7m = models.PositiveSmallIntegerField(default=0)
-    given_7m_home = models.PositiveSmallIntegerField(default=0)
-    given_7m_away = models.PositiveSmallIntegerField(default=0)
-    goals_7m_home = models.PositiveSmallIntegerField(default=0)
-    goals_7m_away = models.PositiveSmallIntegerField(default=0)
-    timeouts_home = models.CharField(max_length=100, blank=True)
-    timeouts_away = models.CharField(max_length=100, blank=True)
+    spectators = models.PositiveIntegerField(blank=True, null=True)
+    score_home = models.PositiveSmallIntegerField(blank=True, null=True)
+    score_away = models.PositiveSmallIntegerField(blank=True, null=True)
     report_url = models.URLField(blank=True)
     referees = models.ManyToManyField('Referee')
     delegates = models.ManyToManyField('Delegate')
@@ -268,23 +256,58 @@ class Match(models.Model):
         verbose_name_plural = 'matches'
 
 
-class MatchStats(models.Model):
+class MatchTeamStats(models.Model):
     match = models.ForeignKey(Match)
     club = models.ForeignKey(Club)
-    player = models.ForeignKey(Player)
-    goals = models.PositiveSmallIntegerField(default=0)
-    goals_7m = models.PositiveSmallIntegerField(default=0)
-    goals_shots = models.PositiveSmallIntegerField(default=0)
-    saves = models.PositiveSmallIntegerField(default=0)
-    saves_7m = models.PositiveSmallIntegerField(default=0)
-    saves_shots = models.PositiveSmallIntegerField(default=0)
+    halftime_score = models.PositiveSmallIntegerField(blank=True, null=True)
+    finaltime_score = models.PositiveSmallIntegerField(blank=True, null=True)
+    score_et1 = models.PositiveSmallIntegerField(
+        'Score after ET1', blank=True, null=True)
+    score_et2 = models.PositiveSmallIntegerField(
+        'Score after ET2', blank=True, null=True)
+    score_7m = models.PositiveSmallIntegerField(
+        'Score after 7m shootout', blank=True, null=True)
+    given_7m = models.PositiveSmallIntegerField(
+        '7m given', blank=True, null=True)
+    goals_7m = models.PositiveSmallIntegerField(
+        '7m scored', blank=True, null=True)
+    timeout1 = models.CharField(max_length=10, blank=True)
+    timeout2 = models.CharField(max_length=10, blank=True)
+    timeout3 = models.CharField(max_length=10, blank=True)
     yellow_card = models.BooleanField(default=False)
-    two_minutes = models.PositiveSmallIntegerField(default=0)
+    two_minutes = models.PositiveSmallIntegerField(blank=True, null=True)
+    red_card = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return u'%s in %s' % (self.club, self.match)
+
+    class Meta:
+        verbose_name_plural = 'team stats'
+        unique_together = ('match', 'club')
+
+
+class MatchPlayerStats(models.Model):
+    match_team = models.ForeignKey(MatchTeamStats)
+    player = models.ForeignKey(Player)
+    goals = models.PositiveSmallIntegerField(blank=True, null=True)
+    goals_7m = models.PositiveSmallIntegerField(blank=True, null=True)
+    goals_shots = models.PositiveSmallIntegerField(
+        'Shots made', blank=True, null=True)
+    saves = models.PositiveSmallIntegerField(blank=True, null=True)
+    saves_7m = models.PositiveSmallIntegerField(blank=True, null=True)
+    saves_shots = models.PositiveSmallIntegerField(
+        'Shots received', blank=True, null=True)
+    yellow_card = models.BooleanField(default=False)
+    two_minutes = models.PositiveSmallIntegerField(blank=True, null=True)
     red_card = models.BooleanField(default=False)
     #playing_time = models.FloatField(default=0)
 
     def __unicode__(self):
-        return u'%s for %s in %s' % (self.player, self.club, self.match)
+        return u'%s in %s' % (self.player, self.match_team)
+
+    class Meta:
+        verbose_name_plural = 'player stats'
+        unique_together = ('match_team', 'player')
 
 
 class Referee(models.Model):

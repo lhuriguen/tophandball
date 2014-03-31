@@ -40,12 +40,20 @@ class GroupInline(admin.TabularInline):
 class MatchInline(admin.StackedInline):
     model = Match
     extra = 1
-    # fieldsets = [
-    #     (None,
-    #         {'fields': [('home_team', 'away_team'), ('date', 'time'),
-    #          'location', ('refereeA', 'refereeB')]}
-    #      )
-    # ]
+    fieldsets = [
+        (None,
+            {'fields': ['stage', ('home_team', 'away_team'),
+                        ('date', 'time'),
+                        ('score_home', 'score_away'),
+                        'report_url']}
+         ),
+        ('Playing Location',
+            {'fields': [('arena', 'location', 'spectators')]}
+         ),
+        ('Officials',
+            {'fields': [('referees', 'delegates')]}
+         )
+    ]
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "home_team" or db_field.name == "away_team":
@@ -56,6 +64,12 @@ class MatchInline(admin.StackedInline):
                 kwargs["queryset"] = Club.objects.all()
         return super(MatchInline, self).formfield_for_foreignkey(
             db_field, request, **kwargs)
+
+
+class MatchTeamStatsInline(admin.TabularInline):
+    model = MatchTeamStats
+    extra = 1
+    max_num = 2
 
 
 class ClubAdmin(admin.ModelAdmin):
@@ -112,6 +126,27 @@ class StageAdmin(admin.ModelAdmin):
         return super(StageAdmin, self).get_form(request, obj, **kwargs)
 
 
+class MatchAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None,
+            {'fields': ['stage', ('home_team', 'away_team'),
+                        ('date', 'time'),
+                        ('score_home', 'score_away'),
+                        'report_url']}
+         ),
+        ('Playing Location',
+            {'fields': [('arena', 'location', 'spectators')]}
+         ),
+        ('Officials',
+            {'fields': [('referees', 'delegates')]}
+         )
+    ]
+    inlines = [MatchTeamStatsInline]
+    list_filter = ['date', 'stage']
+    list_display = ('home_team', 'away_team', 'date', 'time', 'location')
+    search_fields = ['home_team__name', 'away_team__name']
+
+
 admin.site.register(Season)
 admin.site.register(Club, ClubAdmin)
 admin.site.register(Player, PlayerAdmin)
@@ -119,3 +154,4 @@ admin.site.register(Coach, CoachAdmin)
 admin.site.register(Competition, CompetitionAdmin)
 admin.site.register(CompetitionSeason, CompetitionSeasonAdmin)
 admin.site.register(Stage, StageAdmin)
+admin.site.register(Match, MatchAdmin)
