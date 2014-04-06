@@ -5,7 +5,7 @@ admin.autodiscover()
 
 urlpatterns = patterns(
     '',
-    url(r'^$', TemplateView.as_view(template_name='base.html')),
+    url(r'^$', TemplateView.as_view(template_name='index.html')),
     # Examples:
     # url(r'^$', 'infohandball.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),

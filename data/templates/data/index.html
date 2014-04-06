@@ -1,12 +1,7 @@
-<html>
-  <head>
-    <title></title>
-    <meta content="">
-    <style></style>
-  </head>
-  <body>
+{% extends "base.html" %}
+{% block title %}Handball data{% endblock %}
+{% block content %}
     <ul>
         <li><a href="{% url 'data:club_index' %}">Clubs</a></li>
     </ul>
-  </body>
-</html>
+{% endblock %}

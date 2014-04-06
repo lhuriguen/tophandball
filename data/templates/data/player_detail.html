@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Player: {{ player.full_name }}{% endblock %}
+{% block active_player %}active{% endblock %}
+{% block content %}
+    <div class="page-header">
+       <h1>{{ player.full_name }} <small>{{ player.country }}</small></h1>
+    </div>
+    <img src="{% get_static_prefix %}players/{{ player.ehf_id }}.jpg" alt="photo">
+
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+    <h2>Other names</h2>
+    <ul>
+    {% for playername in player.playername_set.all %}
+        <li>{{ playername.full_name }}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

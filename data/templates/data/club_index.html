@@ -1,18 +1,24 @@
-<html>
-  <head>
-    <title></title>
-    <meta content="">
-    <style></style>
-  </head>
-  <body>
-  	{% if club_list %}
+{% extends "base.html" %}
+{% block title %}Club index{% endblock %}
+{% block active_club %}active{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>Clubs</h1>
+    </div>
+    {% if club_list %}
+    {% regroup club_list by country as country_list %}
     <ul>
-    {% for club in club_list %}
-        <li><a href="{% url 'data:club_detail' club.id %}">{{ club.name }}</a></li>
-    {% endfor %}
+        {% for country in country_list %}
+        <li>{{ country.grouper }}</li>
+        <ul>
+            {% for club in country.list %}
+            <li><a href="{{ club.get_absolute_url }}">{{ club.name }}</a></li>
+            {% endfor %}
+        </ul>
+        {% endfor %}
     </ul>
 {% else %}
     <p>No clubs are available.</p>
 {% endif %}
-  </body>
-</html>
+{% endblock %}

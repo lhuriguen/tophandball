@@ -1,34 +1,123 @@
-<html>
-  <head>
-    <title></title>
-    <meta content="">
-    <style></style>
-  </head>
-  <body>
-  	<h1>{{ club.name }}</h1>
+{% extends "base.html" %}
+{% load static %}
 
-    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+{% block title %}Club: {{ club.name }}{% endblock %}
+{% block active_club %}active{% endblock %}
 
-    <h2>Players</h2>
-    <ul>
-    {% for player in club.players.all %}
-        <li>{{ player.full_name }}</li>
+{% block content %}
+    <div class="page-header">
+       <h1>{{ club.name }} <small>{{ club.country }}</small></h1>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Information</h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-6 col-md-3">
+                    <img class="thumbnail img-logo" src="{% get_static_prefix %}logos/{{ club.ehf_id }}.jpg" alt="logo">
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <strong>Also known as</strong>
+                    <ul class="list-unstyled">
+                    {% for clubname in club.clubname_set.all %}
+                        <li>{{ clubname.season }} - {{ clubname.name }}</li>
+                    {% endfor %}
+                    </ul>
+                </div>
+                <div class="clearfix visible-sm"></div>
+                <div class="col-sm-6 col-md-3">
+                    <address>
+                        <strong>Address</strong><br>
+                        {% for line in club.address_lines %}
+                        {{ line }}<br>
+                        {% endfor %}
+                    </address>
+                    <address>
+                        <strong>Online</strong><br>
+                        <a href="{{ club.website }}">{{ club.website }}</a>
+                        <a href="{{ club.twitter }}">{{ club.twitter }}</a>
+                        <a href="{{ club.facebook }}">{{ club.facebook }}</a>
+                    </address>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div id="map_canvas" class="thumbnail"></div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-star"></span> Star</button>
+        </div>
+    </div>
+
+    {% if club.get_current_team %}
+    {% regroup club.get_current_team|dictsort:"player.position" by player.get_position_display as position_list %}
+    {% for position in position_list %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ position.grouper }}{{ position.list|length|pluralize }}</h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+            {% for player in position.list %}
+                <div class="col-xs-12 col-md-3">
+                    <!-- <div class="list-group-item"> -->
+                    <a href="{{ player.player.get_absolute_url }}">
+                    <img class="thumbnail" src="{% get_static_prefix %}players/{{ player.player.ehf_id }}.jpg" alt="photo">
+                    </a>
+                    <div class="caption">
+                        <h4>{{ player.player.full_name }} <small>{{ player.player.country }}</small></h4>
+                        <p><span class="badge">#{{ player.shirt_number }}</span> Since {{ player.from_date|date:"F Y" }}</p>
+                        <!-- <p><a href="{{ player.player.get_absolute_url }}" class="btn btn-primary" role="button">View</a> <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-star"></span> Star</a></p> -->
+                    </div>
+                    <!-- </div> -->
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
     {% endfor %}
-    </ul>
-
+    {% else %}
+    <p>No players.</p>
+    {% endif %}
+    
     <h2>Coaches</h2>
+    {% if club.coaches.all %}
+    <p>Number of coaches: {{ club.coaches.all|length }}</p>
     <ul>
     {% for coach in club.coaches.all %}
         <li>{{ coach.full_name }}</li>
     {% endfor %}
     </ul>
+    {% else %}
+    <p>No coaches.</p>
+    {% endif %}
+{% endblock %}
+{% block extra_script %}
+<script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+<script>
+    var geocoder, map;
 
-    <h2>Other names</h2>
-    <ul>
-    {% for clubname in club.clubname_set.all %}
-        <li>{{ clubname.season }} - {{ clubname.name }}</li>
-    {% endfor %}
-    </ul>
+    function codeAddress(address) {
+        geocoder = new google.maps.Geocoder();
+        geocoder.geocode({
+            'address': address
+        }, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                var myOptions = {
+                    zoom: 8,
+                    center: results[0].geometry.location,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                }
+                map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
-  </body>
-</html>
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: results[0].geometry.location
+                });
+            }
+        });
+    }
+    google.maps.event.addDomListener(window, 'load', codeAddress("{{ club.address }}"));
+</script>
+{% endblock %}

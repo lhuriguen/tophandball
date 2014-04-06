@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Player index{% endblock %}
+{% block active_player %}active{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <h1>Players</h1>
+  </div>
+  {% if player_list %}
+  {% regroup player_list by country as country_list %}
+  <ul>
+    {% for country in country_list %}
+    <li>{{ country.grouper }}</li>
+    <ul>
+    {% for player in country.list %}
+        <li><a href="{{ player.get_absolute_url }}">{{ player.full_name }}</a></li>
+    {% endfor %}
+    </ul>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No players are available.</p>
+{% endif %}
+{% endblock %}

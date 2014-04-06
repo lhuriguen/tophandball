@@ -1,5 +1,16 @@
+import datetime
+
 from django.core.urlresolvers import reverse
 from django.db import models
+
+
+class PlayerContractManager(models.Manager):
+
+    @property
+    def current(self):
+        return super(PlayerContractManager, self).get_queryset().exclude(
+            to_date__lt=datetime.date.today()
+        ).exclude(from_date__gt=datetime.date.today())
 
 
 class Club(models.Model):
@@ -18,8 +29,18 @@ class Club(models.Model):
         return u'%s' % (self.name)
 
     def get_absolute_url(self):
-        #return reverse('club_detail', kwargs={'pk': self.pk})
+        # return reverse('club_detail', kwargs={'pk': self.pk})
         return reverse('data:club_detail', kwargs={'pk': self.pk})
+
+    def get_current_team(self):
+        return self.playercontract_set.exclude(
+            to_date__lt=datetime.date.today()
+        ).exclude(from_date__gt=datetime.date.today())
+
+    def address_lines(self):
+        if self.address:
+            return self.address.split(',')
+        return []
 
 
 class Season(models.Model):
@@ -69,7 +90,7 @@ class Player(models.Model):
         (BACK, 'Back'),
         (WING, 'Wing'),
         (UNKNOWN, 'Unknown')
-        )
+    )
 
     LEFT_HAND = 'L'
     RIGHT_HAND = 'R'
@@ -77,7 +98,7 @@ class Player(models.Model):
         (LEFT_HAND, 'Left'),
         (RIGHT_HAND, 'Right'),
         (UNKNOWN, 'Unknown')
-        )
+    )
 
     MALE = 'M'
     FEMALE = 'F'
@@ -112,11 +133,36 @@ class Player(models.Model):
         return self.position in (
             self.LEFT_BACK, self.RIGHT_BACK, self.MIDDLE_BACK, self.BACK)
 
+    def get_absolute_url(self):
+        return reverse('data:player_detail', kwargs={'pk': self.pk})
+
+    @property
+    def current_contract(self):
+        contracts = self.playercontract_set.exclude(
+            to_date__lt=datetime.date.today()
+        ).exclude(from_date__gt=datetime.date.today()).order_by('from_date')
+        if len(contracts) == 1:
+            return contracts[0]
+        else:
+            return None
+
+    @property
+    def age(self):
+        today = datetime.date.today()
+        born = self.birth_date
+        adjust = ((today.month, today.day) < (born.month, born.day))
+        return today.year - born.year - adjust
+
 
 class PlayerName(models.Model):
     player = models.ForeignKey(Player)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
+
+    @property
+    def full_name(self):
+        "Returns the person's full name."
+        return '%s %s' % (self.first_name, self.last_name)
 
     def __unicode__(self):
         return u'%s - %s %s' % (self.player, self.first_name, self.last_name)
@@ -129,9 +175,18 @@ class PlayerContract(models.Model):
     to_date = models.DateField(blank=True, null=True)
     shirt_number = models.PositiveSmallIntegerField(blank=True, default=0)
 
+    objects = PlayerContractManager()
+
     def __unicode__(self):
         return u'%s (%s) in %s (%s)' % (
             self.player, self.player.position, self.club, self.from_date)
+
+    def is_current(self):
+        today = datetime.date.today()
+        if self.to_date is None:
+            return self.from_date <= today
+        else:
+            return self.from_date <= today and self.to_date >= today
 
 
 class Coach(models.Model):
@@ -187,6 +242,9 @@ class Competition(models.Model):
     def __unicode__(self):
         return u'%s' % (self.name)
 
+    def get_absolute_url(self):
+        return reverse('data:comp_detail', kwargs={'pk': self.pk})
+
 
 class CompetitionSeason(models.Model):
     competition = models.ForeignKey(Competition)
@@ -203,6 +261,7 @@ class CompetitionSeason(models.Model):
 
 
 class Stage(models.Model):
+
     """Represents a round or stage in a competition"""
     comp_season = models.ForeignKey(CompetitionSeason,
                                     verbose_name='Competition Season')
