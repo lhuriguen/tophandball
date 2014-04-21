@@ -16,6 +16,9 @@ urlpatterns = patterns(
     # ex: /data/clubs/1/edit/
     url(r'^clubs/(?P<pk>\d+)/edit/$',
         views.ClubUpdateView.as_view(), name='club_update'),
+    # ex: /data/clubs/1/matches/
+    url(r'^clubs/(?P<pk>\d+)/matches/$',
+        views.ClubMatchView.as_view(), name='club_matches'),
     # ex: /data/players/
     url(r'^players/$',
         views.PlayerIndexView.as_view(), name='player_index'),

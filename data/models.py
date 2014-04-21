@@ -2,6 +2,8 @@ import datetime
 
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.db.models import F, Q, Sum
+from django.utils import timezone
 
 
 class PlayerContractManager(models.Manager):
@@ -15,13 +17,21 @@ class PlayerContractManager(models.Manager):
 
 class Club(models.Model):
     name = models.CharField(max_length=100)
-    short_name = models.CharField(max_length=3, blank=True)
+    short_name = models.CharField(
+        max_length=15, blank=True,
+        help_text="For use as common name, ex. Vardar, Hypo, FCM...")
+    initials = models.CharField(
+        max_length=3, blank=True,
+        help_text="For use in matches, ex. GYO, VAR, BUD...")
     country = models.CharField(max_length=3)
     ehf_id = models.IntegerField('EHF id', unique=True)
-    address = models.CharField(max_length=200, blank=True)
+    address = models.CharField(
+        max_length=200, blank=True,
+        help_text="Separate address items with commas.")
     website = models.URLField(blank=True)
     twitter = models.URLField(blank=True)
     facebook = models.URLField(blank=True)
+    logo = models.ImageField(upload_to='clubs', blank=True, null=True)
     players = models.ManyToManyField('Player', through='PlayerContract')
     coaches = models.ManyToManyField('Coach', through='CoachContract')
 
@@ -29,22 +39,51 @@ class Club(models.Model):
         return u'%s' % (self.name)
 
     def get_absolute_url(self):
-        # return reverse('club_detail', kwargs={'pk': self.pk})
         return reverse('data:club_detail', kwargs={'pk': self.pk})
 
     def get_current_team(self):
         return self.playercontract_set.exclude(
             to_date__lt=datetime.date.today()
-        ).exclude(from_date__gt=datetime.date.today())
+            ).exclude(from_date__gt=datetime.date.today())
+
+    def get_current_coaches(self):
+        return self.coachcontract_set.exclude(
+            to_date__lt=datetime.date.today()
+            ).exclude(from_date__gt=datetime.date.today())
+
+    def get_matches(self):
+        query = Q(home_team=self) | Q(away_team=self)
+        return Match.objects.filter(query).order_by('-match_datetime')
 
     def address_lines(self):
         if self.address:
             return self.address.split(',')
         return []
 
+    def has_logo(self):
+        if self.logo:
+            return True
+        return False
+    has_logo.boolean = True
+    has_logo.short_description = 'Has logo?'
+
+    def admin_thumbnail(self):
+        if self.logo:
+            return u'<img src="%s" />' % (self.logo.url)
+        else:
+            return u'No image.'
+    admin_thumbnail.short_description = 'Logo preview'
+    admin_thumbnail.allow_tags = True
+
+    @property
+    def logo_url(self):
+        if self.logo:
+            return self.logo.url
+        else:
+            return u'http://placehold.it/200x200&text=No+Logo'
+
 
 class Season(models.Model):
-    #name = models.CharField(max_length=7)
     year_from = models.PositiveSmallIntegerField()
     year_to = models.PositiveSmallIntegerField()
 
@@ -117,9 +156,11 @@ class Player(models.Model):
         help_text="Please indicate height in centimeters.")
     main_hand = models.CharField(
         max_length=1, choices=HAND_CHOICES, default=UNKNOWN)
-    #clubs = models.ManyToManyField(Club, through='PlayerContract')
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
+    gender = models.CharField(
+        max_length=1, choices=GENDER_CHOICES, default=FEMALE)
     retired = models.BooleanField(default=False)
+    retirement_date = models.DateField(null=True, blank=True)
+    photo = models.ImageField(upload_to='people', blank=True, null=True)
 
     def __unicode__(self):
         return u'%s' % (self.full_name)
@@ -129,12 +170,23 @@ class Player(models.Model):
         "Returns the person's full name."
         return '%s %s' % (self.first_name, self.last_name)
 
-    def is_back_player(self):
-        return self.position in (
-            self.LEFT_BACK, self.RIGHT_BACK, self.MIDDLE_BACK, self.BACK)
-
     def get_absolute_url(self):
         return reverse('data:player_detail', kwargs={'pk': self.pk})
+
+    def has_photo(self):
+        if self.photo:
+            return True
+        return False
+    has_photo.boolean = True
+    has_photo.short_description = 'Has photo?'
+
+    def admin_thumbnail(self):
+        if self.photo:
+            return u'<img src="%s" />' % (self.photo.url)
+        else:
+            return u'No image.'
+    admin_thumbnail.short_description = 'Photo preview'
+    admin_thumbnail.allow_tags = True
 
     @property
     def current_contract(self):
@@ -152,6 +204,13 @@ class Player(models.Model):
         born = self.birth_date
         adjust = ((today.month, today.day) < (born.month, born.day))
         return today.year - born.year - adjust
+
+    @property
+    def photo_url(self):
+        if self.photo:
+            return self.photo.url
+        else:
+            return u'http://placehold.it/160x220&text=No+Image'
 
 
 class PlayerName(models.Model):
@@ -196,10 +255,16 @@ class Coach(models.Model):
 
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
+    birth_date = models.DateField(blank=True, null=True)
+    birth_place = models.CharField(max_length=50, blank=True, null=True)
     country = models.CharField(max_length=3)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     player = models.ForeignKey(Player, blank=True, null=True, unique=True,
                                on_delete=models.SET_NULL)
+    photo = models.ImageField(upload_to='people', blank=True, null=True)
+
+    class Meta:
+        verbose_name_plural = 'coaches'
 
     def __unicode__(self):
         return u'%s %s' % (self.first_name, self.last_name)
@@ -209,15 +274,42 @@ class Coach(models.Model):
         "Returns the person's full name."
         return '%s %s' % (self.first_name, self.last_name)
 
-    class Meta:
-        verbose_name_plural = 'coaches'
+    @property
+    def photo_url(self):
+        if self.photo:
+            return self.photo.url
+        else:
+            return u'http://placehold.it/200x200&text=No+Image'
+
+    def has_photo(self):
+        if self.photo:
+            return True
+        return False
+    has_photo.boolean = True
+    has_photo.short_description = 'Has photo?'
+
+    def admin_thumbnail(self):
+        if self.photo:
+            return u'<img src="%s" />' % (self.photo.url)
+        else:
+            return u'No image.'
+    admin_thumbnail.short_description = 'Photo preview'
+    admin_thumbnail.allow_tags = True
 
 
 class CoachContract(models.Model):
+    HEAD = 'H'
+    ASSISTANT = 'A'
+    ROLE_CHOICES = (
+        (HEAD, 'Head coach'),
+        (ASSISTANT, 'Assistant coach')
+    )
+
     coach = models.ForeignKey(Coach)
     club = models.ForeignKey(Club)
     from_date = models.DateField()
     to_date = models.DateField(blank=True, null=True)
+    role = models.CharField(max_length=1, choices=ROLE_CHOICES, default=HEAD)
 
     def __unicode__(self):
         return u'%s in %s (%s)' % (self.coach, self.club, self.from_date)
@@ -236,7 +328,8 @@ class Competition(models.Model):
     country = models.CharField(max_length=3, blank=True, null=True)
     #type = models.CharField(max_length=1, choices=TYPE_CHOICES)
     is_international = models.BooleanField(default=False)
-    #level = models.PositiveSmallIntegerField(default=1)
+    level = models.PositiveSmallIntegerField(default=1)
+    logo = models.ImageField(upload_to='comps', blank=True, null=True)
     seasons = models.ManyToManyField(Season, through='CompetitionSeason')
 
     def __unicode__(self):
@@ -244,6 +337,28 @@ class Competition(models.Model):
 
     def get_absolute_url(self):
         return reverse('data:comp_detail', kwargs={'pk': self.pk})
+
+    @property
+    def logo_url(self):
+        if self.logo:
+            return self.logo.url
+        else:
+            return u'http://placehold.it/200x200&text=No+Logo'
+
+    def has_logo(self):
+        if self.logo:
+            return True
+        return False
+    has_logo.boolean = True
+    has_logo.short_description = 'Has logo?'
+
+    def admin_thumbnail(self):
+        if self.logo:
+            return u'<img src="%s" />' % (self.logo.url)
+        else:
+            return u'No image.'
+    admin_thumbnail.short_description = 'Logo preview'
+    admin_thumbnail.allow_tags = True
 
 
 class CompetitionSeason(models.Model):
@@ -261,13 +376,14 @@ class CompetitionSeason(models.Model):
 
 
 class Stage(models.Model):
-
     """Represents a round or stage in a competition"""
+
     comp_season = models.ForeignKey(CompetitionSeason,
                                     verbose_name='Competition Season')
     order = models.PositiveSmallIntegerField('Stage order')
     name = models.CharField(max_length=30)
     short_name = models.CharField(max_length=5)
+    is_qualification = models.BooleanField(default=False)
 
     def __unicode__(self):
         return u'%s %s. %s' % (self.comp_season, self.order, self.name)
@@ -278,10 +394,88 @@ class Group(models.Model):
     order = models.PositiveSmallIntegerField('Group order')
     name = models.CharField(max_length=30)
     is_single = models.BooleanField('Is single group?', default=False)
-    teams = models.ManyToManyField(Club)
+    teams = models.ManyToManyField(Club, through='GroupTable')
 
     def __unicode__(self):
         return u'%s - %s' % (self.stage, self.name)
+
+
+class GroupTable(models.Model):
+    group = models.ForeignKey(Group)
+    team = models.ForeignKey(Club)
+    position = models.PositiveSmallIntegerField(default=0)
+    point_penalty = models.SmallIntegerField(
+        default=0, help_text="Points to take away as a penalty.")
+
+    def __unicode__(self):
+        return u'%s %s' % (self.group, self.team)
+
+    class Meta:
+        unique_together = ('group', 'team')
+
+    def query(self):
+        return Q(home_team=self.team) | Q(away_team=self.team)
+
+    @property
+    def matches(self):
+        return self.group.stage.match_set.filter(self.query()).order_by('date')
+
+    @property
+    def num_matches(self):
+        return self.group.stage.match_set.filter(self.query()).count()
+
+    @property
+    def wins(self):
+        home = self.team.home_matches.filter(
+            stage=self.group.stage, score_home__gt=F('score_away')).count()
+        away = self.team.away_matches.filter(
+            stage=self.group.stage, score_away__gt=F('score_home')).count()
+        total = home + away
+        return (total, home, away)
+
+    @property
+    def draws(self):
+        home = self.team.home_matches.filter(
+            stage=self.group.stage, score_home=F('score_away')).count()
+        away = self.team.away_matches.filter(
+            stage=self.group.stage, score_away=F('score_home')).count()
+        total = home + away
+        return (total, home, away)
+
+    @property
+    def losses(self):
+        home = self.team.home_matches.filter(
+            stage=self.group.stage, score_home__lt=F('score_away')).count()
+        away = self.team.away_matches.filter(
+            stage=self.group.stage, score_away__lt=F('score_home')).count()
+        total = home + away
+        return (total, home, away)
+
+    @property
+    def goals_for(self):
+        home = self.team.home_matches.filter(
+            stage=self.group.stage).aggregate(
+            for_home=Sum('score_home'))['for_home']
+        away = self.team.away_matches.filter(
+            stage=self.group.stage).aggregate(
+            for_away=Sum('score_away'))['for_away']
+        total = home + away
+        return (total, home, away)
+
+    @property
+    def goals_against(self):
+        home = self.team.home_matches.filter(
+            stage=self.group.stage).aggregate(
+            against_home=Sum('score_away'))['against_home']
+        away = self.team.away_matches.filter(
+            stage=self.group.stage).aggregate(
+            against_away=Sum('score_home'))['against_away']
+        total = home + away
+        return (total, home, away)
+
+    @property
+    def points(self):
+        return self.wins[0] * 2 + self.draws[0] * 1 - self.point_penalty
 
 # class MatchWeek(models.Model):
 #     stage = models.ForeignKey(Stage)
@@ -297,8 +491,7 @@ class Match(models.Model):
     placeholder = models.CharField(
         help_text="Placeholder text for use when teams are yet unknown.",
         blank=True, max_length=150)
-    date = models.DateField(blank=True, null=True)
-    time = models.TimeField(blank=True, null=True)
+    match_datetime = models.DateTimeField()
     arena = models.CharField(max_length=100, blank=True)
     location = models.CharField(max_length=100, blank=True)
     spectators = models.PositiveIntegerField(blank=True, null=True)
@@ -309,10 +502,38 @@ class Match(models.Model):
     delegates = models.ManyToManyField('Delegate')
 
     def __unicode__(self):
-        return u'%s vs %s on %s' % (self.home_team, self.away_team, self.date)
+        return u'%s vs %s on %s' % (
+            self.home_team, self.away_team, self.match_datetime)
 
     class Meta:
         verbose_name_plural = 'matches'
+
+    @property
+    def is_future(self):
+        now = timezone.now()
+        if self.match_datetime > now:
+            return True
+        return False
+
+    @property
+    def is_draw(self):
+        if self.score_home and self.score_away:
+            return self.score_home == self.score_away
+        return False
+
+    @property
+    def home_stats(self):
+        q = self.matchteamstats_set.filter(club=self.home_team)
+        if q.exists():
+            return q[0]
+        return None
+
+    @property
+    def away_stats(self):
+        q = self.matchteamstats_set.filter(club=self.away_team)
+        if q.exists():
+            return q[0]
+        return None
 
 
 class MatchTeamStats(models.Model):

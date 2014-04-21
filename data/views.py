@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views import generic
 
 from data.models import Club, Player, Competition
@@ -23,12 +23,34 @@ class ClubUpdateView(generic.edit.UpdateView):
     template_name_suffix = '_update_form'
 
 
+class ClubMatchView(generic.ListView):
+    #model = Club
+    template_name = 'data/club_matches.html'
+    context_object_name = 'match_list'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(ClubMatchView, self).get_context_data(**kwargs)
+        # Add in the club
+        context['club'] = self.club
+        return context
+
+    def get_queryset(self):
+        self.club = get_object_or_404(Club, pk=self.kwargs['pk'])
+        if 'a' in self.request.GET:
+            return self.club.get_matches()
+        else:
+            return self.club.get_matches()[:5]
+
+
 class PlayerIndexView(generic.ListView):
     template_name = 'data/player_index.html'
     context_object_name = 'player_list'
+    paginate_by = 125
 
     def get_queryset(self):
-        return Player.objects.order_by('country')
+        # return Player.objects.order_by('country')
+        return Player.objects.order_by('last_name')
 
 
 class PlayerDetailView(generic.DetailView):

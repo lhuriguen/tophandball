@@ -37,13 +37,18 @@ class GroupInline(admin.TabularInline):
     extra = 1
 
 
+class GroupTableInline(admin.TabularInline):
+    model = GroupTable
+    extra = 1
+
+
 class MatchInline(admin.StackedInline):
     model = Match
     extra = 1
     fieldsets = [
         (None,
             {'fields': ['stage', ('home_team', 'away_team'),
-                        ('date', 'time'),
+                        ('match_datetime'),
                         ('score_home', 'score_away'),
                         'report_url']}
          ),
@@ -72,10 +77,16 @@ class MatchTeamStatsInline(admin.TabularInline):
     max_num = 2
 
 
+class MatchPlayerStatsInline(admin.TabularInline):
+    model = MatchPlayerStats
+
+
 class ClubAdmin(admin.ModelAdmin):
     fieldsets = [
         (None,
-            {'fields': ['name', 'short_name', 'country', 'ehf_id', 'address']}
+            {'fields': [('name', 'short_name', 'initials'),
+                        ('country', 'address'), 'ehf_id',
+                        'logo', 'admin_thumbnail']}
          ),
         ('Links',
             {'fields': ['website', 'twitter', 'facebook'],
@@ -83,29 +94,41 @@ class ClubAdmin(admin.ModelAdmin):
          )
     ]
     inlines = [ClubNamesInline, PlayerContractInline, CoachContractInline]
-    list_display = ('name', 'country')
+    list_display = ('name', 'country', 'has_logo')
     list_filter = ['country']
     search_fields = ['name']
+    readonly_fields = ('admin_thumbnail',)
 
 
 class PlayerAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {'fields': ['ehf_id', 'gender']}),
         ('Personal information',
             {'fields': [('first_name', 'last_name'),
-                        ('birth_date', 'birth_place'),
-                        'country', 'height']}
+                        ('birth_date', 'birth_place', 'country'),
+                        ('height', 'gender'), 'photo', 'admin_thumbnail']}
          ),
         ('Playing information',
-            {'fields': ['position', 'main_hand', 'retired']})
+            {'fields': [('position', 'main_hand'),
+                        ('retired', 'retirement_date'), 'ehf_id']})
     ]
     inlines = [PlayerNamesInline, PlayerContractInline]
-    list_display = ('full_name', 'country', 'birth_date')
+    list_display = ('full_name', 'country', 'birth_date', 'has_photo')
     list_filter = ['country']
     search_fields = ['first_name', 'last_name']
+    readonly_fields = ('admin_thumbnail',)
 
 
 class CoachAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ('Personal information',
+            {'fields': [('first_name', 'last_name'),
+                        ('birth_date', 'birth_place', 'country'),
+                        'player', 'photo', 'admin_thumbnail']}
+         )
+    ]
+    readonly_fields = ('admin_thumbnail',)
+    list_display = ('full_name', 'country', 'birth_date', 'has_photo')
+    search_fields = ['first_name', 'last_name']
     inlines = [CoachContractInline]
 
 
@@ -119,6 +142,9 @@ class CompetitionSeasonAdmin(admin.ModelAdmin):
 
 class StageAdmin(admin.ModelAdmin):
     inlines = [GroupInline, MatchInline]
+    list_display = ('comp_season', 'name', 'order')
+    list_filter = ['comp_season__competition__name', 'comp_season__season']
+    search_fields = ['comp_season__competition__name', 'name']
 
     def get_form(self, request, obj=None, **kwargs):
         # just save obj reference for future processing in Inline
@@ -130,7 +156,7 @@ class MatchAdmin(admin.ModelAdmin):
     fieldsets = [
         (None,
             {'fields': ['stage', ('home_team', 'away_team'),
-                        ('date', 'time'),
+                        ('match_datetime'),
                         ('score_home', 'score_away'),
                         'report_url']}
          ),
@@ -142,9 +168,13 @@ class MatchAdmin(admin.ModelAdmin):
          )
     ]
     inlines = [MatchTeamStatsInline]
-    list_filter = ['date', 'stage']
-    list_display = ('home_team', 'away_team', 'date', 'time', 'location')
+    list_filter = ['match_datetime', 'stage']
+    list_display = ('home_team', 'away_team', 'match_datetime', 'location')
     search_fields = ['home_team__name', 'away_team__name']
+
+
+class GroupAdmin(admin.ModelAdmin):
+    inlines = [GroupTableInline]
 
 
 admin.site.register(Season)
@@ -154,4 +184,5 @@ admin.site.register(Coach, CoachAdmin)
 admin.site.register(Competition, CompetitionAdmin)
 admin.site.register(CompetitionSeason, CompetitionSeasonAdmin)
 admin.site.register(Stage, StageAdmin)
+admin.site.register(Group, GroupAdmin)
 admin.site.register(Match, MatchAdmin)

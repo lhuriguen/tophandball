@@ -1,103 +1,123 @@
-{% extends "base.html" %}
-{% load static %}
+{% extends "data/base_club.html" %}
+{% block active_info %}active{% endblock %}
+{% block specific %}
 
-{% block title %}Club: {{ club.name }}{% endblock %}
-{% block active_club %}active{% endblock %}
-
-{% block content %}
-    <div class="page-header">
-       <h1>{{ club.name }} <small>{{ club.country }}</small></h1>
+<div class="row" id="info">
+    <div class="col-sm-6 col-md-3">
+        <img class="img-logo" src="{{ club.logo_url }}" alt="logo">
     </div>
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Information</h3>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-sm-6 col-md-3">
-                    <img class="thumbnail img-logo" src="{% get_static_prefix %}logos/{{ club.ehf_id }}.jpg" alt="logo">
-                </div>
-                <div class="col-sm-6 col-md-3">
-                    <strong>Also known as</strong>
-                    <ul class="list-unstyled">
-                    {% for clubname in club.clubname_set.all %}
-                        <li>{{ clubname.season }} - {{ clubname.name }}</li>
-                    {% endfor %}
-                    </ul>
-                </div>
-                <div class="clearfix visible-sm"></div>
-                <div class="col-sm-6 col-md-3">
-                    <address>
-                        <strong>Address</strong><br>
-                        {% for line in club.address_lines %}
-                        {{ line }}<br>
-                        {% endfor %}
-                    </address>
-                    <address>
-                        <strong>Online</strong><br>
-                        <a href="{{ club.website }}">{{ club.website }}</a>
-                        <a href="{{ club.twitter }}">{{ club.twitter }}</a>
-                        <a href="{{ club.facebook }}">{{ club.facebook }}</a>
-                    </address>
-                </div>
-                <div class="col-sm-6 col-md-3">
-                    <div id="map_canvas" class="thumbnail"></div>
-                </div>
-            </div>
-        </div>
-        <div class="panel-footer">
-            <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-star"></span> Star</button>
-        </div>
-    </div>
-
-    {% if club.get_current_team %}
-    {% regroup club.get_current_team|dictsort:"player.position" by player.get_position_display as position_list %}
-    {% for position in position_list %}
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">{{ position.grouper }}{{ position.list|length|pluralize }}</h3>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-            {% for player in position.list %}
-                {% if forloop.counter|divisibleby:3 %}
-                <div class="clearfix visible-sm"></div>
-                {% endif %}
-                <div class="col-sm-6 col-md-3">
-                    <a href="{{ player.player.get_absolute_url }}">
-                    <img class="thumbnail" src="{% get_static_prefix %}players/{{ player.player.ehf_id }}.jpg" alt="photo">
-                    </a>
-                    <div class="caption">
-                        <h4>{{ player.player.full_name }} <small>{{ player.player.country }}</small></h4>
-                        <p><span class="badge">#{{ player.shirt_number }}</span> Since {{ player.from_date|date:"F Y" }}</p>
-                        <!-- <p><a href="{{ player.player.get_absolute_url }}" class="btn btn-primary" role="button">View</a> <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-star"></span> Star</a></p> -->
-                    </div>
-                    <!-- </div> -->
-                </div>
-            {% if forloop.counter|divisibleby:4 %}
-            </div>
-            <div class="row">
-            {% endif %}
+    <div class="col-sm-6 col-md-3">
+        <strong>Also known as</strong>
+        <ul class="list-unstyled">
+            {% for clubname in club.clubname_set.all %}
+            <li>{{ clubname.season }} - {{ clubname.name }}</li>
+            {% empty %}
+            <li>No alternative names found.</li>
             {% endfor %}
+        </ul>
+    </div>
+    <div class="clearfix visible-sm"></div>
+    <div class="col-sm-6 col-md-3">
+        <address>
+            <strong>Address</strong><br>
+            {% for line in club.address_lines %}
+            {{ line }}<br>
+            {% empty %}
+            Address unknown.
+            {% endfor %}
+        </address>
+        <address>
+            <strong>Online</strong><br>
+            <a href="{{ club.website }}">{{ club.website }}</a><br>
+            <a href="{{ club.twitter }}">{{ club.twitter }}</a><br>
+            <a href="{{ club.facebook }}">{{ club.facebook }}</a>
+        </address>
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <div id="map_canvas" class="thumbnail">{% if not club.address_lines %}Sorry, cannot show map without an address.{% endif %}</div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-9" role="main"  id="players">
+        {% regroup club.get_current_team|dictsort:"player.position" by player.get_position_display as position_list %}
+        {% for position in position_list %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" id="{{ position.grouper }}">{{ position.grouper }}{{ position.list|length|pluralize }}</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    {% for player in position.list %}
+                    {% if forloop.counter|divisibleby:3 %}
+                    <div class="clearfix visible-sm"></div>
+                    {% endif %}
+                    <div class="col-sm-6 col-md-3">
+                        <a href="{{ player.player.get_absolute_url }}">
+                            <img class="thumbnail img-person" src="{{ player.player.photo_url }}" alt="photo">
+                        </a>
+                        <div class="caption">
+                            <h4>{{ player.player.full_name }}
+                                <small>{{ player.player.country }}</small>
+                            </h4>
+                            <p>
+                                <span class="badge">#{{ player.shirt_number }}</span> Since {{ player.from_date|date:"F Y" }}</p>
+                            <!-- <p><a href="{{ player.player.get_absolute_url }}" class="btn btn-primary" role="button">View</a> <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-star"></span> Star</a></p> -->
+                        </div>
+                        <!-- </div> -->
+                    </div>
+                    {% if forloop.counter|divisibleby:4 %}
+                </div>
+                <div class="row">
+                    {% endif %} {% endfor %}
+                </div>
             </div>
         </div>
+        {% empty %} {% endfor %}
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" id="coach">Coaches</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    {% for coach in club.get_current_coaches %}
+                    {% if forloop.counter|divisibleby:3 %}
+                    <div class="clearfix visible-sm"></div>
+                    {% endif %}
+                    <div class="col-sm-6 col-md-3">
+                        <a href="{{ coach.coach.get_absolute_url }}">
+                            <img class="thumbnail img-person" src="{{ coach.coach.photo_url }}" alt="photo">
+                        </a>
+                        <div class="caption">
+                            <h4>{{ coach.coach.full_name }} <small>{{ coach.coach.country }}</small></h4>
+                            <p>{{ coach.get_role_display }}. Since {{ coach.from_date|date:"F Y" }}</p>
+                        </div>
+                    </div>
+                    {% if forloop.counter|divisibleby:4 %}
+                </div>
+                <div class="row">
+                    {% endif %}
+                    {% empty %}
+                    <div class="col-sm-6 col-md-3">
+                        <p>No current coach found.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
     </div>
-    {% endfor %}
-    {% else %}
-    <p>No players.</p>
-    {% endif %}
-    
-    <h2>Coaches</h2>
-    {% if club.coaches.all %}
-    <p>Number of coaches: {{ club.coaches.all|length }}</p>
-    <ul>
-    {% for coach in club.coaches.all %}
-        <li>{{ coach.full_name }}</li>
-    {% endfor %}
-    </ul>
-    {% else %}
-    <p>No coaches.</p>
-    {% endif %}
+
+    <div class="col-md-3">
+        <ul class="nav hidden-print" id="sidebar" role="complementary">
+            {% for position in position_list %}
+            <li><a href="#{{ position.grouper }}">{{ position.grouper }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
 {% endblock %}
 {% block extra_script %}
 <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
@@ -125,5 +145,34 @@
         });
     }
     google.maps.event.addDomListener(window, 'load', codeAddress("{{ club.address }}"));
+</script>
+<script type="text/javascript">
+
+    // var $body   = $(document.body);
+    // var navHeight = $('.navbar').outerHeight(true) + 10;
+
+    // $body.scrollspy({
+    //     target: '#leftCol',
+    //     offset: navHeight
+    // });
+
+    var topHeight = $('.navbar').outerHeight(true) + $('#header').outerHeight(true) + $('#info').outerHeight(true);
+
+    $('#sidebar').affix({
+        offset: {
+          top: topHeight
+        , bottom: function () {
+            return (this.bottom = $('#footer').outerHeight(true))
+          }
+        }
+    })
+
+    // $('a.scroll').click(function(event){
+    //     event.preventDefault();
+    //     $('#players').animate({
+    //         scrollTop:$(this.hash).offset().top - $('.navbar').outerHeight()
+    //     }, 550);
+    // })
+
 </script>
 {% endblock %}

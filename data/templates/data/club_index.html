@@ -6,19 +6,22 @@
     <div class="page-header">
         <h1>Clubs</h1>
     </div>
-    {% if club_list %}
+    
     {% regroup club_list by country as country_list %}
-    <ul>
+    <div class="list-group">
         {% for country in country_list %}
-        <li>{{ country.grouper }}</li>
-        <ul>
+        <a href="#" class="list-group-item active">{{ country.grouper }} <span class="badge">{{ country.list|length }}</a>
+        <div class="list-group">
             {% for club in country.list %}
-            <li><a href="{{ club.get_absolute_url }}">{{ club.name }}</a></li>
+            <a href="{{ club.get_absolute_url }}" class="list-group-item">
+                <h4 class="list-group-item-heading">{{ club.name }}</h4>
+                <img class="img-responsive" alt="logo" style="height: 64px" src="{{ club.logo_url }}" >
+            </a>
             {% endfor %}
-        </ul>
+        </div>
+        {% empty %}
+        <a href="#" class="list-group-item list-group-item-danger">No clubs are available.</a>
         {% endfor %}
-    </ul>
-{% else %}
-    <p>No clubs are available.</p>
-{% endif %}
+    </div>
+
 {% endblock %}

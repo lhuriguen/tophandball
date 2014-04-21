@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Club: {{ club.name }}{% endblock %}
+{% block active_club %}active{% endblock %}
+
+{% block content %}
+<div id="header">
+    <div class="page-header">
+        <h1>{{ club.name }} <small>{{ club.country }}</small></h1>
+    </div>
+    <ul class="nav nav-tabs">
+        <li class="{% block active_info %}{% endblock %}"><a href="{{ club.get_absolute_url }}">Information</a></li>
+        <li class="{% block active_team %}{% endblock %}"><a href="#">Team</a></li>
+        <li class="{% block active_match %}{% endblock %}"><a href="{% url 'data:club_matches' pk=club.id %}">Matches</a></li>
+    </ul>
+</div>
+{% block specific %}{% endblock %}
+{% endblock content %}
+{% block extra_script %}{% endblock %}

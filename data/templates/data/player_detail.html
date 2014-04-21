@@ -1,19 +1,44 @@
 {% extends "base.html" %}
 {% load static %}
+
 {% block title %}Player: {{ player.full_name }}{% endblock %}
 {% block active_player %}active{% endblock %}
+
 {% block content %}
     <div class="page-header">
        <h1>{{ player.full_name }} <small>{{ player.country }}</small></h1>
+       <p class="lead">Born{% if player.birth_place %} in {{ player.birth_place }}{% endif %} on {{ player.birth_date }}. {% if player.current_contract %}Currently playing for {{ player.current_contract.club }}.{% endif %}</p>
     </div>
-    <img src="{% get_static_prefix %}players/{{ player.ehf_id }}.jpg" alt="photo">
-
-    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-
-    <h2>Other names</h2>
-    <ul>
-    {% for playername in player.playername_set.all %}
-        <li>{{ playername.full_name }}</li>
-    {% endfor %}
-    </ul>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Information</h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-6 col-md-3">
+                    <img class="thumbnail img-person" src="{{ player.photo_url }}" alt="photo">
+                </div>
+                <div class="col-sm-6 col-md-9">
+                    <strong>Birth date:</strong> {{ player.birth_date }} (age {{ player.age }})<br>
+                    <strong>Birth place:</strong> {{ player.birth_place }}<br>
+                    <strong>Height:</strong> {{ player.height }} cm<br>
+                    <strong>Position:</strong> {{ player.get_position_display }}<br>
+                    <strong>Main hand:</strong> {{ player.get_main_hand_display }}<br>
+                    {% if player.current_contract %}<strong>Current club:</strong> <a href="{{ player.current_contract.club.get_absolute_url }}"> {{ player.current_contract.club }}</a><br>{% endif %}
+                    {% if player.retired %}<span class="label label-danger">Retired</span><br>{% endif %}
+                    {% if player.playername_set.all %}
+                    <strong>Also credited as:</strong>
+                    <ul class="list-unstyled">
+                    {% for playername in player.playername_set.all %}
+                        <li>{{ playername.full_name }}</li>
+                    {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-star"></span> Star</button>
+        </div>
+    </div>
 {% endblock %}
