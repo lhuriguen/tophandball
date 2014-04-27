@@ -5,9 +5,12 @@
 {% block active_player %}active{% endblock %}
 
 {% block content %}
-    <div class="page-header">
-       <h1>{{ player.full_name }} <small>{{ player.country }}</small></h1>
-       <p class="lead">Born{% if player.birth_place %} in {{ player.birth_place }}{% endif %} on {{ player.birth_date }}. {% if player.current_contract %}Currently playing for {{ player.current_contract.club }}.{% endif %}</p>
+    <div id="header-box">
+        <div class="">
+           <h1>{{ player.full_name }} <small>{{ player.country }}</small></h1>
+           <img class="img-person" src="{{ player.photo_url }}" alt="photo">
+           <!-- <p class="lead">Born{% if player.birth_place %} in {{ player.birth_place }}{% endif %} on {{ player.birth_date }}. {% if player.current_contract %}Currently playing for {{ player.current_contract.club }}.{% endif %}</p> -->
+        </div>
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">

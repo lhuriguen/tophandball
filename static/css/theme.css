@@ -1,7 +1,7 @@
 body {
-    padding-top: 70px;
+    /*padding-top: 70px;*/
     padding-bottom: 30px;
-    margin-bottom: 80px;
+    margin-bottom: 50px;
 }
 /* Sticky footer styles
 -------------------------------------------------- */
@@ -10,8 +10,36 @@ html {
     min-height: 100%;
 }
 
-#header {
+#header-box {
+    border: 1px solid #E5E5E5;
+    border-radius: 4px;
     margin-bottom: 10px;
+    background-color: #F9F9F9;
+    min-height: 150px;
+}
+
+#header-box h1 {
+    font-size: 50px;
+    display: inline-block;
+    padding: 10px;
+    margin-left: 10px;
+    margin-bottom: 20px;
+}
+
+#header-box .img-logo {
+    max-height: 100px;
+    float: right !important;
+    margin: 20px;
+    padding: 0;
+}
+
+#header-box .img-person {
+    max-height: 150px;
+    width: auto;
+    float: left !important;
+    margin: 0px;
+    padding: 0;
+    border-radius: 4px;
 }
 
 #footer {
@@ -19,7 +47,7 @@ html {
     bottom: 0;
     width: 100%;
     /* Set the fixed height of the footer here */
-    height: 80px;
+    height: 50px;
     background-color: #F9F9F9;
     border-top: 1px solid #E5E5E5;
     padding: 10px 0;
@@ -37,7 +65,7 @@ html {
     display: inline-block;
     padding: 4px;
     line-height: 1.42857143;
-    background-color: #fff;
+    /*background-color: #fff;*/
     -webkit-transition: all .2s ease-in-out;
           transition: all .2s ease-in-out;
 }
@@ -56,9 +84,44 @@ html {
   width: inherit;
   position: absolute;
   top: auto;
-  bottom: 80px; 
+  bottom: 50px; 
 }
 
 .affix-top {
   
+}
+
+.form-signin {
+  max-width: 330px;
+/*  padding: 15px;*/
+  margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-signin .checkbox {
+  font-weight: normal;
+}
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+/*  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;*/
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+/*  border-top-left-radius: 0;
+  border-top-right-radius: 0;*/
 }

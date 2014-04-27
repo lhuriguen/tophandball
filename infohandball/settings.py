@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'data',
+    'user_profile',
     'south',
     'debug_toolbar',
     'allauth',
@@ -47,6 +48,8 @@ INSTALLED_APPS = (
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.twitter',
+    'bootstrapform',
+    'django_extensions',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -99,6 +102,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 
+# For development only
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 # Authentication with AllAuth
 # https://github.com/pennersr/django-allauth
 
@@ -112,7 +118,6 @@ AUTHENTICATION_BACKENDS = (
 TEMPLATE_CONTEXT_PROCESSORS = (
     # Required by allauth template tags
     'django.core.context_processors.request',
-    # Why?
     'django.contrib.auth.context_processors.auth',
     # allauth specific context processors
     'allauth.account.context_processors.account',
@@ -124,9 +129,11 @@ LOGIN_REDIRECT_URL = '/'
 SOCIALACCOUNT_QUERY_EMAIL = True
 SOCIALACCOUNT_PROVIDERS = {
     'facebook': {
-        'SCOPE': ['email', 'publish_stream'],
-        'METHOD': 'js_sdk'  # instead of 'oauth2'
+        'SCOPE': ['email'], # , 'publish_stream'
+        'METHOD': 'oauth2'  # instead of 'js_sdk'
     }
 }
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
 SITE_ID = 1

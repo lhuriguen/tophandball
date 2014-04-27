@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load bootstrap %}
+{% load socialaccount %}
+
+{% block title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-5">
+    <form class="form-signin" method="POST" action="{% url 'account_login' %}">
+      <h2 class="form-signin-heading">Please sign in</h2>
+      {% csrf_token %}
+      {{ form|bootstrap }}
+      {% if redirect_field_value %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+      {% endif %}
+      <div class="form-actions">
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <a class="btn" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+      </div>
+    </form>
+  </div>
+  <div class="col-md-7">
+    {% if socialaccount.providers %}
+    <div class="form-signin">
+      <h2 class="form-signin-heading">Don't have an account?</h2>
+      <a href="{% url 'account_signup' %}" class="btn btn-lg btn-primary btn-block">Sign up now</a>
+      <h3 class="text-center">Or</h3>
+      <a class="btn btn-lg btn-block btn-social btn-google-plus" href="{% provider_login_url "google" process="login" %}">
+        <i class="fa fa-google-plus"></i> Sign in with Google
+      </a>
+      <a class="btn btn-lg btn-block btn-social btn-facebook" href="{% provider_login_url "facebook" process="login" %}">
+        <i class="fa fa-facebook"></i> Sign in with Facebook
+      </a>
+      <a class="btn btn-lg btn-block btn-social btn-twitter" href="{% provider_login_url "twitter" process="login" %}">
+        <i class="fa fa-twitter"></i> Sign in with Twitter
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}
+
