@@ -4,9 +4,6 @@
 
 <div class="row" id="info">
     <div class="col-sm-6 col-md-3">
-        <img class="img-logo" src="{{ club.logo_url }}" alt="logo">
-    </div>
-    <div class="col-sm-6 col-md-3">
         <strong>Also known as</strong>
         <ul class="list-unstyled">
             {% for clubname in club.clubname_set.all %}
@@ -16,7 +13,6 @@
             {% endfor %}
         </ul>
     </div>
-    <div class="clearfix visible-sm"></div>
     <div class="col-sm-6 col-md-3">
         <address>
             <strong>Address</strong><br>

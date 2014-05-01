@@ -4,13 +4,16 @@
 
 {% block content %}
 
-<div class="row">
-    <div id="header-box">
+<div id="header-box">
+    <div class="row">
         <div class="col-md-2">
             <img class="img-logo img-responsive" src="{{ club.logo_url }}" alt="logo">
         </div>
         <div class="col-md-10">
             <h1>{{ club.name }} <small>{{ club.country }}</small></h1>
+            <span class="rating">
+                <span class="star"></span>
+            </span>
         </div>
     </div>
 </div>

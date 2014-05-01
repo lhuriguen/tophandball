@@ -5,13 +5,18 @@
 {% block active_player %}active{% endblock %}
 
 {% block content %}
-    <div id="header-box">
-        <div class="">
-           <h1>{{ player.full_name }} <small>{{ player.country }}</small></h1>
-           <img class="img-person" src="{{ player.photo_url }}" alt="photo">
-           <!-- <p class="lead">Born{% if player.birth_place %} in {{ player.birth_place }}{% endif %} on {{ player.birth_date }}. {% if player.current_contract %}Currently playing for {{ player.current_contract.club }}.{% endif %}</p> -->
+
+<div id="header-box">
+    <div class="row">
+        <div class="col-md-2">
+            <img class="img-person img-responsive" src="{{ player.photo_url }}" alt="photo">
+        </div>
+        <div class="col-md-10">
+            <h1>{{ player.full_name }} <small>{{ player.country }}</small></h1>
         </div>
     </div>
+</div>
+
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">Information</h3>
@@ -19,7 +24,7 @@
         <div class="panel-body">
             <div class="row">
                 <div class="col-sm-6 col-md-3">
-                    <img class="thumbnail img-person" src="{{ player.photo_url }}" alt="photo">
+                    
                 </div>
                 <div class="col-sm-6 col-md-9">
                     <strong>Birth date:</strong> {{ player.birth_date }} (age {{ player.age }})<br>
