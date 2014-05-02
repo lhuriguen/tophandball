@@ -1,35 +1,29 @@
 body {
-    /*padding-top: 70px;*/
     padding-bottom: 30px;
     margin-bottom: 50px;
 }
-/* Sticky footer styles
--------------------------------------------------- */
 html {
     position: relative;
     min-height: 100%;
 }
-
 #header-box {
     border: 1px solid #E5E5E5;
     border-radius: 4px;
     margin-bottom: 5px;
     background-color: #F9F9F9;
     height: auto;
+    position: relative;
 }
-
 #header-box h1 {
     padding: 10px;
     margin-bottom: 20px;
 }
-
 #header-box .img-logo {
     max-height: 120px;
     margin: 1px;
     padding: 0;
     margin-left: 5px;
 }
-
 #header-box .img-person {
     max-height: 150px;
     width: auto;
@@ -37,7 +31,13 @@ html {
     padding: 0;
     border-radius: 4px;
 }
-
+#header-box .button-bar {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-right: -1px;
+    margin-bottom: -1px;
+}
 #footer {
     position: absolute;
     bottom: 0;
@@ -49,7 +49,6 @@ html {
     padding: 10px 0;
     text-align: center;
 }
-
 #map_canvas {
     width: auto;
     height: 200px;
@@ -64,21 +63,18 @@ html {
   width: inherit;
   top: 50px;
 }
-
 .affix-bottom {
   width: inherit;
   position: absolute;
   top: auto;
   bottom: 50px; 
 }
-
-.affix-top {
+/*.affix-top {
   
-}
+}*/
 
 .form-signin {
   max-width: 330px;
-/*  padding: 15px;*/
   margin: 0 auto;
 }
 .form-signin .form-signin-heading,
@@ -111,26 +107,19 @@ html {
   border-top-right-radius: 0;*/
 }
 
-.rating {
-    direction: rtl;
-    font-size: 30px;
-    unicode-bidi: bidi-override;
+.follow:before {
+  content: "\f08a";
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
 }
-.rating span.star {
-    display: inline-block;
-    font-family: FontAwesome;
-    font-style: normal;
-    font-weight: normal;
-}
-.rating span.star:hover {
-    cursor: pointer;
-}
-.rating span.star:before {
-    color: #999999;
-    content: "";
-    padding-right: 5px;
-}
-.rating span.star:hover:before, .rating span.star:hover ~ span.star:before {
-    color: #C00000;
-    content: "";
+
+.unfollow:before {
+  content: "\f004";
+  color: #D00000;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
 }

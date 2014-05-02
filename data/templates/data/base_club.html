@@ -9,21 +9,26 @@
         <div class="col-md-2">
             <img class="img-logo img-responsive" src="{{ club.logo_url }}" alt="logo">
         </div>
-        <div class="col-md-10">
+        <div class="col-md-8">
             <h1>{{ club.name }} <small>{{ club.country }}</small></h1>
-            <span class="rating">
-                <span class="star"></span>
-            </span>
         </div>
     </div>
+    <div class="button-bar">
+        {% block under_nav %}{% endblock %}
+    </div>
 </div>
-<div>
-    <ul class="nav nav-tabs">
-        <li class="{% block active_info %}{% endblock %}"><a href="{{ club.get_absolute_url }}">Information</a></li>
-        <li class="{% block active_team %}{% endblock %}"><a href="#">Team</a></li>
-        <li class="{% block active_match %}{% endblock %}"><a href="{% url 'data:club_matches' pk=club.id %}">Matches</a></li>
-    </ul>
-</div>
+<ul class="nav nav-tabs">
+    <li class="{% block active_info %}{% endblock %}"><a href="{{ club.get_absolute_url }}">Information</a></li>
+    <li class="{% block active_team %}{% endblock %}"><a href="#">Team</a></li>
+    <li class="{% block active_match %}{% endblock %}"><a href="{% url 'data:club_matches' pk=club.id %}">Matches</a></li>
+</ul>
 {% block specific %}{% endblock %}
 {% endblock content %}
-{% block extra_script %}{% endblock %}
+{% block extra_script %}
+<script type="text/javascript">
+    $('#dolove').click(function() {
+      $('#ilove').toggleClass("fa-heart fa-heart-o");
+      $('#choice').val("unlove");
+    });
+</script>
+{% endblock %}

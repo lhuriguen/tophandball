@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import F, Q, Sum
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 
 class PlayerContractManager(models.Manager):
@@ -34,6 +35,7 @@ class Club(models.Model):
     logo = models.ImageField(upload_to='clubs', blank=True, null=True)
     players = models.ManyToManyField('Player', through='PlayerContract')
     coaches = models.ManyToManyField('Coach', through='CoachContract')
+    fans = models.ManyToManyField(User, related_name='fan_clubs')
 
     def __unicode__(self):
         return u'%s' % (self.name)

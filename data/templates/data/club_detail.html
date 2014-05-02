@@ -1,7 +1,24 @@
 {% extends "data/base_club.html" %}
 {% block active_info %}active{% endblock %}
-{% block specific %}
 
+{% block under_nav %}
+    <form action="{% url 'data:club_love' club.id %}" method="post" id="follow_form">
+        {% csrf_token %}
+        {% if fan %}
+            <input type="hidden" name="choice" id="choice" value="unfollow" />
+            <button type="submit" class="btn btn-default btn-sm">
+                <span class="unfollow"></i> Unfollow <small>({{ fan_count }} fans)</small>
+            </button>
+        {% else %}
+            <input type="hidden" name="choice" id="choice" value="follow" />
+            <button type="submit" class="btn btn-default btn-sm">
+                <span class="follow"></i> Follow <small>({{ fan_count }} fans)</small>
+            </button>
+        {% endif %}
+    </form>
+{% endblock %}
+
+{% block specific %}
 <div class="row" id="info">
     <div class="col-sm-6 col-md-3">
         <strong>Also known as</strong>
@@ -171,4 +188,21 @@
     // })
 
 </script>
+// <script type="text/javascript">
+//     var frm = $('#follow_form');
+//     frm.submit(function () {
+//         $.ajax({
+//             type: frm.attr('method'),
+//             url: frm.attr('action'),
+//             data: frm.serialize(),
+//             success: function (data) {
+//                 $("#SOME-DIV").html(data);
+//             },
+//             error: function(data) {
+//                 $("#MESSAGE-DIV").html("Something went wrong!");
+//             }
+//         });
+//         return false;
+//     });
+// </script>
 {% endblock %}
