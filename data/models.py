@@ -16,6 +16,17 @@ class PlayerContractManager(models.Manager):
         ).exclude(from_date__gt=datetime.date.today())
 
 
+class Country(models.Model):
+    code = models.CharField(max_length=3, primary_key=True)
+    name = models.CharField(max_length=255, unique=True)
+
+    class Meta:
+        verbose_name_plural = 'countries'
+
+    def __unicode__(self):
+        return u'%s (%s)' % (self.name, self.code)
+
+
 class Club(models.Model):
     name = models.CharField(max_length=100)
     short_name = models.CharField(
@@ -35,7 +46,7 @@ class Club(models.Model):
     logo = models.ImageField(upload_to='clubs', blank=True, null=True)
     players = models.ManyToManyField('Player', through='PlayerContract')
     coaches = models.ManyToManyField('Coach', through='CoachContract')
-    fans = models.ManyToManyField(User, related_name='fan_clubs')
+    fans = models.ManyToManyField(User, related_name='fav_clubs')
 
     def __unicode__(self):
         return u'%s' % (self.name)

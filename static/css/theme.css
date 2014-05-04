@@ -38,6 +38,10 @@ html {
     margin-right: -1px;
     margin-bottom: -1px;
 }
+#sub-nav {
+    margin-bottom: 10px;
+}
+
 #footer {
     position: absolute;
     bottom: 0;
@@ -59,7 +63,7 @@ html {
     height: 200px;
 }
 
-.affix {
+/*.affix {
   width: inherit;
   top: 50px;
 }
@@ -68,7 +72,7 @@ html {
   position: absolute;
   top: auto;
   bottom: 50px; 
-}
+}*/
 /*.affix-top {
   
 }*/
@@ -110,8 +114,8 @@ html {
 .follow:before {
   content: "\f08a";
   font-family: FontAwesome;
-  font-style: normal;
-  font-weight: normal;
+/*  font-style: normal;
+  font-weight: normal;*/
   text-decoration: inherit;
 }
 
@@ -119,7 +123,7 @@ html {
   content: "\f004";
   color: #D00000;
   font-family: FontAwesome;
-  font-style: normal;
-  font-weight: normal;
+/*  font-style: normal;
+  font-weight: normal;*/
   text-decoration: inherit;
 }

@@ -1,10 +1,13 @@
+import json
+from datetime import datetime
+
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 
-from data.models import Club, Player, Competition
+from data.models import Club, Player, Competition, Season
 
 
 class ClubIndexView(generic.ListView):
@@ -25,12 +28,20 @@ class ClubDetailView(generic.DetailView):
         self.club = get_object_or_404(Club, pk=self.kwargs['pk'])
         # Add in the fan status
         if self.request.user.is_authenticated():
-            is_fan = self.request.user.fan_clubs.filter(id=self.club.id).exists()
+            is_fan = self.request.user.fav_clubs.filter(id=self.club.id).exists()
             context['fan'] = is_fan
         else:
             context['fan'] = False
         # Number of fans
         context['fan_count'] = self.club.fans.count()
+
+        # Prepare context data for matches
+        s = Season.objects.get(year_to=datetime.now().year)
+        context['comp_list'] = self.club.group_set.filter(
+            stage__comp_season__season=s).order_by(
+            'stage__comp_season__competition__is_international',
+            '-stage__comp_season__competition__level')
+
         return context
 
 
@@ -63,23 +74,21 @@ class ClubMatchView(generic.ListView):
 @login_required
 def club_love(request, club_id):
     c = get_object_or_404(Club, pk=club_id)
-    try:
+    if request.method == 'POST':
         choice = request.POST['choice']
-    except KeyError:
-        return render(request, 'data/club_detail.html', {
-            'club': c,
-            'messages': ["You didn't select a choice.", ],
-        })
-    else:
         if choice == 'follow':
             c.fans.add(request.user)
         elif choice == 'unfollow':
             c.fans.remove(request.user)
-        #return HttpResponse("You now %s club %s." % (choice, club_id))
-        # Always return an HttpResponseRedirect after successfully dealing
-        # with POST data. This prevents data from being posted twice if a
-        # user hits the Back button.
-        return HttpResponseRedirect(reverse('data:club_detail', kwargs={'pk': c.id}))
+        # Handle view with or without AJAX
+        if request.is_ajax():
+            new_count = c.fans.count()
+            return HttpResponse(json.dumps({'fan_count': new_count}), mimetype="application/json")
+        else:
+            # Always return an HttpResponseRedirect after successfully dealing
+            # with POST data. This prevents data from being posted twice if a
+            # user hits the Back button.
+            return HttpResponseRedirect(reverse('data:club_detail', kwargs={'pk': c.id}))
 
 
 class PlayerIndexView(generic.ListView):
