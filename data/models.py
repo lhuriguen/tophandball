@@ -7,15 +7,6 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 
 
-class PlayerContractManager(models.Manager):
-
-    @property
-    def current(self):
-        return super(PlayerContractManager, self).get_queryset().exclude(
-            to_date__lt=datetime.date.today()
-        ).exclude(from_date__gt=datetime.date.today())
-
-
 class Country(models.Model):
     code = models.CharField(max_length=3, primary_key=True)
     name = models.CharField(max_length=255, unique=True)
@@ -203,13 +194,15 @@ class Player(models.Model):
 
     @property
     def current_contract(self):
-        contracts = self.playercontract_set.exclude(
-            to_date__lt=datetime.date.today()
-        ).exclude(from_date__gt=datetime.date.today()).order_by('from_date')
-        if len(contracts) == 1:
-            return contracts[0]
-        else:
-            return None
+        # TODO
+        # contracts = self.playercontract_set.exclude(
+        #     to_date__lt=datetime.date.today()
+        # ).exclude(from_date__gt=datetime.date.today()).order_by('from_date')
+        # if len(contracts) == 1:
+        #     return contracts[0]
+        # else:
+        #     return None
+        pass
 
     @property
     def age(self):
@@ -241,24 +234,54 @@ class PlayerName(models.Model):
 
 
 class PlayerContract(models.Model):
+    JANUARY = 1
+    FEBRUARY = 2
+    MARCH = 3
+    APRIL = 4
+    MAY = 5
+    JUNE = 6
+    JULY = 7
+    AUGUST = 8
+    SEPTEMBER = 9
+    OCTOBER = 10
+    NOVEMBER = 11
+    DECEMBER = 12
+    MONTH_CHOICES = (
+        (JANUARY, 'January'),
+        (FEBRUARY, 'February'),
+        (MARCH, 'March'),
+        (APRIL, 'April'),
+        (MAY, 'May'),
+        (JUNE, 'June'),
+        (JULY, 'July'),
+        (AUGUST, 'August'),
+        (SEPTEMBER, 'September'),
+        (OCTOBER, 'October'),
+        (NOVEMBER, 'November'),
+        (DECEMBER, 'December')
+    )
     player = models.ForeignKey(Player)
     club = models.ForeignKey(Club)
-    from_date = models.DateField()
-    to_date = models.DateField(blank=True, null=True)
+    season = models.ForeignKey(Season)
+    departure_month = models.IntegerField(
+        choices=MONTH_CHOICES, blank=True, null=True,
+        help_text="Only if the player left before the end of the season.")
+    arrival_month = models.IntegerField(
+        choices=MONTH_CHOICES, blank=True, null=True,
+        help_text="Only if the player arrived after the start of the season.")
     shirt_number = models.PositiveSmallIntegerField(blank=True, default=0)
-
-    objects = PlayerContractManager()
 
     def __unicode__(self):
         return u'%s (%s) in %s (%s)' % (
-            self.player, self.player.position, self.club, self.from_date)
+            self.player, self.player.position, self.club, self.season)
 
     def is_current(self):
-        today = datetime.date.today()
-        if self.to_date is None:
-            return self.from_date <= today
-        else:
-            return self.from_date <= today and self.to_date >= today
+        today = datetime.datetime.today()
+        middle = datetime.date(today.year, 7, 1)
+        season_year = today.year
+        if today < middle:
+            season_year -= 1
+        return self.season.year_from == season_year
 
 
 class Coach(models.Model):

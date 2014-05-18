@@ -134,6 +134,11 @@ class CoachAdmin(admin.ModelAdmin):
 
 class CompetitionAdmin(admin.ModelAdmin):
     inlines = [CompetitionSeasonInline]
+    list_display = (
+        'name', 'short_name', 'country',
+        'is_international', 'level')
+    search_fields = ('name',)
+    readonly_fields = ('admin_thumbnail',)
 
 
 class CompetitionSeasonAdmin(admin.ModelAdmin):
@@ -168,13 +173,15 @@ class MatchAdmin(admin.ModelAdmin):
          )
     ]
     inlines = [MatchTeamStatsInline]
-    list_filter = ['match_datetime', 'stage']
+    list_filter = ['match_datetime', 'stage__comp_season']
     list_display = ('home_team', 'away_team', 'match_datetime', 'location')
     search_fields = ['home_team__name', 'away_team__name']
 
 
 class GroupAdmin(admin.ModelAdmin):
     inlines = [GroupTableInline]
+    list_display = ['stage', 'order', 'name']
+    list_filter = ['stage__comp_season']
 
 
 admin.site.register(Season)
@@ -189,3 +196,4 @@ admin.site.register(Match, MatchAdmin)
 admin.site.register(Referee)
 admin.site.register(Delegate)
 admin.site.register(Country)
+admin.site.register(MatchPlayerStats)

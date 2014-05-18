@@ -1,0 +1,1 @@
+[{"pk": 1, "model": "data.coach", "fields": {"first_name": "Ambros", "last_name": "Mart\u00edn", "photo": "people/Ambros_Mart\u00edn_1.jpg", "country": "ESP", "player": null, "birth_place": "Lanzarote", "gender": "M", "birth_date": "1968-04-30"}}]

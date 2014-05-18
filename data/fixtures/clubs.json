@@ -1,0 +1,1857 @@
+[{
+    "pk": 1,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.hypo-noe.at/",
+        "name": "Hypo Nieder\u00f6sterreich",
+        "short_name": "",
+        "country": "AUT",
+        "twitter": "",
+        "fans": [1, 3],
+        "ehf_id": 1079,
+        "facebook": "",
+        "address": "BSFZ S\u00fcdstadt, Liese-Prokop-Platz 1, 2344 Maria Enzersdorf, Austria",
+        "logo": "clubs/logo_hypo.png",
+        "initials": ""
+    }
+}, {
+    "pk": 2,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.muratpasabldspor.org",
+        "name": "Muratpasa Belediyesi SK",
+        "short_name": "",
+        "country": "TUR",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 15510,
+        "facebook": "",
+        "address": "Yesilbahce Mahallesi Eski, Lara Yolu Girisi 1, Antalya, Turkey",
+        "logo": "clubs/15510.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 3,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.lkz-handball.ch/",
+        "name": "LK Zug Handball",
+        "short_name": "",
+        "country": "SUI",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 5714,
+        "facebook": "",
+        "address": "Irene Spieler-Strickler, Gartenstrasse 22, 6331 H\u00fcnenberg, Switzerland",
+        "logo": "clubs/lk_zug.png",
+        "initials": ""
+    }
+}, {
+    "pk": 4,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.rostovhandball.ru",
+        "name": "Rostov-Don",
+        "short_name": "",
+        "country": "RUS",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 6514,
+        "facebook": "",
+        "address": "1 Konnoy Army street, 4-a, 344029 Rostov-on-Don, Russia",
+        "logo": "clubs/6514.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 5,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.hcmbaiamare.ro",
+        "name": "HCM Baia Mare",
+        "short_name": "",
+        "country": "ROU",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 6414,
+        "facebook": "",
+        "address": "BD.Bucuresti Nr. 47 A, 430012 Baia Mare, Rumania",
+        "logo": "clubs/6414.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 6,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.spr.lublin.pl",
+        "name": "MKS Selgros Lublin",
+        "short_name": "",
+        "country": "POL",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 1743,
+        "facebook": "",
+        "address": "ul. Melgiewska 2, 20-209 Lublin, Poland",
+        "logo": "clubs/1743.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 7,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.savehof.se",
+        "name": "IK S\u00e4vehof",
+        "short_name": "",
+        "country": "SWE",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 10939,
+        "facebook": "",
+        "address": "Box 201, 43324 Partille, Sweden",
+        "logo": "clubs/10939.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 8,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.rkkrim.com",
+        "name": "RK Krim Mercator",
+        "short_name": "",
+        "country": "SLO",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 1095,
+        "facebook": "",
+        "address": "Center Stozice, Vojkova Cesta 100, 1000 Ljubljana, Slovenia",
+        "logo": "clubs/1095.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 9,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.tertneshandball.no",
+        "name": "Tertnes Bergen",
+        "short_name": "",
+        "country": "NOR",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 4465,
+        "facebook": "",
+        "address": "Tertnesveien 24, 5113 Tertnes, Norway",
+        "logo": "clubs/4465.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 10,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.larvikhk.no/",
+        "name": "Larvik",
+        "short_name": "",
+        "country": "NOR",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 1042,
+        "facebook": "",
+        "address": "L\u00e5gaveien 6, N-3262 Larvik, Norway",
+        "logo": "clubs/Larvik_HK_logo.png",
+        "initials": ""
+    }
+}, {
+    "pk": 11,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.byaasen.no/",
+        "name": "Byasen Trondheim",
+        "short_name": "",
+        "country": "NOR",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 1709,
+        "facebook": "",
+        "address": "Idrettens Hus, 7495 Trondheim, Norway",
+        "logo": "clubs/1709.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 12,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.gyorietokc.hu/",
+        "name": "Gy\u00f6ri Audi ETO KC",
+        "short_name": "",
+        "country": "HUN",
+        "twitter": "",
+        "fans": [3],
+        "ehf_id": 2145,
+        "facebook": "",
+        "address": "Kiskutliget, 92027 Gy\u00f6r, Hungary",
+        "logo": "clubs/2145.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 13,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.pdosalerno.it",
+        "name": "Jomi Salerno",
+        "short_name": "",
+        "country": "ITA",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 1737,
+        "facebook": "",
+        "address": "Via de Jacobis 3, 84127 Salerno, Italy",
+        "logo": "clubs/1737.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 14,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.sercodakdalfsen.nl",
+        "name": "SERCODAK Dalfsen",
+        "short_name": "",
+        "country": "NED",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 14357,
+        "facebook": "",
+        "address": "To: R. Cloo, Ossenkamp 2a, 8024 AE Zwolle, Netherlands",
+        "logo": "clubs/14357.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 15,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.zrkbuducnost.com",
+        "name": "Buducnost",
+        "short_name": "",
+        "country": "MNE",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 1677,
+        "facebook": "",
+        "address": "Ivana Milutinovica B.B., 81000 Podgorica, Montenegro",
+        "logo": "clubs/1677.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 16,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.zrkvardar.mk",
+        "name": "WHC Vardar SCBT",
+        "short_name": "",
+        "country": "MKD",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 1785,
+        "facebook": "",
+        "address": "Preseka 55/10, 1000 Skopje, FYRO Macedonia",
+        "logo": "clubs/1785.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 17,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.balonmanoberabera.com/",
+        "name": "Balonmano Bera Bera",
+        "short_name": "Bera Bera",
+        "country": "ESP",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 1769,
+        "facebook": "",
+        "address": "Travesia Rodil 8, 20013 Donostia/Gipuzkoa, Spain",
+        "logo": "clubs/1769.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 18,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.fleuryloirethandball.com",
+        "name": "Fleury Loiret Handball",
+        "short_name": "",
+        "country": "FRA",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 8649,
+        "facebook": "",
+        "address": "109 Avenue Louis Gallouedec, 45400 Fleury les Aubrais, France",
+        "logo": "clubs/8649.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 19,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.handballerd.hu",
+        "name": "\u00c9RD Handball Club",
+        "short_name": "",
+        "country": "HUN",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 17622,
+        "facebook": "",
+        "address": "Ercsi \u00fat 34., H-2030 \u00c9rd, Hungary",
+        "logo": "clubs/17622.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 20,
+    "model": "data.club",
+    "fields": {
+        "website": "http://kezilabda.fradi.hu",
+        "name": "FTC-Rail Cargo Hungaria",
+        "short_name": "",
+        "country": "HUN",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 1057,
+        "facebook": "",
+        "address": "Kobanyai ut 47/a., 1101 Budapest, Hungary",
+        "logo": "clubs/1057.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 21,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.metz-handball.fr",
+        "name": "Metz Handball",
+        "short_name": "",
+        "country": "FRA",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 1655,
+        "facebook": "",
+        "address": "20 Rue des Mirabelles, 57050 Metz, France",
+        "logo": "clubs/1655.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 22,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.hc-leipzig.de",
+        "name": "HC Leipzig",
+        "short_name": "",
+        "country": "GER",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 2640,
+        "facebook": "",
+        "address": "ARENA Leipzig, Am Sportforum 1, 04105 Leipzig, Germany",
+        "logo": "clubs/2640.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 23,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.thueringer-hc.de",
+        "name": "Th\u00fcringer HC",
+        "short_name": "",
+        "country": "GER",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 13600,
+        "facebook": "",
+        "address": "Mittelh\u00e4user Str. 21, 99089 Erfurt, Germany",
+        "logo": "clubs/13600.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 24,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.teamtvisholstebro.dk",
+        "name": "Team Tvis Holstebro",
+        "short_name": "",
+        "country": "DEN",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 15526,
+        "facebook": "",
+        "address": "Hostrupsvej 27, 7500 Holstebro, Denmark",
+        "logo": "clubs/15526.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 25,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.vhk.dk",
+        "name": "Viborg HK",
+        "short_name": "",
+        "country": "DEN",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 1069,
+        "facebook": "",
+        "address": "Tingvej 7, 2. sal, 8800 Viborg, Denmark",
+        "logo": "clubs/1069.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 26,
+    "model": "data.club",
+    "fields": {
+        "website": "http://hc.bntu.by",
+        "name": "BNTU-BelAZ Minsk Reg.",
+        "short_name": "",
+        "country": "BLR",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 1075,
+        "facebook": "",
+        "address": "B. Khmelnitsky Street 9, Office 70-71, 220013 Minsk, Belarus",
+        "logo": "clubs/1075.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 27,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.rklokomotiva.hr",
+        "name": "HC Lokomotiva Zagreb",
+        "short_name": "",
+        "country": "CRO",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 1685,
+        "facebook": "",
+        "address": "Crnatkova 18, 10000 Zagreb, Croatia",
+        "logo": "clubs/1685.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 28,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.rk-podravka.hr",
+        "name": "HC Podravka Vegeta",
+        "short_name": "",
+        "country": "CRO",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 1072,
+        "facebook": "",
+        "address": "Zeljka Selingera 3A, 48000 Koprivnica, Croatia",
+        "logo": "clubs/1072.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 29,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.fcm-haandbold.dk",
+        "name": "FC Midtjylland",
+        "short_name": "",
+        "country": "DEN",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 1687,
+        "facebook": "",
+        "address": "Stadion Alle 2B, 7430 Ikast, Denmark",
+        "logo": "clubs/1687.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 30,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.uskudar-bld.gov.tr",
+        "name": "\u00dcsk\u00fcdar B.S.K. Dernegi",
+        "short_name": "",
+        "country": "TUR",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 5024,
+        "facebook": "",
+        "address": "Hakimiye Milliye Cad. Koncal, Alisveris Merkezi Kat. 3 No. 107, 81140 \u00dcsk\u00fcdar-Istanbul, Turkey",
+        "logo": "clubs/5024.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 31,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.lugihandboll.se",
+        "name": "Lugi HF",
+        "short_name": "",
+        "country": "SWE",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 15525,
+        "facebook": "",
+        "address": "Klostergardens Idrottsomrade, 222 28 Lund, Sweden",
+        "logo": "clubs/15525.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 32,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.zvezda-handball.ru",
+        "name": "Zvezda Zvenigorod",
+        "short_name": "",
+        "country": "RUS",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 10989,
+        "facebook": "",
+        "address": "Chaykovskogo st. 59/32, 143180 Zvenigorod, Russia",
+        "logo": "clubs/10989.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 33,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.asccorona.ro/",
+        "name": "ASC Corona 2010 Brasov",
+        "short_name": "",
+        "country": "ROU",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 1711,
+        "facebook": "",
+        "address": "B-Dul Garii Nr. 21, 500218 Brasov, Romania",
+        "logo": "clubs/ASC_Corona_2010_Brasov.png",
+        "initials": ""
+    }
+}, {
+    "pk": 34,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.spono.ch",
+        "name": "SPONO Nottwil",
+        "short_name": "",
+        "country": "SUI",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 1099,
+        "facebook": "",
+        "address": "Mellinger Andre, Eichenstra\u00dfe 3, 6203 Sempach Station, Switzerland",
+        "logo": "clubs/1099.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 35,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.zorkjagodina.com",
+        "name": "ZORK Jagodina",
+        "short_name": "",
+        "country": "SRB",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 15507,
+        "facebook": "",
+        "address": "Brace Dirak bb, 35000 Jagodina, Serbia",
+        "logo": "clubs/15507.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 36,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.juvelis.pt",
+        "name": "Juve Lis",
+        "short_name": "",
+        "country": "POR",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 6506,
+        "facebook": "",
+        "address": "Centro Desportivo Juve Lis, Rua da Cooperativa no 65, 2410 256 Sao Romao- Leiria, Portugal",
+        "logo": "clubs/6506.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 37,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.zaglebie.lubin.pl",
+        "name": "KGHM Metraco Zaglebie Lubin",
+        "short_name": "",
+        "country": "POL",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 1999,
+        "facebook": "",
+        "address": "ul.M. Sklodowskiej Curie 98, 59-300 Lubin, Poland",
+        "logo": "clubs/1999.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 38,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.rkmetalurg.mk",
+        "name": "WHC Metalurg",
+        "short_name": "",
+        "country": "MKD",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 14349,
+        "facebook": "",
+        "address": "ul. Jane Lukroski 6, 1000 Skopje, FYRO Macedonia",
+        "logo": "clubs/14349.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 39,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.veszprembarabaskc.hu",
+        "name": "Veszprem Barabas Dunatakarek KC",
+        "short_name": "",
+        "country": "HUN",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 18307,
+        "facebook": "",
+        "address": "T\u00fcz\u00e9r 69., 8200 Veszpr\u00e9m, Hungary",
+        "logo": "clubs/18307.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 40,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.balonmanoguardes.com/",
+        "name": "Mecalia Atletico Guardes",
+        "short_name": "",
+        "country": "ESP",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 18244,
+        "facebook": "",
+        "address": "Sport Hall A Sangrina, Portugal Avenue, 36780 A GUARDA, Spain",
+        "logo": "clubs/18244.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 41,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.bsv-live.de",
+        "name": "Buxtehuder SV",
+        "short_name": "",
+        "country": "GER",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 5276,
+        "facebook": "",
+        "address": "Handball-Marketing Buxtehude Gmb, Viverstra\u00dfe 2, 21614 Buxtehude, Germany",
+        "logo": "clubs/5276.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 42,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.hcodense.dk/",
+        "name": "HC Odense",
+        "short_name": "",
+        "country": "DEN",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 18223,
+        "facebook": "",
+        "address": "Odin Havnepark, Lumbyvej 11 C, 5000 Odense C, Danmark",
+        "logo": "clubs/HC_Odense_Logo.png",
+        "initials": ""
+    }
+}, {
+    "pk": 43,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.handball-korneuburg.at",
+        "name": "Union Korneuburg",
+        "short_name": "",
+        "country": "AUT",
+        "twitter": "",
+        "fans": [3],
+        "ehf_id": 16578,
+        "facebook": "",
+        "address": "Mechtlerstra\u00dfe 10, 2100 Korneuburg, Austria",
+        "logo": "clubs/16578.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 44,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.gorodnichanka.by",
+        "name": "Gorodnichanka",
+        "short_name": "",
+        "country": "BLR",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 6585,
+        "facebook": "",
+        "address": "Budzonogo str. 48A-32, 230023 City of Grodno, Belarus",
+        "logo": "clubs/6585.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 45,
+    "model": "data.club",
+    "fields": {
+        "website": "",
+        "name": "Stabaek Handball",
+        "short_name": "",
+        "country": "NOR",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 17598,
+        "facebook": "",
+        "address": "Stab\u00e6k H\u00e5ndball, Haukeveien 12, 1357 Bekkestua, Norway",
+        "logo": "clubs/17598.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 46,
+    "model": "data.club",
+    "fields": {
+        "website": "",
+        "name": "H.C. Holon",
+        "short_name": "",
+        "country": "ISR",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 1053,
+        "facebook": "",
+        "address": "PO Box 5222, 58150 Holon, Israel",
+        "logo": "clubs/1053.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 47,
+    "model": "data.club",
+    "fields": {
+        "website": "",
+        "name": "O.F.N. Ionias",
+        "short_name": "",
+        "country": "GRE",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 4470,
+        "facebook": "",
+        "address": "Mesologiou 40, 14231 N. Ionia - Athen, Greece",
+        "logo": "clubs/4470.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 48,
+    "model": "data.club",
+    "fields": {
+        "website": "",
+        "name": "Cercle Dijon Bourgogne",
+        "short_name": "",
+        "country": "FRA",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 4970,
+        "facebook": "",
+        "address": "Gymnase des Poussots, 9 rue Ernest Champeaux, 21000 Dijon, France",
+        "logo": "clubs/4970.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 49,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.lcbruehl.ch",
+        "name": "LC Br\u00fchl Handball",
+        "short_name": "",
+        "country": "SUI",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 5020,
+        "facebook": "",
+        "address": "Postfach 1228, 9001 St. Gallen, Switzerland",
+        "logo": "clubs/5020.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 50,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.hc-karpaty.org",
+        "name": "HC Karpaty",
+        "short_name": "",
+        "country": "UKR",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 3285,
+        "facebook": "",
+        "address": "Zankovetskaya Str. 5, 88000 Uzhgorod, Ukraine",
+        "logo": "clubs/3285.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 51,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.skuruik.se/handboll",
+        "name": "Skuru IK",
+        "short_name": "",
+        "country": "SWE",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 3804,
+        "facebook": "",
+        "address": "P.O. Box 4013, 13 104 Nacka, Sweden",
+        "logo": "clubs/3804.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 52,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.handball.ru",
+        "name": "Lada",
+        "short_name": "",
+        "country": "RUS",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 5880,
+        "facebook": "",
+        "address": "Julia Visner, Primorsky boulvar 49,, 445860 Togliatti, Russia",
+        "logo": "clubs/5880.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 53,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.zrkradnicki.org",
+        "name": "WHC Radnicki Kragujevac",
+        "short_name": "",
+        "country": "SRB",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 17623,
+        "facebook": "",
+        "address": "Grada Sirena 15, 34000 Kragujevac, Serbia",
+        "logo": "clubs/17623.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 54,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.dhwa.be",
+        "name": "DHW Antwerpen",
+        "short_name": "",
+        "country": "BEL",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 10250,
+        "facebook": "",
+        "address": "Boterlaarbaan 18, 2970 Schilde, Belgium",
+        "logo": "clubs/10250.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 55,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.hk-dinamo.ru",
+        "name": "Dinamo Volgograd",
+        "short_name": "",
+        "country": "RUS",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 3799,
+        "facebook": "",
+        "address": "Novorossiskaya St. 2a, off. 5, 4000131 Volgograd, Russia",
+        "logo": "clubs/3799.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 56,
+    "model": "data.club",
+    "fields": {
+        "website": "",
+        "name": "Cankaya Bel. Anka Spor K.",
+        "short_name": "",
+        "country": "TUR",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 11917,
+        "facebook": "",
+        "address": "8.cad.1330.sokak 16/11 asag\u0131 ove, Ovecler/Ankara, Turkey",
+        "logo": "clubs/11917.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 57,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.rokomet-zagorje.si",
+        "name": "RK GEN-I  Zagorje",
+        "short_name": "",
+        "country": "SLO",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 14383,
+        "facebook": "",
+        "address": "RK Zagorje, C. 9 avgusta 44, 1410 Zagorje ob Savi, Slovenia",
+        "logo": "clubs/14383.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 58,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.iuventa-zhk.chemkostavarena.sk",
+        "name": "IUVENTA Michalovce",
+        "short_name": "",
+        "country": "SVK",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 7023,
+        "facebook": "",
+        "address": "Karola Kuzm\u00e1nyho 6225/24, 07101 Michalovce, Slovakia",
+        "logo": "clubs/7023.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 59,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.astrahanochka.ru",
+        "name": "Astrakhanochka",
+        "short_name": "",
+        "country": "RUS",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 6970,
+        "facebook": "",
+        "address": "ul.N. Ostrovskogo 147, 414022 Astrakhan, Russia",
+        "logo": "clubs/6970.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 60,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.alavarium.pt",
+        "name": "Alavarium / Love Tiles",
+        "short_name": "",
+        "country": "POR",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 16569,
+        "facebook": "",
+        "address": "Rua Jaime Moniz, 3810-123 Aveiro, Portugal",
+        "logo": "clubs/16569.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 61,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.uhandbal.ro",
+        "name": "U Jolidon Cluj",
+        "short_name": "",
+        "country": "ROU",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 4490,
+        "facebook": "",
+        "address": "Str. Cardinal Iuliu Hossu nr. 23, 400029 Cluj Napoca, Rumania",
+        "logo": "clubs/4490.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 62,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.hczalau.ro",
+        "name": "H.C. Zalau",
+        "short_name": "",
+        "country": "ROU",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 1787,
+        "facebook": "",
+        "address": "Str. Unirii No. 7, Zalau, Romania",
+        "logo": "clubs/1787.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 63,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.energaazskoszalin.pl",
+        "name": "Energa AZS Koszalin",
+        "short_name": "",
+        "country": "POL",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 13699,
+        "facebook": "",
+        "address": "Ul Sniadeckich 4, 75-453 Koszalin, Poland",
+        "logo": "",
+        "initials": ""
+    }
+}, {
+    "pk": 64,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.lhk.no",
+        "name": "Levanger HK",
+        "short_name": "",
+        "country": "NOR",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 11768,
+        "facebook": "",
+        "address": "Postboks 385, 7601 Levanger, Norway",
+        "logo": "clubs/11768.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 65,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.colegio-j-barros.com",
+        "name": "ADA Colegio Joao de Barros",
+        "short_name": "",
+        "country": "POR",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 13604,
+        "facebook": "",
+        "address": "Rua do Covao, 3105-236 Meirinhas/Pombal, Portugal",
+        "logo": "clubs/13604.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 66,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.rkprilep.com.mk",
+        "name": "HC Zito Prilep",
+        "short_name": "",
+        "country": "MKD",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 14348,
+        "facebook": "",
+        "address": "Rampo Lefkata  18, 7500 Prilep, FYR Macedonia",
+        "logo": "clubs/14348.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 67,
+    "model": "data.club",
+    "fields": {
+        "website": "",
+        "name": "ACME ZALGIRIS Kaunas",
+        "short_name": "",
+        "country": "LTU",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 17626,
+        "facebook": "",
+        "address": "HC ZALGIRIS Kaunas, Ausros  42, LT-44221 Kaunas, Lithuania",
+        "logo": "clubs/17626.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 68,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.fram.is",
+        "name": "Fram",
+        "short_name": "",
+        "country": "ISL",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 1699,
+        "facebook": "",
+        "address": "Safamyri 26, 108 Reykjavik, Iceland",
+        "logo": "clubs/1699.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 69,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.khf-kastrioti.com",
+        "name": "KHF Kastrioti",
+        "short_name": "",
+        "country": "KOS",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 15517,
+        "facebook": "",
+        "address": "Sp Hall Bill Clinton, Str. Prizren Street, 70 000 Ferizaj, Kosovo",
+        "logo": "clubs/15517.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 70,
+    "model": "data.club",
+    "fields": {
+        "website": "",
+        "name": "Bnei Hertzeliya",
+        "short_name": "",
+        "country": "ISR",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 10967,
+        "facebook": "",
+        "address": "PO Box 5854, 46100 Hertzliya, Israel",
+        "logo": "clubs/10967.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 71,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.hbd.lu",
+        "name": "HB Dudelange",
+        "short_name": "",
+        "country": "LUX",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 4479,
+        "facebook": "",
+        "address": "B.P. 10, 3401 Dudelange, Luxembourg",
+        "logo": "",
+        "initials": ""
+    }
+}, {
+    "pk": 72,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.werks-elfen.de",
+        "name": "TSV Bayer 04 Leverkusen",
+        "short_name": "",
+        "country": "GER",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 5968,
+        "facebook": "",
+        "address": "Handballabteilung, Kalkstra\u00dfe 46, 51377 Leverkusen, Germany",
+        "logo": "clubs/5968.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 73,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.fkc.hu",
+        "name": "Feh\u00e9rv\u00e1r KC",
+        "short_name": "",
+        "country": "HUN",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 18253,
+        "facebook": "",
+        "address": "Verseci 1-15, 8000 Sz\u00e9kesfeh\u00e9rv\u00e1r, Hungary",
+        "logo": "clubs/18253.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 74,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.voc-handbal.nl",
+        "name": "Succes Schoonmaak / VOC Amsterdam",
+        "short_name": "",
+        "country": "NED",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 5211,
+        "facebook": "",
+        "address": "Nachtegaalstraat 64, 1021 GC Amsterdam, Netherlands",
+        "logo": "clubs/5211.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 75,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.ormipatras.gr",
+        "name": "A.C. Loux Patras",
+        "short_name": "",
+        "country": "GRE",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 6104,
+        "facebook": "",
+        "address": "41, Empeirikou str., 26335 Patras, Greece",
+        "logo": "clubs/6104.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 76,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.olympialondonhandball.co.uk",
+        "name": "Olympia HC - London",
+        "short_name": "",
+        "country": "GBR",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 16554,
+        "facebook": "",
+        "address": "Flat 4, 32 Amberely Court, Stanl, SW198RF London, England",
+        "logo": "clubs/16554.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 77,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.paokhandball.gr",
+        "name": "A.C. PAOK",
+        "short_name": "",
+        "country": "GRE",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 16556,
+        "facebook": "",
+        "address": "Mikras Aslas 1 Toumpa Stadium, 54351 Thessaloniki, Greece",
+        "logo": "clubs/16556.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 78,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.cbmelche.es",
+        "name": "Elche C.F.-Mustang",
+        "short_name": "",
+        "country": "ESP",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 14341,
+        "facebook": "",
+        "address": "c/ Victoria Kent, S/N; Polidepor, 03206 Elche, Spain",
+        "logo": "clubs/14341.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 79,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.balonmanoalcobendas.org/",
+        "name": "Helvetia BM Alcobendas",
+        "short_name": "Alcobendas",
+        "country": "ESP",
+        "twitter": "https://twitter.com/bmalcobendas",
+        "fans": [],
+        "ehf_id": 17618,
+        "facebook": "http://www.facebook.com/BM.Alcobendas",
+        "address": "Avenida Doctor Severo Ochoa 1, 28100 Alcobendas-Madrid, Spain",
+        "logo": "clubs/alcobendas.png",
+        "initials": ""
+    }
+}, {
+    "pk": 80,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.vacinkse.hu",
+        "name": "Ipress Center-Vac",
+        "short_name": "",
+        "country": "HUN",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 6997,
+        "facebook": "",
+        "address": "B\u00e1n M\u00e1rton  str. 3, 2600 V\u00e1c, Hungary",
+        "logo": "clubs/6997.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 81,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.fa-frauen.de",
+        "name": "Frisch Auf G\u00f6ppingen",
+        "short_name": "",
+        "country": "GER",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 14317,
+        "facebook": "",
+        "address": "Hohenstaufenstra\u00dfe 142, 73033 G\u00f6ppingen, Germany",
+        "logo": "clubs/14317.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 82,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.teamesbjerg.dk",
+        "name": "Team Esbjerg",
+        "short_name": "",
+        "country": "DEN",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 15527,
+        "facebook": "",
+        "address": "Gammel Vardevej 82, 6700 Esbjerg, Denmark",
+        "logo": "clubs/15527.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 83,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.balonmanoremudas.com",
+        "name": "Rocasa Ace Gran Canaria",
+        "short_name": "",
+        "country": "ESP",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 5252,
+        "facebook": "",
+        "address": "c/ Mesonero Romano S/N, Las Remudas, 35 200 Gran Canaria, Spain",
+        "logo": "clubs/5252.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 84,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.ghc.by",
+        "name": "HC Gomel",
+        "short_name": "",
+        "country": "BLR",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 17596,
+        "facebook": "",
+        "address": "st. 50 let Gomselmasha, 12, 246018 Gomel, Belarus",
+        "logo": "clubs/17596.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 85,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.etar64.org",
+        "name": "HSC \"Etar-64\" Veliko Tarnovo",
+        "short_name": "",
+        "country": "BUL",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 3818,
+        "facebook": "",
+        "address": "Stadion Ivaylo, 5000 Veliko Tarnovo, Bulgaria",
+        "logo": "clubs/3818.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 86,
+    "model": "data.club",
+    "fields": {
+        "website": "",
+        "name": "ZRK Samobor",
+        "short_name": "",
+        "country": "CRO",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 3743,
+        "facebook": "",
+        "address": "Ivana Perkovca 90, 10 430 Samobor, Croatia",
+        "logo": "clubs/3743.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 87,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.dhk-banikmost.cz",
+        "name": "DHK Banik Most",
+        "short_name": "",
+        "country": "CZE",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 16553,
+        "facebook": "",
+        "address": "Tr. Budovatelu 112/7, 43401 Most, Czech Republic",
+        "logo": "clubs/16553.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 88,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.hzrkzrinjski.info",
+        "name": "ZRK \"Zrinski\" Mostar",
+        "short_name": "",
+        "country": "BIH",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 6486,
+        "facebook": "",
+        "address": "S. Radica 49, 88000 Mostar, Bosnia Herzegovina",
+        "logo": "clubs/6486.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 89,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.feminavise.be",
+        "name": "Handball Femina Vise",
+        "short_name": "",
+        "country": "BEL",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 3947,
+        "facebook": "",
+        "address": "Bernadette Vandenbergh, 14 Rue Jean Vercheval, 4040 Herstal, Belgium",
+        "logo": "",
+        "initials": ""
+    }
+}, {
+    "pk": 90,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.kbhbold.dk/",
+        "name": "Kobenhavn Handbold",
+        "short_name": "",
+        "country": "DEN",
+        "twitter": "https://twitter.com/KBHBolddk",
+        "fans": [],
+        "ehf_id": 5215,
+        "facebook": "https://www.facebook.com/KBHBolddk",
+        "address": "Islands Brygge 79C 4th, Kontor 8501, 2300 K\u00f8benhavn S, Denmark",
+        "logo": "clubs/5215.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 91,
+    "model": "data.club",
+    "fields": {
+        "website": "http://abusport.handball.az",
+        "name": "ABU Baku",
+        "short_name": "",
+        "country": "AZE",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 5907,
+        "facebook": "",
+        "address": "K. Rahimov Str. 15, 1072 Baku, Azerbaijan",
+        "logo": "clubs/5907.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 92,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.baselregio.ch",
+        "name": "SG Basel Regio Handball",
+        "short_name": "",
+        "country": "SUI",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 18286,
+        "facebook": "",
+        "address": "Remy Geiser, Morgartenring 126, 4054 Basel, Switzerland",
+        "logo": "clubs/18286.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 93,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.h65.se",
+        "name": "H 65 H\u00f6\u00f6r",
+        "short_name": "",
+        "country": "SWE",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 17632,
+        "facebook": "",
+        "address": "Sverige",
+        "logo": "clubs/17632.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 94,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.zrknaisa.org.rs",
+        "name": "ZRK Naisa-Nis",
+        "short_name": "",
+        "country": "SRB",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 4496,
+        "facebook": "",
+        "address": "Hala Cair, IX Brigade bb, 18000 Nis, Serbia",
+        "logo": "clubs/4496.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 95,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.galychanka.com",
+        "name": "PO SC Galytchanka-Lviv",
+        "short_name": "",
+        "country": "UKR",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 1801,
+        "facebook": "",
+        "address": "Zelena str., 147, 79035 Lviv, Ukraine",
+        "logo": "clubs/1801.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 96,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.ardesengsk.com",
+        "name": "Ardesen GSK",
+        "short_name": "",
+        "country": "TUR",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 18294,
+        "facebook": "",
+        "address": "Ardesen H\u00fck\u00fcmet Konag\u0131, Atat\u00fcrk, 53400, Turkey",
+        "logo": "clubs/18294.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 97,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.maltepebelediyespor.org.tr",
+        "name": "Istanbul Maltepe Bel.GSK",
+        "short_name": "",
+        "country": "TUR",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 18297,
+        "facebook": "",
+        "address": "maltepe, idealtepe mh. m\u0131zrak sokak no: 4, istanbul, T\u00fcrkiye",
+        "logo": "clubs/18297.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 98,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.westfrieslandsew.nl",
+        "name": "Westfriesland SEW",
+        "short_name": "",
+        "country": "NED",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 3718,
+        "facebook": "",
+        "address": "Dorpsstraat 38, 1688 CG Nibbixwoud, Netherlands",
+        "logo": "clubs/3718.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 99,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.vistal-laczpol-gdynia.pl",
+        "name": "Vistal Gdynia",
+        "short_name": "",
+        "country": "POL",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 14355,
+        "facebook": "",
+        "address": "Ul. Kazimierza Gorskiego 10, 81-302 Gdynia, Poland",
+        "logo": "clubs/14355.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 100,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.yellow-winterthur.ch",
+        "name": "Yellow Winterthur",
+        "short_name": "",
+        "country": "SUI",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 15515,
+        "facebook": "",
+        "address": "PO Box 1904, 8401 Winterthur, Switzerland",
+        "logo": "clubs/15515.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 101,
+    "model": "data.club",
+    "fields": {
+        "website": "http://dnepryanka.com.ua/",
+        "name": "HC Dnepryanka Kherson",
+        "short_name": "",
+        "country": "UKR",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 6608,
+        "facebook": "",
+        "address": "str. Petrenko. 5, 73 000 Kherson, Ukraine",
+        "logo": "clubs/6608.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 102,
+    "model": "data.club",
+    "fields": {
+        "website": "",
+        "name": "JAC Alcanena",
+        "short_name": "",
+        "country": "POR",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 18274,
+        "facebook": "",
+        "address": "JAC Alcanena - Marco Santos, D.Dinis, Lote 1, N\u00ba14, 2380-103 Alcanena, Portugal",
+        "logo": "clubs/18274.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 103,
+    "model": "data.club",
+    "fields": {
+        "website": "http://andebol.colgaia.pt",
+        "name": "Colegio de Gaia",
+        "short_name": "",
+        "country": "POR",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 2153,
+        "facebook": "",
+        "address": "Rua Padua Correia 166, 4400-238 Vila Nova de Gaia, Portugal",
+        "logo": "clubs/2153.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 104,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.rkbmsmilenium.com",
+        "name": "HC BMS Milenium",
+        "short_name": "",
+        "country": "SRB",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 18280,
+        "facebook": "",
+        "address": "Kneza Milosa 82/III, 11000 Beograd, Serbia",
+        "logo": "clubs/18280.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 105,
+    "model": "data.club",
+    "fields": {
+        "website": "",
+        "name": "Danilovgrad",
+        "short_name": "",
+        "country": "MNE",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 18263,
+        "facebook": "",
+        "address": "Baja Sekulica 1, 81410 Danilovgrad, Montenegro",
+        "logo": "",
+        "initials": ""
+    }
+}, {
+    "pk": 106,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.issyparishand.com",
+        "name": "Issy Paris Hand",
+        "short_name": "",
+        "country": "FRA",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 1729,
+        "facebook": "",
+        "address": "5 Avenue Jean Bouin, 92130 Issy les Moulineaux, France",
+        "logo": "clubs/1729.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 107,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.khfprishtina.com",
+        "name": "KHF Prishtina",
+        "short_name": "",
+        "country": "KOS",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 11848,
+        "facebook": "",
+        "address": "Pallati I Sportit de Rinise, Luan Haradinaj n.n., 10000 Pristina, Kosovo",
+        "logo": "clubs/11848.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 108,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.umbb-handball.fr",
+        "name": "Union Mios Biganos-Begles",
+        "short_name": "",
+        "country": "FRA",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 3781,
+        "facebook": "",
+        "address": "Complexe Delphin Impasse Delphin, 33 130 BEGLES, France",
+        "logo": "clubs/3781.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 109,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.hvquintus.nl",
+        "name": "Virto / Quintus",
+        "short_name": "",
+        "country": "NED",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 6399,
+        "facebook": "",
+        "address": "R. van Leeuwen, Dr. Ter Haarlaan 4, 2685 RX Poeldijk, Netherlands",
+        "logo": "clubs/6399.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 110,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.megas-sport.gr",
+        "name": "GAS Megas Alexandros Giannitson",
+        "short_name": "",
+        "country": "GRE",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 11707,
+        "facebook": "",
+        "address": "3, M. Alexandrou, 58100 Giannitsa, Greece",
+        "logo": "clubs/11707.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 111,
+    "model": "data.club",
+    "fields": {
+        "website": "",
+        "name": "ZRK Krivaja",
+        "short_name": "",
+        "country": "BIH",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 18205,
+        "facebook": "",
+        "address": "Stjepana Radica  b.b, Zavidovic, Bosnia Herzegovina",
+        "logo": "clubs/krivaja.png",
+        "initials": ""
+    }
+}, {
+    "pk": 112,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.dhcslavia.cz",
+        "name": "DHC Slavia Praha",
+        "short_name": "",
+        "country": "CZE",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 1070,
+        "facebook": "",
+        "address": "Vladivostocka 10/1460, 10005 Praha 10, Czechia",
+        "logo": "clubs/1070.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 113,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.hazenaporuba.cz",
+        "name": "DHC Sokol Poruba",
+        "short_name": "",
+        "country": "CZE",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 17616,
+        "facebook": "",
+        "address": "Chopinova 576/1, 70200 Ostrava, Czech Republic",
+        "logo": "clubs/17616.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 114,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.rk-zelina.hr",
+        "name": "RK Zelina",
+        "short_name": "",
+        "country": "CRO",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 16551,
+        "facebook": "",
+        "address": "Trg kardinala Stepinca 2, 10380 Sveti Ivan Zelina, Croatia",
+        "logo": "clubs/16551.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 115,
+    "model": "data.club",
+    "fields": {
+        "website": "http://www.anagennisi-artas.gr/jml",
+        "name": "FETA EPIRUS ANAGENNISI ARTAS",
+        "short_name": "",
+        "country": "GRE",
+        "twitter": "",
+        "fans": [],
+        "ehf_id": 1659,
+        "facebook": "",
+        "address": "V.PYRROU 17, 47100 Arta, Greece",
+        "logo": "clubs/1659.jpg",
+        "initials": ""
+    }
+}, {
+    "pk": 116,
+    "model": "data.club",
+    "fields": {
+        "website": "",
+        "name": "Test Club HC",
+        "short_name": "",
+        "country": "AUT",
+        "twitter": "",
+        "fans": [3],
+        "ehf_id": 0,
+        "facebook": "",
+        "address": "",
+        "logo": "",
+        "initials": ""
+    }
+}]
