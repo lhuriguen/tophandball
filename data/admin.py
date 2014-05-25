@@ -184,6 +184,13 @@ class GroupAdmin(admin.ModelAdmin):
     list_filter = ['stage__comp_season']
 
 
+class MatchTeamStatsAdmin(admin.ModelAdmin):
+    inlines = [MatchPlayerStatsInline]
+    list_display = ['club', 'match', 'halftime_score', 'finaltime_score']
+    list_filter = ['match__match_datetime', 'match__stage__comp_season']
+    search_fields = ['club__name']
+
+
 admin.site.register(Season)
 admin.site.register(Club, ClubAdmin)
 admin.site.register(Player, PlayerAdmin)
@@ -196,4 +203,4 @@ admin.site.register(Match, MatchAdmin)
 admin.site.register(Referee)
 admin.site.register(Delegate)
 admin.site.register(Country)
-admin.site.register(MatchPlayerStats)
+admin.site.register(MatchTeamStats, MatchTeamStatsAdmin)

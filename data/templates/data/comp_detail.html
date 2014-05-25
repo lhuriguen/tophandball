@@ -2,7 +2,102 @@
 {% block title %}Competition: {{ competition.name }}{% endblock %}
 {% block active_comp %}active{% endblock %}
 {% block content %}
-    <div class="page-header">
-       <h1>{{ competition.name }} {% if competition.country %}<small>{{ competition.country }}</small>{% endif %}</h1>
+
+<div id="header-box">
+    <h1><i class="fa fa-trophy text-primary"></i> {{ competition.name }} {% if competition.country %}<small>{{ competition.country }}</small>{% endif %} - {{ comp_season.season.name }}</h1>
+    <div class="button-bar">
+        {% block under_nav %}
+        {% endblock %}
     </div>
+</div>
+<div id="sub-nav">
+    <ul class="nav nav-tabs">
+        <li class="{% block active_info %}{% endblock %}"><a href="{{ competition.get_absolute_url }}">Overview</a></li>
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                Rounds <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                {% for st in comp_season.stage_set.all %}
+                    <li><a href="#{{ st.short_name }}">{{ st.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </li>
+        <li class=""><a href="#">Scorers</a></li>
+        <li class=""><a href="#">Archive</a></li>
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+              Seasons <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+            {% for cs in competition.competitionseason_set.all %}
+                <li><a href="?s={{ cs.season.year_to }}">{{ cs.season.name }}</a></li>
+            {% endfor %}
+            </ul>
+        </li>
+    </ul>
+</div>
+<h3>Information</h3>
+<ul>
+    <li>Name: {{ competition.name }}</li>
+    <li>Short name: {{ competition.short_name }}</li>
+    <li>Website: {{ competition.website }}</li>
+    <li>Country: {{ competition.country }}</li>
+    <li>International: {{ competition.is_international }}</li>
+    <li>Level: {{ competition.level }}</li>
+</ul>
+<h3>Season {{ comp_season.season.name }}</h3>
+    {% for st in comp_season.stage_set.all %}
+    <h4><b>{{ st.name }}</b>, {{ st.short_name }}, {{ st.order }}, {{ st.is_qualification }}</h4>
+    <div class="row">
+        {% for g in st.group_set.all %}
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading"><b>{{ g.name }}</b></div>
+                {% if g.is_single %}
+                <ul class="list-group">
+                    {% for gt in g.grouptable_set.all %}
+                    <li class="list-group-item">{{ gt.position }}, {{ gt.team.name }} - {{ gt.num_matches }}, {{ gt.wins }}, {{ gt.draws }}, {{ gt.losses }}, {{ gt.goals_for.0 }}, {{ gt.goals_against.0 }}, {{ gt.points }}</li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Team</th>
+                            <th>M</th>
+                            <th>W</th>
+                            <th>D</th>
+                            <th>L</th>
+                            <th>GF</th>
+                            <th>GA</th>
+                            <th>P</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for gt in g.grouptable_set.all %}
+                        <tr>
+                            <td>{{ gt.position }}</td>
+                            <td><a href="{{ gt.team.get_absolute_url }}">{{ gt.team.name }}</a></td>
+                            <td>{{ gt.num_matches }}</td>
+                            <td>{{ gt.wins.0 }}</td>
+                            <td>{{ gt.draws.0 }}</td>
+                            <td>{{ gt.losses.0 }}</td>
+                            <td>{{ gt.goals_for.0 }}</td>
+                            <td>{{ gt.goals_against.0 }}</td>
+                            <td>{{ gt.points }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+
 {% endblock %}

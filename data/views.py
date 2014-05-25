@@ -1,4 +1,3 @@
-import json
 from datetime import datetime
 
 from django.shortcuts import render, get_object_or_404
@@ -6,6 +5,7 @@ from django.views import generic
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 from data.models import Club, Player, Competition, Season
 
@@ -28,7 +28,8 @@ class ClubDetailView(generic.DetailView):
         self.club = get_object_or_404(Club, pk=self.kwargs['pk'])
         # Add in the fan status
         if self.request.user.is_authenticated():
-            is_fan = self.request.user.fav_clubs.filter(id=self.club.id).exists()
+            is_fan = self.request.user.fav_clubs.filter(
+                id=self.club.id).exists()
             context['fan'] = is_fan
         else:
             context['fan'] = False
@@ -49,6 +50,10 @@ class ClubUpdateView(generic.edit.UpdateView):
     model = Club
     fields = ['name', 'short_name']
     template_name_suffix = '_update_form'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ClubUpdateView, self).dispatch(*args, **kwargs)
 
 
 class ClubMatchView(generic.ListView):
@@ -80,15 +85,11 @@ def club_love(request, club_id):
             c.fans.add(request.user)
         elif choice == 'unfollow':
             c.fans.remove(request.user)
-        # Handle view with or without AJAX
-        if request.is_ajax():
-            new_count = c.fans.count()
-            return HttpResponse(json.dumps({'fan_count': new_count}), mimetype="application/json")
-        else:
-            # Always return an HttpResponseRedirect after successfully dealing
-            # with POST data. This prevents data from being posted twice if a
-            # user hits the Back button.
-            return HttpResponseRedirect(reverse('data:club_detail', kwargs={'pk': c.id}))
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return HttpResponseRedirect(
+            reverse('data:club_detail', kwargs={'pk': c.id}))
 
 
 class PlayerIndexView(generic.ListView):
@@ -116,6 +117,19 @@ class CompIndexView(generic.ListView):
 class CompDetailView(generic.DetailView):
     model = Competition
     template_name = 'data/comp_detail.html'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(CompDetailView, self).get_context_data(**kwargs)
+        self.competition = get_object_or_404(Competition, pk=self.kwargs['pk'])
+        # Prepare context data for latest or selected season
+        year = datetime.now().year
+        if 's' in self.request.GET:
+            str_year = self.request.GET['s']
+            if str_year.isdigit():
+                year = int(str_year)
+        context['comp_season'] = self.competition.get_season_or_latest(year)
+        return context
 
 
 def index(request):

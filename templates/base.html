@@ -9,10 +9,10 @@
     <title>TopHandball - {% block title %}{% endblock %}</title>
     {% block extra_head %} {% endblock %}
     <!-- Bootstrap -->
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
     <link href="{% static "css/theme.css" %}" rel="stylesheet">
     <link href="{% static "css/bootstrap-social.css" %}" rel="stylesheet">
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{% static "css/font-awesome.min.css" %}" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -71,9 +71,8 @@
     </div>
     
     <!-- Begin page content -->
-    <div id="content" >
-      <div class="container">
-      {% if messages %}
+    <div class="container">
+    {% if messages %}
       <div>
           <strong>Messages:</strong>
           <ul>
@@ -82,15 +81,14 @@
               {% endfor %}
           </ul>
       </div>
-      {% endif %}
-      {% block content %}
-      {% endblock %}
-      </div>
+    {% endif %}
+    {% block content %}
+    {% endblock %}
     </div>
 
     <div id="footer">
       <div class="container">
-        <p class="text-muted">&copy; 2014 TopHandball. <a href="#">Back to top</a></p>
+        <p class="text-muted"><small>TopHandball &copy; Leticia Hernández Urigüen. <a href="#">Back to top</a></small></p>
       </div>
     </div>
     <!-- Bootstrap core JavaScript
@@ -98,7 +96,8 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <!-- <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script> -->
+    <script src="{% static "js/bootstrap.min.js" %}"></script>
     {% block extra_script %}{% endblock %}
   </body>
 </html>

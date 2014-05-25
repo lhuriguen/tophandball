@@ -396,6 +396,17 @@ class Competition(models.Model):
     admin_thumbnail.short_description = 'Logo preview'
     admin_thumbnail.allow_tags = True
 
+    def get_season_or_latest(self, year=None):
+        if not year:
+            year = datetime.datetime.now().year
+        cs = self.competitionseason_set.filter(season__year_to=year)
+        if not cs:
+            cs = self.competitionseason_set.order_by(
+                '-season__year_to')
+        if cs:
+            return cs[0]
+        return None
+
 
 class CompetitionSeason(models.Model):
     competition = models.ForeignKey(Competition)
@@ -424,6 +435,9 @@ class Stage(models.Model):
     def __unicode__(self):
         return u'%s %s. %s' % (self.comp_season, self.order, self.name)
 
+    class Meta:
+        ordering = ['order']
+
 
 class Group(models.Model):
     stage = models.ForeignKey(Stage)
@@ -434,6 +448,9 @@ class Group(models.Model):
 
     def __unicode__(self):
         return u'%s - %s' % (self.stage, self.name)
+
+    class Meta:
+        ordering = ['order']
 
 
 class GroupTable(models.Model):
@@ -448,6 +465,7 @@ class GroupTable(models.Model):
 
     class Meta:
         unique_together = ('group', 'team')
+        ordering = ['position']
 
     def query(self):
         return Q(home_team=self.team) | Q(away_team=self.team)
@@ -495,7 +513,7 @@ class GroupTable(models.Model):
         away = self.team.away_matches.filter(
             stage=self.group.stage).aggregate(
             for_away=Sum('score_away'))['for_away']
-        total = home + away
+        total = int(home or 0) + int(away or 0)
         return (total, home, away)
 
     @property
@@ -506,7 +524,7 @@ class GroupTable(models.Model):
         away = self.team.away_matches.filter(
             stage=self.group.stage).aggregate(
             against_away=Sum('score_home'))['against_away']
-        total = home + away
+        total = int(home or 0) + int(away or 0)
         return (total, home, away)
 
     @property
