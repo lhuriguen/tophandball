@@ -7,12 +7,12 @@
         {% if fan %}
             <input type="hidden" name="choice" id="choice" value="unfollow" />
             <button id="submit_follow" type="submit" class="btn btn-default btn-sm">
-                <span id="icon" class="unfollow"></span> Unfollow <small>({{ club.fans.count }} fans)</small>
+                <span id="icon" class="unfollow"></span> Unfollow <small>({{ fan_count }} fans)</small>
             </button>
         {% else %}
             <input type="hidden" name="choice" id="choice" value="follow" />
             <button id="submit_follow" type="submit" class="btn btn-default btn-sm">
-                <span id="icon" class="follow"></span> Follow <small>({{ club.fans.count }} fans)</small>
+                <span id="icon" class="follow"></span> Follow <small>({{ fan_count }} fans)</small>
             </button>
         {% endif %}
     </form>
@@ -20,116 +20,88 @@
 
 {% block specific %}
 <div class="row">
-    <div class="col-md-10">
-        <div class="row" id="info">
-            <div class="col-md-4">
-                <strong>Also known as</strong>
-                <ul class="list-unstyled">
+    <div class="col-md-3">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <small>
+                    <strong>Country: </strong> {{ club.country }}<br>
+                    <strong>Short name: </strong> {{ club.short_name }}<br>
+                    <strong>Initials: </strong> {{ club.initials }}<br>
+                    <hr>
+                    <strong>Website: </strong> {{ club.website|urlize }}<br>
+                    <strong>Twitter: </strong> {{ club.twitter|urlize }}<br>
+                    <strong>Facebook: </strong> {{ club.facebook|urlize }}<br>
+                    <hr>
+                    <strong>Address:</strong><br>
+                    {{ club.address }}
+                    <hr>
+                    <strong>Also known as:</strong>
+                    <ul class="list-unstyled">
                     {% for clubname in club.clubname_set.all %}
-                    <li>{{ clubname.season }} - {{ clubname.name }}</li>
+                        <li>{{ clubname.season }} - {{ clubname.name }}</li>
                     {% empty %}
-                    <li>No alternative names found.</li>
+                        <li>No alternative names found.</li>
                     {% endfor %}
-                </ul>
-            </div>
-            <div class="col-md-4">
-                <address>
-                    <strong>Address</strong><br>
-                    {% for line in club.address_lines %}
-                    {{ line }}<br>
-                    {% empty %}
-                    Address unknown.
-                    {% endfor %}
-                </address>
-                <address>
-                    <strong>Online</strong><br>
-                    <a href="{{ club.website }}">{{ club.website }}</a><br>
-                    <a href="{{ club.twitter }}">{{ club.twitter }}</a><br>
-                    <a href="{{ club.facebook }}">{{ club.facebook }}</a>
-                </address>
-            </div>
-            <div class="col-md-4">
-                <div id="map_canvas" class="thumbnail">{% if not club.address_lines %}Sorry, cannot show map without an address.{% endif %}</div>
-            </div>
-        </div> <!-- end row info -->
-        <img class="center-block" style="margin-bottom: 10px;" src="http://placehold.it/728x90">
-        <div class="row">
-            <div class="col-md-8">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{{ club.name }}'s Matches</h3>
-                    </div>
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Season</th>
-                                <th>Comp.</th>
-                                <th>Stage</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>2013/14</td>
-                                <td>EHF Champions League</td>
-                                <td><a href="#">Main Round</a></td>
-                            </tr>
-                            <tr>
-                                <td>2013/14</td>
-                                <td>EHF Cup Winners' Cup</td>
-                                <td><a href="#">Semifinals</a></td>
-                            </tr>
-                            <tr>
-                                <td>2012/13</td>
-                                <td>EHF Champions League</td>
-                                <td><a href="#">Main Round</a></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Related Clubs</h3>
-                    </div>
-                    <div class="panel-body">
-                        <ul class="media-list">
-                            <li class="media">
-                                <a class="pull-left" href="#"><img class="media-object" src="http://placehold.it/64x64" alt="..."></a>
-                                <div class="media-body">
-                                    <h4 class="media-heading">Media heading</h4>
-                                    lalalala
-                                </div>
-                            </li>
-                            <li class="media">
-                                <a class="pull-left" href="#"><img class="media-object" src="http://placehold.it/64x64" alt="..."></a>
-                                <div class="media-body">
-                                    <h4 class="media-heading">Media heading</h4>
-                                    lalalala
-                                </div>
-                            </li>
-                            <li class="media">
-                                <a class="pull-left" href="#"><img class="media-object" src="http://placehold.it/64x64" alt="..."></a>
-                                <div class="media-body">
-                                    <h4 class="media-heading">Media heading</h4>
-                                    lalalala
-                                </div>
-                            </li>
-                            <li class="media">
-                                <a class="pull-left" href="#"><img class="media-object" src="http://placehold.it/64x64" alt="..."></a>
-                                <div class="media-body">
-                                    <h4 class="media-heading">Media heading</h4>
-                                    lalalala
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                    </ul>
+                </small>
             </div>
         </div>
+        <div id="map_canvas" class="thumbnail">{% if not club.address %}Sorry, cannot show map without an address.{% endif %}</div>
     </div>
-    <div class="col-md-2">
-        <img src="http://placehold.it/160x600">
+    <div class="col-md-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> {{ club.name }}'s Matches</h3>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Season</th>
+                        <th>Comp.</th>
+                        <th>Stage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2013/14</td>
+                        <td>EHF Champions League</td>
+                        <td><a href="#">Main Round</a></td>
+                    </tr>
+                    <tr>
+                        <td>2013/14</td>
+                        <td>EHF Cup Winners' Cup</td>
+                        <td><a href="#">Semifinals</a></td>
+                    </tr>
+                    <tr>
+                        <td>2012/13</td>
+                        <td>EHF Champions League</td>
+                        <td><a href="#">Main Round</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-group"></i> Current players</h3>
+            </div>
+            <div class="list-group media-list">
+                {% for player in club.get_current_team %}
+                <a href="{{ player.player.get_absolute_url }}" class="list-group-item media">
+                    <div class="pull-left">
+                      <img class="media-object" src="{{ player.player.photo_url }}" alt="{{ player.player.full_name }}">
+                    </div>
+                    <div class="media-body">
+                      <h5 class="list-group-item-heading">{{ player.player.full_name }}</h5>
+                      <small>{{ player.player.get_position_display }}</small>
+                    </div>
+                </a>
+                {% empty %}
+                <a href="#" class="list-group-item">No players found.</a>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

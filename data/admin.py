@@ -47,8 +47,8 @@ class MatchInline(admin.StackedInline):
     extra = 1
     fieldsets = [
         (None,
-            {'fields': ['stage', ('home_team', 'away_team'),
-                        ('match_datetime'),
+            {'fields': ['group', ('home_team', 'away_team'),
+                        ('match_datetime', 'week'),
                         ('score_home', 'score_away'),
                         'report_url']}
          ),
@@ -64,7 +64,7 @@ class MatchInline(admin.StackedInline):
         if db_field.name == "home_team" or db_field.name == "away_team":
             if request._obj_ is not None:
                 kwargs["queryset"] = Club.objects.filter(
-                    group__stage=request._obj_)
+                    group=request._obj_)
             else:
                 kwargs["queryset"] = Club.objects.all()
         return super(MatchInline, self).formfield_for_foreignkey(
@@ -146,22 +146,17 @@ class CompetitionSeasonAdmin(admin.ModelAdmin):
 
 
 class StageAdmin(admin.ModelAdmin):
-    inlines = [GroupInline, MatchInline]
+    inlines = [GroupInline]
     list_display = ('comp_season', 'name', 'order')
     list_filter = ['comp_season__competition__name', 'comp_season__season']
     search_fields = ['comp_season__competition__name', 'name']
-
-    def get_form(self, request, obj=None, **kwargs):
-        # just save obj reference for future processing in Inline
-        request._obj_ = obj
-        return super(StageAdmin, self).get_form(request, obj, **kwargs)
 
 
 class MatchAdmin(admin.ModelAdmin):
     fieldsets = [
         (None,
-            {'fields': ['stage', ('home_team', 'away_team'),
-                        ('match_datetime'),
+            {'fields': ['group', ('home_team', 'away_team'),
+                        ('match_datetime', 'week'),
                         ('score_home', 'score_away'),
                         'report_url']}
          ),
@@ -173,21 +168,26 @@ class MatchAdmin(admin.ModelAdmin):
          )
     ]
     inlines = [MatchTeamStatsInline]
-    list_filter = ['match_datetime', 'stage__comp_season']
+    list_filter = ['match_datetime', 'group__stage__comp_season']
     list_display = ('home_team', 'away_team', 'match_datetime', 'location')
     search_fields = ['home_team__name', 'away_team__name']
 
 
 class GroupAdmin(admin.ModelAdmin):
-    inlines = [GroupTableInline]
+    inlines = [GroupTableInline, MatchInline]
     list_display = ['stage', 'order', 'name']
     list_filter = ['stage__comp_season']
+
+    def get_form(self, request, obj=None, **kwargs):
+        # just save obj reference for future processing in Inline
+        request._obj_ = obj
+        return super(GroupAdmin, self).get_form(request, obj, **kwargs)
 
 
 class MatchTeamStatsAdmin(admin.ModelAdmin):
     inlines = [MatchPlayerStatsInline]
     list_display = ['club', 'match', 'halftime_score', 'finaltime_score']
-    list_filter = ['match__match_datetime', 'match__stage__comp_season']
+    list_filter = ['match__match_datetime', 'match__group__stage__comp_season']
     search_fields = ['club__name']
 
 

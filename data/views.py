@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
-from data.models import Club, Player, Competition, Season
+from data.models import Club, Player, Competition, Season, PlayerContract
 
 
 class ClubIndexView(generic.ListView):
@@ -25,7 +25,8 @@ class ClubDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(ClubDetailView, self).get_context_data(**kwargs)
-        self.club = get_object_or_404(Club, pk=self.kwargs['pk'])
+        #self.club = get_object_or_404(Club, pk=self.kwargs['pk'])
+        self.club = self.object
         # Add in the fan status
         if self.request.user.is_authenticated():
             is_fan = self.request.user.fav_clubs.filter(
@@ -104,6 +105,55 @@ class PlayerIndexView(generic.ListView):
 
 class PlayerDetailView(generic.DetailView):
     model = Player
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(PlayerDetailView, self).get_context_data(**kwargs)
+        #self.player = get_object_or_404(Player, pk=self.kwargs['pk'])
+        self.player = self.object
+
+        # Add in the fan status
+        if self.request.user.is_authenticated():
+            is_fan = self.request.user.fav_players.filter(
+                id=self.player.id).exists()
+            context['fan'] = is_fan
+        else:
+            context['fan'] = False
+        # Number of fans
+        context['fan_count'] = self.player.fans.count()
+
+        context['club_career'] = self.player.playercontract_set.select_related(
+            'club', 'season').all()
+
+        # Add teammates
+        ct = self.player.current_contract
+        context['cur_contract'] = ct
+        if ct:
+            context['teammates'] = PlayerContract.objects.select_related(
+                'player').filter(club=ct.club,
+                                 season=ct.season).exclude(pk=ct.id)
+
+        # Matches
+        matches = self.player.matchplayerstats_set.select_related().order_by(
+            '-match_team__match__match_datetime')
+        context['matches'] = matches[0:8]
+        return context
+
+
+@login_required
+def player_love(request, player_id):
+    p = get_object_or_404(Player, pk=player_id)
+    if request.method == 'POST':
+        choice = request.POST['choice']
+        if choice == 'follow':
+            p.fans.add(request.user)
+        elif choice == 'unfollow':
+            p.fans.remove(request.user)
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return HttpResponseRedirect(
+            reverse('data:player_detail', kwargs={'pk': p.id}))
 
 
 class CompIndexView(generic.ListView):

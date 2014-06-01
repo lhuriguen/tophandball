@@ -31,6 +31,9 @@ urlpatterns = patterns(
     # ex: /data/players/1/edit/
     # url(r'^players/(?P<pk>\d+)/edit/$',
     #     views.PlayerUpdateView.as_view(), name='player_update')
+    # ex: /data/players/1/love/
+    url(r'^players/(?P<player_id>\d+)/love/$',
+        views.player_love, name='player_love'),
     # ex: /data/comp/
     url(r'^comp/$',
         views.CompIndexView.as_view(), name='comp_index'),

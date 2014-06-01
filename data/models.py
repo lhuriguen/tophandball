@@ -46,14 +46,19 @@ class Club(models.Model):
         return reverse('data:club_detail', kwargs={'pk': self.pk})
 
     def get_current_team(self):
-        return self.playercontract_set.exclude(
-            to_date__lt=datetime.date.today()
-            ).exclude(from_date__gt=datetime.date.today())
+        today = datetime.datetime.today()
+        middle = datetime.datetime(today.year, 7, 1)
+        season_year = today.year
+        if today < middle:
+            season_year -= 1
+        return self.playercontract_set.select_related(
+            'player', 'season').filter(
+            season__year_from=season_year, departure_month=None)
 
     def get_current_coaches(self):
         return self.coachcontract_set.exclude(
             to_date__lt=datetime.date.today()
-            ).exclude(from_date__gt=datetime.date.today())
+        ).exclude(from_date__gt=datetime.date.today())
 
     def get_matches(self):
         query = Q(home_team=self) | Q(away_team=self)
@@ -165,6 +170,7 @@ class Player(models.Model):
     retired = models.BooleanField(default=False)
     retirement_date = models.DateField(null=True, blank=True)
     photo = models.ImageField(upload_to='people', blank=True, null=True)
+    fans = models.ManyToManyField(User, related_name='fav_players')
 
     def __unicode__(self):
         return u'%s' % (self.full_name)
@@ -194,15 +200,18 @@ class Player(models.Model):
 
     @property
     def current_contract(self):
-        # TODO
-        # contracts = self.playercontract_set.exclude(
-        #     to_date__lt=datetime.date.today()
-        # ).exclude(from_date__gt=datetime.date.today()).order_by('from_date')
-        # if len(contracts) == 1:
-        #     return contracts[0]
-        # else:
-        #     return None
-        pass
+        today = datetime.datetime.today()
+        middle = datetime.datetime(today.year, 7, 1)
+        season_year = today.year
+        if today < middle:
+            season_year -= 1
+        contracts = self.playercontract_set.select_related(
+            'club', 'season').filter(
+            season__year_from=season_year, departure_month=None)
+        if len(contracts) == 1:
+            return contracts[0]
+        else:
+            return None
 
     @property
     def age(self):
@@ -423,6 +432,7 @@ class CompetitionSeason(models.Model):
 
 
 class Stage(models.Model):
+
     """Represents a round or stage in a competition"""
 
     comp_season = models.ForeignKey(CompetitionSeason,
@@ -531,15 +541,9 @@ class GroupTable(models.Model):
     def points(self):
         return self.wins[0] * 2 + self.draws[0] * 1 - self.point_penalty
 
-# class MatchWeek(models.Model):
-#     stage = models.ForeignKey(Stage)
-#     order = models.PositiveSmallIntegerField('Match week order')
-#     start_date = models.DateField()
-#     end_date = models.DateField()
-
 
 class Match(models.Model):
-    stage = models.ForeignKey(Stage)
+    group = models.ForeignKey(Group)
     home_team = models.ForeignKey(Club, related_name='home_matches')
     away_team = models.ForeignKey(Club, related_name='away_matches')
     placeholder = models.CharField(
@@ -552,6 +556,7 @@ class Match(models.Model):
     score_home = models.PositiveSmallIntegerField(blank=True, null=True)
     score_away = models.PositiveSmallIntegerField(blank=True, null=True)
     report_url = models.URLField(blank=True)
+    week = models.SmallIntegerField(default=0)
     referees = models.ManyToManyField('Referee')
     delegates = models.ManyToManyField('Delegate')
 
