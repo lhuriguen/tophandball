@@ -482,46 +482,46 @@ class GroupTable(models.Model):
 
     @property
     def matches(self):
-        return self.group.stage.match_set.filter(self.query()).order_by('date')
+        return self.group.match_set.filter(self.query()).order_by('date')
 
     @property
     def num_matches(self):
-        return self.group.stage.match_set.filter(self.query()).count()
+        return self.group.match_set.filter(self.query()).count()
 
     @property
     def wins(self):
         home = self.team.home_matches.filter(
-            stage=self.group.stage, score_home__gt=F('score_away')).count()
+            group=self.group, score_home__gt=F('score_away')).count()
         away = self.team.away_matches.filter(
-            stage=self.group.stage, score_away__gt=F('score_home')).count()
+            group=self.group, score_away__gt=F('score_home')).count()
         total = home + away
         return (total, home, away)
 
     @property
     def draws(self):
         home = self.team.home_matches.filter(
-            stage=self.group.stage, score_home=F('score_away')).count()
+            group=self.group, score_home=F('score_away')).count()
         away = self.team.away_matches.filter(
-            stage=self.group.stage, score_away=F('score_home')).count()
+            group=self.group, score_away=F('score_home')).count()
         total = home + away
         return (total, home, away)
 
     @property
     def losses(self):
         home = self.team.home_matches.filter(
-            stage=self.group.stage, score_home__lt=F('score_away')).count()
+            group=self.group, score_home__lt=F('score_away')).count()
         away = self.team.away_matches.filter(
-            stage=self.group.stage, score_away__lt=F('score_home')).count()
+            group=self.group, score_away__lt=F('score_home')).count()
         total = home + away
         return (total, home, away)
 
     @property
     def goals_for(self):
         home = self.team.home_matches.filter(
-            stage=self.group.stage).aggregate(
+            group=self.group).aggregate(
             for_home=Sum('score_home'))['for_home']
         away = self.team.away_matches.filter(
-            stage=self.group.stage).aggregate(
+            group=self.group).aggregate(
             for_away=Sum('score_away'))['for_away']
         total = int(home or 0) + int(away or 0)
         return (total, home, away)
@@ -529,10 +529,10 @@ class GroupTable(models.Model):
     @property
     def goals_against(self):
         home = self.team.home_matches.filter(
-            stage=self.group.stage).aggregate(
+            group=self.group).aggregate(
             against_home=Sum('score_away'))['against_home']
         away = self.team.away_matches.filter(
-            stage=self.group.stage).aggregate(
+            group=self.group).aggregate(
             against_away=Sum('score_home'))['against_away']
         total = int(home or 0) + int(away or 0)
         return (total, home, away)

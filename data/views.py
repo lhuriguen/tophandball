@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
-from data.models import Club, Player, Competition, Season, PlayerContract
+from data.models import Club, Player, Competition, PlayerContract
 
 
 class ClubIndexView(generic.ListView):
@@ -38,18 +38,18 @@ class ClubDetailView(generic.DetailView):
         context['fan_count'] = self.club.fans.count()
 
         # Prepare context data for matches
-        s = Season.objects.get(year_to=datetime.now().year)
-        context['comp_list'] = self.club.group_set.filter(
-            stage__comp_season__season=s).order_by(
-            'stage__comp_season__competition__is_international',
-            '-stage__comp_season__competition__level')
+        context['comp_list'] = self.club.grouptable_set.order_by(
+            'group__stage__comp_season__competition__is_international',
+            'group__stage__comp_season__competition__level',
+            'group__stage__order')
 
         return context
 
 
 class ClubUpdateView(generic.edit.UpdateView):
     model = Club
-    fields = ['name', 'short_name']
+    fields = ['name', 'short_name', 'initials', 'address', 'website',
+              'twitter', 'facebook']
     template_name_suffix = '_update_form'
 
     @method_decorator(login_required)

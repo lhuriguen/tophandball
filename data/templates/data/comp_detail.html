@@ -37,15 +37,36 @@
         </li>
     </ul>
 </div>
-<h3>Information</h3>
-<ul>
-    <li>Name: {{ competition.name }}</li>
-    <li>Short name: {{ competition.short_name }}</li>
-    <li>Website: {{ competition.website }}</li>
-    <li>Country: {{ competition.country }}</li>
-    <li>International: {{ competition.is_international }}</li>
-    <li>Level: {{ competition.level }}</li>
-</ul>
+<div class="row">
+    <div class="col-md-3">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <small>
+                    <strong>Short name:</strong> {{ competition.short_name }}<br>
+                    <a href="{{ competition.website }}">Official website</a><br>
+                    {% if competition.is_international %}
+                    <strong>International</strong><br>
+                    {% else %}
+                    <strong>Country:</strong> {{ competition.country }}<br>
+                    {% endif %}    
+                    <strong>Level:</strong> {{ competition.level }}<br>
+                    <hr>
+                    <strong>Seasons:</strong>
+                    <ul class="list-unstyled">
+                    {% for cs in competition.competitionseason_set.all %}
+                        <li>{{ cs.season.name }}</li>
+                    {% empty %}
+                        <li>No seasons found.</li>
+                    {% endfor %}
+                    </ul>
+                    <hr>
+                    <p><i class="fa fa-edit"></i> Is this information wrong or incomplete? You can fix it <a href="#">here</a>.</p>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
 <h3>Season {{ comp_season.season.name }}</h3>
     {% for st in comp_season.stage_set.all %}
     <h4><b>{{ st.name }}</b>, {{ st.short_name }}, {{ st.order }}, {{ st.is_qualification }}</h4>

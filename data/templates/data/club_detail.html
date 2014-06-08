@@ -43,6 +43,8 @@
                         <li>No alternative names found.</li>
                     {% endfor %}
                     </ul>
+                    <hr>
+                    <p><i class="fa fa-edit"></i> Is this information wrong or incomplete? You can fix it <a href="{% url 'data:club_update' pk=club.id %}">here</a>.</p>
                 </small>
             </div>
         </div>
@@ -51,7 +53,7 @@
     <div class="col-md-6">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> {{ club.name }}'s Matches</h3>
+                <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> {{ club.name }}'s Competitions</h3>
             </div>
             <table class="table table-hover">
                 <thead>
@@ -59,24 +61,18 @@
                         <th>Season</th>
                         <th>Comp.</th>
                         <th>Stage</th>
+                        <th>#</th>
                     </tr>
                 </thead>
                 <tbody>
+                    {% for gt in comp_list %}
                     <tr>
-                        <td>2013/14</td>
-                        <td>EHF Champions League</td>
-                        <td><a href="#">Main Round</a></td>
+                        <td>{{ gt.group.stage.comp_season.season }}</td>
+                        <td><a href="{{ gt.group.stage.comp_season.competition.get_absolute_url }}">{{ gt.group.stage.comp_season.competition.short_name }}</a></td>
+                        <td><a href="#">{{ gt.group.stage.name }}</a></td>
+                        <td>{{ gt.position }}</td>
                     </tr>
-                    <tr>
-                        <td>2013/14</td>
-                        <td>EHF Cup Winners' Cup</td>
-                        <td><a href="#">Semifinals</a></td>
-                    </tr>
-                    <tr>
-                        <td>2012/13</td>
-                        <td>EHF Champions League</td>
-                        <td><a href="#">Main Round</a></td>
-                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
@@ -100,6 +96,9 @@
                 {% empty %}
                 <a href="#" class="list-group-item">No players found.</a>
                 {% endfor %}
+            </div>
+            <div class="panel-footer">
+                <p class="panel-title text-center"><a href="#">All players</a></p>
             </div>
         </div>
     </div>
