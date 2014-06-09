@@ -4,10 +4,10 @@
 
 {% block specific %}
     <form action="" method="post">
-    	{% csrf_token %}
-    	<div>
-    		{{ form|bootstrap }}
-    	</div>
+        {% csrf_token %}
+        <div>
+            {{ form }}
+        </div>
         <fieldset>
             <legend>Contract</legend>
             {{ contract_form.management_form }}
@@ -15,21 +15,13 @@
             {% for form in contract_form %}
                 {{ form.id }}
                 <div class="inline {{ contract_form.prefix }}">
-                    {{ form.club.errors }}
-                    {{ form.club.label_tag }}
-                    {{ form.club }}
-                    {{ form.season.errors }}
-                    {{ form.season.label_tag }}
-                    {{ form.season }}
-                    {{ form.shirt_number.errors }}
-                    {{ form.shirt_number.label_tag }}
-                    {{ form.shirt_number }}
-                    {{ form.departure_month.errors }}
-                    {{ form.departure_month.label_tag }}
-                    {{ form.departure_month }}
-                    {{ form.arrival_month.errors }}
-                    {{ form.arrival_month.label_tag }}
-                    {{ form.arrival_month }}
+                {% for field in form.visible_fields %}
+                    <div class="form-group">
+                        {{ field.errors }}
+                        {{ field.label_tag }} {{ field }}
+                        {{ field.help_text }}
+                    </div>
+                {% endfor %}
                 </div>
             {% endfor %}
         </fieldset>
