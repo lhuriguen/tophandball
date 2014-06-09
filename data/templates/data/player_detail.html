@@ -1,37 +1,26 @@
-{% extends "base.html" %}
-{% load static %}
+{% extends "data/base_player.html" %}
 
-{% block title %}Player: {{ player.full_name }}{% endblock %}
-{% block active_player %}active{% endblock %}
+{% block header_button_bar %}
 
-{% block content %}
+<form action="{% url 'data:player_love' player.id %}" method="post" id="follow_form">
+    {% csrf_token %}
+    {% if fan %}
+        <input type="hidden" name="choice" id="choice" value="unfollow" />
+        <button id="submit_follow" type="submit" class="btn btn-default btn-sm">
+            <span id="icon" class="unfollow"></span> Unfollow <small>({{ fan_count }} fans)</small>
+        </button>
+    {% else %}
+        <input type="hidden" name="choice" id="choice" value="follow" />
+        <button id="submit_follow" type="submit" class="btn btn-default btn-sm">
+            <span id="icon" class="follow"></span> Follow <small>({{ fan_count }} fans)</small>
+        </button>
+    {% endif %}
+</form>
 
-<div id="header-box">
-    <div class="row">
-        <div class="col-md-2">
-            <img class="img-person img-responsive" src="{{ player.photo_url }}" alt="photo">
-        </div>
-        <div class="col-md-8">
-            <h1>{{ player.full_name }} <small>{{ player.country }}</small></h1>
-        </div>
-    </div>
-    <div class="button-bar">
-        <form action="{% url 'data:player_love' player.id %}" method="post" id="follow_form">
-            {% csrf_token %}
-            {% if fan %}
-                <input type="hidden" name="choice" id="choice" value="unfollow" />
-                <button id="submit_follow" type="submit" class="btn btn-default btn-sm">
-                    <span id="icon" class="unfollow"></span> Unfollow <small>({{ fan_count }} fans)</small>
-                </button>
-            {% else %}
-                <input type="hidden" name="choice" id="choice" value="follow" />
-                <button id="submit_follow" type="submit" class="btn btn-default btn-sm">
-                    <span id="icon" class="follow"></span> Follow <small>({{ fan_count }} fans)</small>
-                </button>
-            {% endif %}
-        </form>
-    </div>
-</div>
+{% endblock %}
+
+{% block specific %}
+
 <div class="row">
     <div class="col-sm-6 col-md-3">
         <div class="panel panel-default">
@@ -62,6 +51,8 @@
                         <li>{{ contract.season.name }} - <a href="{{ contract.club.get_absolute_url }}">{{ contract.club.name }}</a>{% if contract.arrival_month %} (since {{ contract.get_arrival_month_display }}){% endif %}{% if contract.departure_month %} (until {{ contract.get_departure_month_display }}){% endif %}</li>
                     {% endfor %}
                     </ul>
+                    <hr>
+                    <p><i class="fa fa-edit"></i> Is this information wrong or incomplete? You can fix it <a href="{% url 'data:player_update' pk=player.id %}">here</a>.</p>
                 </small>
             </div>
         </div>
@@ -126,4 +117,5 @@
         </div>
     </div>
 </div>
+
 {% endblock %}

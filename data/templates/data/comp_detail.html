@@ -1,15 +1,7 @@
-{% extends "base.html" %}
-{% block title %}Competition: {{ competition.name }}{% endblock %}
-{% block active_comp %}active{% endblock %}
-{% block content %}
+{% extends "data/base_comp.html" %}
 
-<div id="header-box">
-    <h1><i class="fa fa-trophy text-primary"></i> {{ competition.name }} {% if competition.country %}<small>{{ competition.country }}</small>{% endif %} - {{ comp_season.season.name }}</h1>
-    <div class="button-bar">
-        {% block under_nav %}
-        {% endblock %}
-    </div>
-</div>
+{% block specific %}
+
 <div id="sub-nav">
     <ul class="nav nav-tabs">
         <li class="{% block active_info %}{% endblock %}"><a href="{{ competition.get_absolute_url }}">Overview</a></li>

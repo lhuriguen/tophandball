@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Competition: {{ competition.name }}{% endblock %}
+{% block active_comp %}active{% endblock %}
+
+{% block content %}
+
+<div id="header-box">
+    <h1><i class="fa fa-trophy text-primary"></i> {{ competition.name }} {% if competition.country %}<small>{{ competition.country }}</small>{% endif %}</h1>
+    <div class="button-bar">
+        {% block under_nav %}
+        {% endblock %}
+    </div>
+</div>
+
+{% block specific %}{% endblock %}
+{% endblock content %}
+{% block extra_script %}{% endblock %}

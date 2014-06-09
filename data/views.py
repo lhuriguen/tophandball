@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
 from data.models import Club, Player, Competition, PlayerContract
+from .forms import PlayerContractFormSet, PlayerNameFormSet, PlayerForm
 
 
 class ClubIndexView(generic.ListView):
@@ -140,6 +141,73 @@ class PlayerDetailView(generic.DetailView):
         return context
 
 
+class PlayerUpdateView(generic.UpdateView):
+    model = Player
+    fields = ['first_name', 'last_name', 'country', 'position', 'birth_date',
+              'birth_place', 'height', 'main_hand', 'retired',
+              'retirement_date']
+    template_name_suffix = '_update_form'
+    form_class = PlayerForm
+
+    def get(self, request, *args, **kwargs):
+        """
+        Handles GET requests and instantiates blank versions of the form
+        and its inline formsets.
+        """
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        contract_form = PlayerContractFormSet(instance=self.object)
+        names_form = PlayerNameFormSet(instance=self.object)
+        return self.render_to_response(
+            self.get_context_data(form=form,
+                                  contract_form=contract_form,
+                                  names_form=names_form))
+
+    def post(self, request, *args, **kwargs):
+        """
+        Handles POST requests, instantiating a form instance and its inline
+        formsets with the passed POST variables and then checking them for
+        validity.
+        """
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        contract_form = PlayerContractFormSet(self.request.POST)
+        names_form = PlayerNameFormSet(self.request.POST)
+        if (form.is_valid() and contract_form.is_valid() and names_form.is_valid()):
+            return self.form_valid(form, contract_form, names_form)
+        else:
+            return self.form_invalid(form, contract_form, names_form)
+
+    def form_valid(self, form, contract_form, names_form):
+        """
+        Called if all forms are valid. Creates a Player instance along with
+        associated Contracts and Names and then redirects to a
+        success page.
+        """
+        self.object = form.save()
+        contract_form.instance = self.object
+        contract_form.save()
+        names_form.instance = self.object
+        names_form.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form, contract_form, names_form):
+        """
+        Called if a form is invalid. Re-renders the context data with the
+        data-filled forms and errors.
+        """
+        return self.render_to_response(
+            self.get_context_data(form=form,
+                                  contract_form=contract_form,
+                                  names_form=names_form))
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(PlayerUpdateView, self).dispatch(*args, **kwargs)
+
+
 @login_required
 def player_love(request, player_id):
     p = get_object_or_404(Player, pk=player_id)
@@ -180,6 +248,17 @@ class CompDetailView(generic.DetailView):
                 year = int(str_year)
         context['comp_season'] = self.competition.get_season_or_latest(year)
         return context
+
+
+class CompUpdateView(generic.UpdateView):
+    model = Competition
+    template_name_suffix = '_update_form'
+    fields = ['name', 'short_name', 'website', 'country', 'is_international',
+              'level']
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(PlayerUpdateView, self).dispatch(*args, **kwargs)
 
 
 def index(request):

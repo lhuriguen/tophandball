@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Player: {{ player.full_name }}{% endblock %}
+{% block active_player %}active{% endblock %}
+
+{% block content %}
+
+<div id="header-box">
+    <div class="row">
+        <div class="col-md-2">
+            <img class="img-person img-responsive" src="{{ player.photo_url }}" alt="photo">
+        </div>
+        <div class="col-md-8">
+            <h1>{{ player.full_name }} <small>{{ player.country }}</small></h1>
+        </div>
+    </div>
+    <div class="button-bar">
+        {% block header_button_bar %}{% endblock %}
+    </div>
+</div>
+
+{% block specific %}{% endblock %}
+{% endblock content %}
+{% block extra_script %}{% endblock %}

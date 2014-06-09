@@ -361,17 +361,10 @@ class CoachContract(models.Model):
 
 
 class Competition(models.Model):
-    # LEAGUE = 'L'
-    # CUP = 'C'
-    # TYPE_CHOICES = (
-    #     (LEAGUE, 'League'),
-    #     (CUP, 'Cup')
-    #     )
     name = models.CharField(max_length=50)
     short_name = models.CharField(max_length=5)
     website = models.URLField(blank=True)
     country = models.CharField(max_length=3, blank=True, null=True)
-    #type = models.CharField(max_length=1, choices=TYPE_CHOICES)
     is_international = models.BooleanField(default=False)
     level = models.PositiveSmallIntegerField(default=1)
     logo = models.ImageField(upload_to='comps', blank=True, null=True)
@@ -432,15 +425,23 @@ class CompetitionSeason(models.Model):
 
 
 class Stage(models.Model):
-
     """Represents a round or stage in a competition"""
 
+    # KNOCKOUT = 'KO'
+    # ROUND_ROBIN = 'RR'
+    # KO_GROUPS = 'KG'
+    # TYPE_CHOICES = (
+    #     (KNOCKOUT, 'Knockout'),
+    #     (ROUND_ROBIN, 'Round robin'),
+    #     (KO_GROUPS, 'KO groups')
+    #     )
     comp_season = models.ForeignKey(CompetitionSeason,
                                     verbose_name='Competition Season')
     order = models.PositiveSmallIntegerField('Stage order')
     name = models.CharField(max_length=30)
     short_name = models.CharField(max_length=5)
     is_qualification = models.BooleanField(default=False)
+    #tournament = models.CharField(max_length=2, choices=TYPE_CHOICES)
 
     def __unicode__(self):
         return u'%s %s. %s' % (self.comp_season, self.order, self.name)
