@@ -28,7 +28,7 @@
                 <small>
                     <strong>Country: </strong> {{ player.country }}<br>
                     <strong>Birth date:</strong> {{ player.birth_date|date:"d/m/Y" }} (age {{ player.age }})<br>
-                    <strong>Birth place:</strong> {{ player.birth_place }}<br>
+                    <strong>Birth place:</strong> {{ player.birth_place|default:"Unknown" }}<br>
                     <strong>Height:</strong> {{ player.height }} cm<br>
                     <hr>
                     <strong>Position:</strong> {{ player.get_position_display }}<br>

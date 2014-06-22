@@ -1,23 +1,6 @@
 {% extends "data/base_club.html" %}
 {% block active_info %}active{% endblock %}
 
-{% block under_nav %}
-    <form action="{% url 'data:club_love' club.id %}" method="post" id="follow_form">
-        {% csrf_token %}
-        {% if fan %}
-            <input type="hidden" name="choice" id="choice" value="unfollow" />
-            <button id="submit_follow" type="submit" class="btn btn-default btn-sm">
-                <span id="icon" class="unfollow"></span> Unfollow <small>({{ fan_count }} fans)</small>
-            </button>
-        {% else %}
-            <input type="hidden" name="choice" id="choice" value="follow" />
-            <button id="submit_follow" type="submit" class="btn btn-default btn-sm">
-                <span id="icon" class="follow"></span> Follow <small>({{ fan_count }} fans)</small>
-            </button>
-        {% endif %}
-    </form>
-{% endblock %}
-
 {% block specific %}
 <div class="row">
     <div class="col-md-3">
@@ -75,6 +58,9 @@
                     {% endfor %}
                 </tbody>
             </table>
+            <div class="panel-footer">
+                <p class="panel-title text-center"><a href="{% url 'data:club_matches' pk=club.id %}">Match History</a></p>
+            </div>
         </div>
     </div>
     <div class="col-md-3">
@@ -98,7 +84,7 @@
                 {% endfor %}
             </div>
             <div class="panel-footer">
-                <p class="panel-title text-center"><a href="#">All players</a></p>
+                <p class="panel-title text-center"><a href="#">Player History</a></p>
             </div>
         </div>
     </div>
@@ -131,5 +117,24 @@
         });
     }
     google.maps.event.addDomListener(window, 'load', codeAddress("{{ club.address }}"));
+</script>
+<script type="text/javascript">
+
+    $(document).on('submit', '#follow_form', function()  {
+        var frm = $('#follow_form');
+        $.ajax({
+            type: frm.attr('method'),
+            url: frm.attr('action'),
+            data: frm.serialize(),
+            success: function (data) {
+                $(".top-button-bar").html(data);
+            },
+            error: function(data) {
+                alert("Something went wrong!");
+            }
+        });
+        return false;
+    });
+
 </script>
 {% endblock %}

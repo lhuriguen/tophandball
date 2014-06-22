@@ -31,15 +31,19 @@ html {
     padding: 0;
     border-radius: 4px 0 0 4px;
 }
-#header-box .button-bar {
+#header-box .top-button-bar {
     position: absolute;
     top: 0;
     right: 0;
     margin-right: -1px;
     margin-top: -1px;
 }
-#sub-nav {
-    margin-bottom: 10px;
+#header-box .bottom-button-bar {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-right: -1px;
+    margin-bottom: -1px;
 }
 #footer {
     position: absolute;

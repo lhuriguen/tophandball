@@ -1,13 +1,14 @@
 from datetime import datetime
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, render_to_response
+from django.template import RequestContext
 from django.views import generic
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
-from data.models import Club, Player, Competition, PlayerContract
+from .models import Club, Player, Competition, PlayerContract
 from .forms import PlayerContractFormSet, PlayerNameFormSet, PlayerForm
 
 
@@ -26,7 +27,6 @@ class ClubDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(ClubDetailView, self).get_context_data(**kwargs)
-        #self.club = get_object_or_404(Club, pk=self.kwargs['pk'])
         self.club = self.object
         # Add in the fan status
         if self.request.user.is_authenticated():
@@ -68,6 +68,15 @@ class ClubMatchView(generic.ListView):
         context = super(ClubMatchView, self).get_context_data(**kwargs)
         # Add in the club
         context['club'] = self.club
+        # Add in the fan status
+        if self.request.user.is_authenticated():
+            is_fan = self.request.user.fav_clubs.filter(
+                id=self.club.id).exists()
+            context['fan'] = is_fan
+        else:
+            context['fan'] = False
+        # Number of fans
+        context['fan_count'] = self.club.fans.count()
         return context
 
     def get_queryset(self):
@@ -85,8 +94,18 @@ def club_love(request, club_id):
         choice = request.POST['choice']
         if choice == 'follow':
             c.fans.add(request.user)
+            fan = True
         elif choice == 'unfollow':
             c.fans.remove(request.user)
+            fan = False
+        if request.is_ajax():
+            print "is_ajax"
+            return render_to_response(
+                'data/club_love.html',
+                {'fan': fan, 'fan_count': c.fans.count(), 'club': c},
+                context_instance=RequestContext(request)
+                )
+        print "Not is_ajax"
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
