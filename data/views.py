@@ -99,13 +99,11 @@ def club_love(request, club_id):
             c.fans.remove(request.user)
             fan = False
         if request.is_ajax():
-            print "is_ajax"
             return render_to_response(
                 'data/club_love.html',
                 {'fan': fan, 'fan_count': c.fans.count(), 'club': c},
                 context_instance=RequestContext(request)
                 )
-        print "Not is_ajax"
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.

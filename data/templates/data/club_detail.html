@@ -92,6 +92,7 @@
 {% endblock %}
 
 {% block extra_script %}
+{{ block.super }}
 <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
 <script>
     var geocoder, map;
@@ -117,24 +118,5 @@
         });
     }
     google.maps.event.addDomListener(window, 'load', codeAddress("{{ club.address }}"));
-</script>
-<script type="text/javascript">
-
-    $(document).on('submit', '#follow_form', function()  {
-        var frm = $('#follow_form');
-        $.ajax({
-            type: frm.attr('method'),
-            url: frm.attr('action'),
-            data: frm.serialize(),
-            success: function (data) {
-                $(".top-button-bar").html(data);
-            },
-            error: function(data) {
-                alert("Something went wrong!");
-            }
-        });
-        return false;
-    });
-
 </script>
 {% endblock %}
