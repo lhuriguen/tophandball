@@ -56,9 +56,13 @@ class Club(models.Model):
             season__year_from=season_year, departure_month=None)
 
     def get_current_coaches(self):
-        return self.coachcontract_set.exclude(
-            to_date__lt=datetime.date.today()
-        ).exclude(from_date__gt=datetime.date.today())
+        today = datetime.datetime.today()
+        middle = datetime.datetime(today.year, 7, 1)
+        season_year = today.year
+        if today < middle:
+            season_year -= 1
+        return self.coachcontract_set.filter(
+            season__year_from=season_year, departure_month=None)
 
     def get_matches(self):
         query = Q(home_team=self) | Q(away_team=self)
@@ -116,7 +120,59 @@ class ClubName(models.Model):
         return u'%s (%s)' % (self.name, self.season)
 
 
-class Player(models.Model):
+class Person(models.Model):
+    MALE = 'M'
+    FEMALE = 'F'
+    GENDER_CHOICES = ((FEMALE, 'Female'), (MALE, 'Male'))
+
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    country = models.CharField(max_length=3)
+    birth_date = models.DateField(blank=True, null=True)
+    birth_place = models.CharField(max_length=50, blank=True, null=True)
+    gender = models.CharField(
+        max_length=1, choices=GENDER_CHOICES, default=FEMALE)
+    photo = models.ImageField(upload_to='people', blank=True, null=True)
+
+    @property
+    def full_name(self):
+        "Returns the person's full name."
+        return '%s %s' % (self.first_name, self.last_name)
+
+    @property
+    def age(self):
+        today = datetime.date.today()
+        born = self.birth_date
+        adjust = ((today.month, today.day) < (born.month, born.day))
+        return today.year - born.year - adjust
+
+    @property
+    def photo_url(self):
+        if self.photo:
+            return self.photo.url
+        else:
+            return u'http://placehold.it/160x220&text=No+Image'
+
+    class Meta:
+        abstract = True
+
+    def has_photo(self):
+        if self.photo:
+            return True
+        return False
+    has_photo.boolean = True
+    has_photo.short_description = 'Has photo?'
+
+    def admin_thumbnail(self):
+        if self.photo:
+            return u'<img src="%s" />' % (self.photo.url)
+        else:
+            return u'No image.'
+    admin_thumbnail.short_description = 'Photo preview'
+    admin_thumbnail.allow_tags = True
+
+
+class Player(Person):
     UNKNOWN = 'U'
     GOALKEEPER = 'GK'
     LINE_PLAYER = 'LP'
@@ -148,55 +204,23 @@ class Player(models.Model):
         (UNKNOWN, 'Unknown')
     )
 
-    MALE = 'M'
-    FEMALE = 'F'
-    GENDER_CHOICES = ((FEMALE, 'Female'), (MALE, 'Male'))
-
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    country = models.CharField(max_length=3)
     ehf_id = models.IntegerField('EHF id', unique=True)
     position = models.CharField(
         max_length=2, choices=POSITION_CHOICES, default=UNKNOWN)
-    birth_date = models.DateField()
-    birth_place = models.CharField(max_length=50, blank=True, null=True)
     height = models.PositiveSmallIntegerField(
         blank=True, default=0,
         help_text="Please indicate height in centimeters.")
     main_hand = models.CharField(
         max_length=1, choices=HAND_CHOICES, default=UNKNOWN)
-    gender = models.CharField(
-        max_length=1, choices=GENDER_CHOICES, default=FEMALE)
     retired = models.BooleanField(default=False)
     retirement_date = models.DateField(null=True, blank=True)
-    photo = models.ImageField(upload_to='people', blank=True, null=True)
     fans = models.ManyToManyField(User, related_name='fav_players')
 
     def __unicode__(self):
         return u'%s' % (self.full_name)
 
-    @property
-    def full_name(self):
-        "Returns the person's full name."
-        return '%s %s' % (self.first_name, self.last_name)
-
     def get_absolute_url(self):
         return reverse('data:player_detail', kwargs={'pk': self.pk})
-
-    def has_photo(self):
-        if self.photo:
-            return True
-        return False
-    has_photo.boolean = True
-    has_photo.short_description = 'Has photo?'
-
-    def admin_thumbnail(self):
-        if self.photo:
-            return u'<img src="%s" />' % (self.photo.url)
-        else:
-            return u'No image.'
-    admin_thumbnail.short_description = 'Photo preview'
-    admin_thumbnail.allow_tags = True
 
     @property
     def current_contract(self):
@@ -213,20 +237,6 @@ class Player(models.Model):
         else:
             return None
 
-    @property
-    def age(self):
-        today = datetime.date.today()
-        born = self.birth_date
-        adjust = ((today.month, today.day) < (born.month, born.day))
-        return today.year - born.year - adjust
-
-    @property
-    def photo_url(self):
-        if self.photo:
-            return self.photo.url
-        else:
-            return u'http://placehold.it/160x220&text=No+Image'
-
 
 class PlayerName(models.Model):
     player = models.ForeignKey(Player)
@@ -242,7 +252,7 @@ class PlayerName(models.Model):
         return u'%s - %s %s' % (self.player, self.first_name, self.last_name)
 
 
-class PlayerContract(models.Model):
+class Contract(models.Model):
     JANUARY = 1
     FEBRUARY = 2
     MARCH = 3
@@ -269,20 +279,26 @@ class PlayerContract(models.Model):
         (NOVEMBER, 'November'),
         (DECEMBER, 'December')
     )
-    player = models.ForeignKey(Player)
     club = models.ForeignKey(Club)
     season = models.ForeignKey(Season)
     departure_month = models.IntegerField(
         choices=MONTH_CHOICES, blank=True, null=True,
-        help_text="Only if the player left before the end of the season.")
+        help_text="Only if the person left before the end of the season.")
     arrival_month = models.IntegerField(
         choices=MONTH_CHOICES, blank=True, null=True,
-        help_text="Only if the player arrived after the start of the season.")
+        help_text="Only if the person arrived after the start of the season.")
+
+    class Meta:
+        abstract = True
+
+
+class PlayerContract(Contract):
+    player = models.ForeignKey(Player)
     shirt_number = models.PositiveSmallIntegerField(blank=True, default=0)
 
     def __unicode__(self):
         return u'%s (%s) in %s (%s)' % (
-            self.player, self.player.position, self.club, self.season)
+            self.player.full_name, self.player.position, self.club.name, self.season.name)
 
     def is_current(self):
         today = datetime.datetime.today()
@@ -293,20 +309,9 @@ class PlayerContract(models.Model):
         return self.season.year_from == season_year
 
 
-class Coach(models.Model):
-    MALE = 'M'
-    FEMALE = 'F'
-    GENDER_CHOICES = ((FEMALE, 'Female'), (MALE, 'Male'))
-
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    birth_date = models.DateField(blank=True, null=True)
-    birth_place = models.CharField(max_length=50, blank=True, null=True)
-    country = models.CharField(max_length=3)
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
+class Coach(Person):
     player = models.ForeignKey(Player, blank=True, null=True, unique=True,
                                on_delete=models.SET_NULL)
-    photo = models.ImageField(upload_to='people', blank=True, null=True)
 
     class Meta:
         verbose_name_plural = 'coaches'
@@ -314,35 +319,8 @@ class Coach(models.Model):
     def __unicode__(self):
         return u'%s %s' % (self.first_name, self.last_name)
 
-    @property
-    def full_name(self):
-        "Returns the person's full name."
-        return '%s %s' % (self.first_name, self.last_name)
 
-    @property
-    def photo_url(self):
-        if self.photo:
-            return self.photo.url
-        else:
-            return u'http://placehold.it/200x200&text=No+Image'
-
-    def has_photo(self):
-        if self.photo:
-            return True
-        return False
-    has_photo.boolean = True
-    has_photo.short_description = 'Has photo?'
-
-    def admin_thumbnail(self):
-        if self.photo:
-            return u'<img src="%s" />' % (self.photo.url)
-        else:
-            return u'No image.'
-    admin_thumbnail.short_description = 'Photo preview'
-    admin_thumbnail.allow_tags = True
-
-
-class CoachContract(models.Model):
+class CoachContract(Contract):
     HEAD = 'H'
     ASSISTANT = 'A'
     ROLE_CHOICES = (
@@ -351,13 +329,10 @@ class CoachContract(models.Model):
     )
 
     coach = models.ForeignKey(Coach)
-    club = models.ForeignKey(Club)
-    from_date = models.DateField()
-    to_date = models.DateField(blank=True, null=True)
     role = models.CharField(max_length=1, choices=ROLE_CHOICES, default=HEAD)
 
     def __unicode__(self):
-        return u'%s in %s (%s)' % (self.coach, self.club, self.from_date)
+        return u'%s in %s (%s)' % (self.coach.full_name, self.club.name, self.season.name)
 
 
 class Competition(models.Model):
