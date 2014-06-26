@@ -8,7 +8,11 @@ $(document).on('submit', '#follow_form', function() {
             $(".top-button-bar").html(data);
         },
         error: function(data) {
-            alert("Something went wrong! Are you logged in?");
+            if (data.status == 401) {
+                window.location.href = data.responseText + '?next=' + window.location.pathname;
+            } else {
+                alert("Something went wrong!");
+            }
         }
     });
     return false;

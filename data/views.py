@@ -5,11 +5,35 @@ from django.template import RequestContext
 from django.views import generic
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 
+from infohandball.decorators import login_required
 from .models import Club, Player, Competition, PlayerContract
 from .forms import PlayerContractFormSet, PlayerNameFormSet, PlayerForm
+
+
+class LoginRequiredMixin(object):
+    @classmethod
+    def as_view(cls, **initkwargs):
+        view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
+        return login_required(view)
+
+
+class LoveMixin(object):
+    """
+    Mixin to add fan status and number of fans to the context.
+    """
+    def is_fan(self):
+        if self.request.user.is_authenticated():
+            return self.object.fans.filter(
+                username=self.request.user.username).exists()
+        else:
+            return False
+
+    def get_context_data(self, **kwargs):
+        context = super(LoveMixin, self).get_context_data(**kwargs)
+        context['fan'] = self.is_fan()
+        context['fan_count'] = self.object.fans.count()
+        return context
 
 
 class ClubIndexView(generic.ListView):
@@ -20,7 +44,7 @@ class ClubIndexView(generic.ListView):
         return Club.objects.order_by('country')
 
 
-class ClubDetailView(generic.DetailView):
+class ClubDetailView(LoveMixin, generic.DetailView):
     model = Club
     #template_name = 'data/club_detail.html'
 
@@ -28,16 +52,6 @@ class ClubDetailView(generic.DetailView):
         # Call the base implementation first to get a context
         context = super(ClubDetailView, self).get_context_data(**kwargs)
         self.club = self.object
-        # Add in the fan status
-        if self.request.user.is_authenticated():
-            is_fan = self.request.user.fav_clubs.filter(
-                id=self.club.id).exists()
-            context['fan'] = is_fan
-        else:
-            context['fan'] = False
-        # Number of fans
-        context['fan_count'] = self.club.fans.count()
-
         # Prepare context data for matches
         context['comp_list'] = self.club.grouptable_set.order_by(
             'group__stage__comp_season__competition__is_international',
@@ -47,18 +61,14 @@ class ClubDetailView(generic.DetailView):
         return context
 
 
-class ClubUpdateView(generic.edit.UpdateView):
+class ClubUpdateView(LoginRequiredMixin, generic.edit.UpdateView):
     model = Club
     fields = ['name', 'short_name', 'initials', 'address', 'website',
               'twitter', 'facebook']
     template_name_suffix = '_update_form'
 
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(ClubUpdateView, self).dispatch(*args, **kwargs)
 
-
-class ClubMatchView(generic.ListView):
+class ClubMatchView(LoveMixin, generic.ListView):
     #model = Club
     template_name = 'data/club_matches.html'
     context_object_name = 'match_list'
@@ -68,15 +78,6 @@ class ClubMatchView(generic.ListView):
         context = super(ClubMatchView, self).get_context_data(**kwargs)
         # Add in the club
         context['club'] = self.club
-        # Add in the fan status
-        if self.request.user.is_authenticated():
-            is_fan = self.request.user.fav_clubs.filter(
-                id=self.club.id).exists()
-            context['fan'] = is_fan
-        else:
-            context['fan'] = False
-        # Number of fans
-        context['fan_count'] = self.club.fans.count()
         return context
 
     def get_queryset(self):
@@ -121,28 +122,15 @@ class PlayerIndexView(generic.ListView):
         return Player.objects.order_by('last_name')
 
 
-class PlayerDetailView(generic.DetailView):
+class PlayerDetailView(LoveMixin, generic.DetailView):
     model = Player
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(PlayerDetailView, self).get_context_data(**kwargs)
-        #self.player = get_object_or_404(Player, pk=self.kwargs['pk'])
         self.player = self.object
-
-        # Add in the fan status
-        if self.request.user.is_authenticated():
-            is_fan = self.request.user.fav_players.filter(
-                id=self.player.id).exists()
-            context['fan'] = is_fan
-        else:
-            context['fan'] = False
-        # Number of fans
-        context['fan_count'] = self.player.fans.count()
-
         context['club_career'] = self.player.playercontract_set.select_related(
             'club', 'season').all()
-
         # Add teammates
         ct = self.player.current_contract
         context['cur_contract'] = ct
@@ -150,7 +138,6 @@ class PlayerDetailView(generic.DetailView):
             context['teammates'] = PlayerContract.objects.select_related(
                 'player').filter(club=ct.club,
                                  season=ct.season).exclude(pk=ct.id)
-
         # Matches
         matches = self.player.matchplayerstats_set.select_related().order_by(
             '-match_team__match__match_datetime')
@@ -158,7 +145,7 @@ class PlayerDetailView(generic.DetailView):
         return context
 
 
-class PlayerUpdateView(generic.UpdateView):
+class PlayerUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Player
     fields = ['first_name', 'last_name', 'country', 'position', 'birth_date',
               'birth_place', 'height', 'main_hand', 'retired',
@@ -220,10 +207,6 @@ class PlayerUpdateView(generic.UpdateView):
                                   contract_form=contract_form,
                                   names_form=names_form))
 
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(PlayerUpdateView, self).dispatch(*args, **kwargs)
-
 
 @login_required
 def player_love(request, player_id):
@@ -232,8 +215,16 @@ def player_love(request, player_id):
         choice = request.POST['choice']
         if choice == 'follow':
             p.fans.add(request.user)
+            fan = True
         elif choice == 'unfollow':
             p.fans.remove(request.user)
+            fan = False
+        if request.is_ajax():
+            return render_to_response(
+                'data/player_love.html',
+                {'fan': fan, 'fan_count': p.fans.count(), 'player': p},
+                context_instance=RequestContext(request)
+                )
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
@@ -267,15 +258,11 @@ class CompDetailView(generic.DetailView):
         return context
 
 
-class CompUpdateView(generic.UpdateView):
+class CompUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Competition
     template_name_suffix = '_update_form'
     fields = ['name', 'short_name', 'website', 'country', 'is_international',
               'level']
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(PlayerUpdateView, self).dispatch(*args, **kwargs)
 
 
 def index(request):

@@ -1,24 +1,5 @@
 {% extends "data/base_player.html" %}
 
-{% block header_button_bar %}
-
-<form action="{% url 'data:player_love' player.id %}" method="post" id="follow_form">
-    {% csrf_token %}
-    {% if fan %}
-        <input type="hidden" name="choice" id="choice" value="unfollow" />
-        <button id="submit_follow" type="submit" class="btn btn-default btn-sm">
-            <span id="icon" class="unfollow"></span> Unfollow <small>({{ fan_count }} fans)</small>
-        </button>
-    {% else %}
-        <input type="hidden" name="choice" id="choice" value="follow" />
-        <button id="submit_follow" type="submit" class="btn btn-default btn-sm">
-            <span id="icon" class="follow"></span> Follow <small>({{ fan_count }} fans)</small>
-        </button>
-    {% endif %}
-</form>
-
-{% endblock %}
-
 {% block specific %}
 
 <div class="row">

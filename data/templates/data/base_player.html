@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% block title %}Player: {{ player.full_name }}{% endblock %}
 {% block active_player %}active{% endblock %}
 
@@ -13,11 +14,18 @@
             <h1>{{ player.full_name }} <small>{{ player.country }}</small></h1>
         </div>
     </div>
-    <div class="button-bar">
-        {% block header_button_bar %}{% endblock %}
+    <div class="top-button-bar">
+        <form action="{% url 'data:player_love' player.id %}" method="post" id="follow_form">
+            {% include "data/form_love.html" %}
+        </form>
+    </div>
+    <div class="bottom-button-bar">
+        {% block under_nav %}{% endblock %}
     </div>
 </div>
 
 {% block specific %}{% endblock %}
 {% endblock content %}
-{% block extra_script %}{% endblock %}
+{% block extra_script %}
+<script src="{% static "js/custom.js" %}"></script>
+{% endblock %}
