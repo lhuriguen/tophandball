@@ -12,6 +12,7 @@ from .forms import PlayerContractFormSet, PlayerNameFormSet, PlayerForm
 
 
 class LoginRequiredMixin(object):
+
     @classmethod
     def as_view(cls, **initkwargs):
         view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
@@ -22,6 +23,7 @@ class LoveMixin(object):
     """
     Mixin to add fan status and number of fans to the context.
     """
+
     def is_fan(self):
         if self.request.user.is_authenticated():
             return self.object.fans.filter(
@@ -41,6 +43,8 @@ class ClubIndexView(generic.ListView):
     context_object_name = 'club_list'
 
     def get_queryset(self):
+        if 'name' in self.request.GET:
+            return Club.objects.filter(name__icontains=self.request.GET['name'])
         return Club.objects.order_by('country')
 
 
@@ -104,7 +108,7 @@ def club_love(request, club_id):
                 'data/club_love.html',
                 {'fan': fan, 'fan_count': c.fans.count(), 'club': c},
                 context_instance=RequestContext(request)
-                )
+            )
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
@@ -179,7 +183,7 @@ class PlayerUpdateView(LoginRequiredMixin, generic.UpdateView):
         form = self.get_form(form_class)
         contract_form = PlayerContractFormSet(self.request.POST)
         names_form = PlayerNameFormSet(self.request.POST)
-        if (form.is_valid() and contract_form.is_valid() and names_form.is_valid()):
+        if form.is_valid() and contract_form.is_valid() and names_form.is_valid():
             return self.form_valid(form, contract_form, names_form)
         else:
             return self.form_invalid(form, contract_form, names_form)
@@ -224,7 +228,7 @@ def player_love(request, player_id):
                 'data/player_love.html',
                 {'fan': fan, 'fan_count': p.fans.count(), 'player': p},
                 context_instance=RequestContext(request)
-                )
+            )
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
@@ -266,5 +270,5 @@ class CompUpdateView(LoginRequiredMixin, generic.UpdateView):
 
 
 def index(request):
-    #return HttpResponse("Hello, world. You're at the data index.")
+    # return HttpResponse("Hello, world. You're at the data index.")
     return render(request, 'data/index.html', None)

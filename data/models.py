@@ -18,6 +18,21 @@ class Country(models.Model):
         return u'%s (%s)' % (self.name, self.code)
 
 
+class Season(models.Model):
+    year_from = models.PositiveSmallIntegerField()
+    year_to = models.PositiveSmallIntegerField()
+
+    class Meta:
+        unique_together = ('year_from', 'year_to')
+
+    @property
+    def name(self):
+        return '%s/%s' % (self.year_from, str(self.year_to)[-2:])
+
+    def __unicode__(self):
+        return u'%s' % (self.name)
+
+
 class Club(models.Model):
     name = models.CharField(max_length=100)
     short_name = models.CharField(
@@ -94,21 +109,6 @@ class Club(models.Model):
             return self.logo.url
         else:
             return u'http://placehold.it/200x200&text=No+Logo'
-
-
-class Season(models.Model):
-    year_from = models.PositiveSmallIntegerField()
-    year_to = models.PositiveSmallIntegerField()
-
-    class Meta:
-        unique_together = ('year_from', 'year_to')
-
-    @property
-    def name(self):
-        return '%s/%s' % (self.year_from, str(self.year_to)[-2:])
-
-    def __unicode__(self):
-        return u'%s' % (self.name)
 
 
 class ClubName(models.Model):
