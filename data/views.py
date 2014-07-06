@@ -5,6 +5,7 @@ from django.template import RequestContext
 from django.views import generic
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.db.models import Count
 
 from infohandball.decorators import login_required
 from .models import Club, Player, Competition, PlayerContract
@@ -42,10 +43,38 @@ class ClubIndexView(generic.ListView):
     template_name = 'data/club_index.html'
     context_object_name = 'club_list'
 
+    def get(self, request, *args, **kwargs):
+        if self.request.is_ajax():
+            if 'name' in self.request.GET:
+                clubs = Club.objects.filter(
+                    name__icontains=self.request.GET['name'])
+            else:
+                clubs = None
+            return render_to_response(
+                'data/club_search.html',
+                {'club_list': clubs},
+                context_instance=RequestContext(self.request)
+            )
+        return super(ClubIndexView, self).get(request, *args, **kwargs)
+
     def get_queryset(self):
         if 'name' in self.request.GET:
-            return Club.objects.filter(name__icontains=self.request.GET['name'])
-        return Club.objects.order_by('country')
+            return Club.objects.filter(
+                name__icontains=self.request.GET['name']).order_by('name')
+        if 'country' in self.request.GET:
+            return Club.objects.filter(
+                country=self.request.GET['country']).order_by('name')
+        return Club.objects.order_by('name')
+
+    def get_context_data(self, **kwargs):
+        context = super(ClubIndexView, self).get_context_data(**kwargs)
+        context['club_count'] = Club.objects.count()
+        context['popular_list'] = Club.objects.annotate(
+            num_fans=Count('fans')).filter(num_fans__gt=0)\
+            .order_by('-num_fans')[:10]
+        context['countries'] = Club.objects.values_list('country', flat=True)\
+            .order_by('country').distinct()
+        return context
 
 
 class ClubDetailView(LoveMixin, generic.DetailView):
@@ -81,15 +110,15 @@ class ClubMatchView(LoveMixin, generic.ListView):
         # Call the base implementation first to get a context
         context = super(ClubMatchView, self).get_context_data(**kwargs)
         # Add in the club
-        context['club'] = self.club
+        context['club'] = self.object
         return context
 
     def get_queryset(self):
-        self.club = get_object_or_404(Club, pk=self.kwargs['pk'])
+        self.object = get_object_or_404(Club, pk=self.kwargs['pk'])
         if 'a' in self.request.GET:
-            return self.club.get_matches()
+            return self.object.get_matches()
         else:
-            return self.club.get_matches()[:5]
+            return self.object.get_matches()[:5]
 
 
 @login_required
@@ -105,8 +134,8 @@ def club_love(request, club_id):
             fan = False
         if request.is_ajax():
             return render_to_response(
-                'data/club_love.html',
-                {'fan': fan, 'fan_count': c.fans.count(), 'club': c},
+                'data/form_love.html',
+                {'fan': fan, 'fan_count': c.fans.count()},
                 context_instance=RequestContext(request)
             )
         # Always return an HttpResponseRedirect after successfully dealing
@@ -124,6 +153,11 @@ class PlayerIndexView(generic.ListView):
     def get_queryset(self):
         # return Player.objects.order_by('country')
         return Player.objects.order_by('last_name')
+
+    def get_context_data(self, **kwargs):
+        context = super(PlayerIndexView, self).get_context_data(**kwargs)
+        context['player_count'] = Player.objects.count()
+        return context
 
 
 class PlayerDetailView(LoveMixin, generic.DetailView):
@@ -180,13 +214,13 @@ class PlayerUpdateView(LoginRequiredMixin, generic.UpdateView):
         """
         self.object = self.get_object()
         form_class = self.get_form_class()
-        form = self.get_form(form_class)
-        contract_form = PlayerContractFormSet(self.request.POST)
-        names_form = PlayerNameFormSet(self.request.POST)
-        if form.is_valid() and contract_form.is_valid() and names_form.is_valid():
-            return self.form_valid(form, contract_form, names_form)
+        frm = self.get_form(form_class)
+        contract_frm = PlayerContractFormSet(self.request.POST)
+        names_frm = PlayerNameFormSet(self.request.POST)
+        if frm.is_valid() and contract_frm.is_valid() and names_frm.is_valid():
+            return self.form_valid(frm, contract_frm, names_frm)
         else:
-            return self.form_invalid(form, contract_form, names_form)
+            return self.form_invalid(frm, contract_frm, names_frm)
 
     def form_valid(self, form, contract_form, names_form):
         """
@@ -225,8 +259,8 @@ def player_love(request, player_id):
             fan = False
         if request.is_ajax():
             return render_to_response(
-                'data/player_love.html',
-                {'fan': fan, 'fan_count': p.fans.count(), 'player': p},
+                'data/form_love.html',
+                {'fan': fan, 'fan_count': p.fans.count()},
                 context_instance=RequestContext(request)
             )
         # Always return an HttpResponseRedirect after successfully dealing

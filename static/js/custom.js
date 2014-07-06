@@ -5,7 +5,7 @@ $(document).on('submit', '#follow_form', function() {
         url: frm.attr('action'),
         data: frm.serialize(),
         success: function(data) {
-            $(".top-button-bar").html(data);
+            $("#follow_form").html(data);
         },
         error: function(data) {
             if (data.status == 401) {

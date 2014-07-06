@@ -1,0 +1,21 @@
+{% if request.GET.name %}
+    {% if club_list|length > 0 %}
+    <div class="alert alert-success" role="alert">{{ club_list|length }} result{{ club_list|pluralize }} for <i>{{ request.GET.name }}</i>.</div>
+    <div id="search_results">
+        <div class="list-group media-list">
+            {% for club in club_list %}
+            <a href="{{ club.get_absolute_url }}" class="list-group-item media">
+                <div class="pull-left">
+                  <img class="media-object" src="{{ club.logo_url }}" alt="{{ club.name }}">
+                </div>
+                <div class="media-body">
+                  <h5 class="list-group-item-heading">{{ club.name }}</h5> <small>{{ club.country }}</small>               
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-danger" role="alert">No results found for <i>{{ request.GET.name }}</i>.</div>
+    {% endif %}
+{% endif %}
