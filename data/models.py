@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import F, Q, Sum
 from django.utils import timezone
+from django.utils.text import slugify
 from django.contrib.auth.models import User
 
 
@@ -58,7 +59,8 @@ class Club(models.Model):
         return u'%s' % (self.name)
 
     def get_absolute_url(self):
-        return reverse('data:club_detail', kwargs={'pk': self.pk})
+        return reverse('data:club_detail',
+                       kwargs={'pk': self.pk, 'slug': slugify(self.name)})
 
     def get_current_team(self):
         today = datetime.datetime.today()
@@ -220,7 +222,8 @@ class Player(Person):
         return u'%s' % (self.full_name)
 
     def get_absolute_url(self):
-        return reverse('data:player_detail', kwargs={'pk': self.pk})
+        return reverse('data:player_detail',
+                       kwargs={'pk': self.pk, 'slug': slugify(self.full_name)})
 
     @property
     def current_contract(self):
@@ -298,7 +301,8 @@ class PlayerContract(Contract):
 
     def __unicode__(self):
         return u'%s (%s) in %s (%s)' % (
-            self.player.full_name, self.player.position, self.club.name, self.season.name)
+            self.player.full_name, self.player.position,
+            self.club.name, self.season.name)
 
     def is_current(self):
         today = datetime.datetime.today()
@@ -332,7 +336,8 @@ class CoachContract(Contract):
     role = models.CharField(max_length=1, choices=ROLE_CHOICES, default=HEAD)
 
     def __unicode__(self):
-        return u'%s in %s (%s)' % (self.coach.full_name, self.club.name, self.season.name)
+        return u'%s in %s (%s)' % (
+            self.coach.full_name, self.club.name, self.season.name)
 
 
 class Competition(models.Model):
@@ -349,7 +354,8 @@ class Competition(models.Model):
         return u'%s' % (self.name)
 
     def get_absolute_url(self):
-        return reverse('data:comp_detail', kwargs={'pk': self.pk})
+        return reverse('data:comp_detail',
+                       kwargs={'pk': self.pk, 'slug': slugify(self.name)})
 
     @property
     def logo_url(self):

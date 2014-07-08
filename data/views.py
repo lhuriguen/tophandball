@@ -151,8 +151,12 @@ class PlayerIndexView(generic.ListView):
     paginate_by = 125
 
     def get_queryset(self):
-        # return Player.objects.order_by('country')
-        return Player.objects.order_by('last_name')
+        filtered = Player.objects.all()
+        if 'country' in self.request.GET:
+            filtered = filtered.filter(country=self.request.GET['country'])
+        if 'position' in self.request.GET:
+            filtered = filtered.filter(position=self.request.GET['position'])
+        return filtered.order_by('last_name')
 
     def get_context_data(self, **kwargs):
         context = super(PlayerIndexView, self).get_context_data(**kwargs)

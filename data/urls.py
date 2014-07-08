@@ -22,6 +22,9 @@ urlpatterns = patterns(
     # ex: /data/clubs/1/love/
     url(r'^clubs/(?P<club_id>\d+)/love/$',
         views.club_love, name='club_love'),
+    # ex: /data/clubs/1/club-name-slug/
+    url(r'^clubs/(?P<pk>\d+)(?:/(?P<slug>[\w\d-]+))?/$',
+        views.ClubDetailView.as_view(), name='club_detail'),
     # ex: /data/players/
     url(r'^players/$',
         views.PlayerIndexView.as_view(), name='player_index'),
@@ -34,6 +37,9 @@ urlpatterns = patterns(
     # ex: /data/players/1/love/
     url(r'^players/(?P<player_id>\d+)/love/$',
         views.player_love, name='player_love'),
+    # ex: /data/players/1/player-name-slug/
+    url(r'^players/(?P<pk>\d+)(?:/(?P<slug>[\w\d-]+))?/$',
+        views.PlayerDetailView.as_view(), name='player_detail'),
     # ex: /data/comp/
     url(r'^comp/$',
         views.CompIndexView.as_view(), name='comp_index'),
@@ -42,5 +48,8 @@ urlpatterns = patterns(
         views.CompDetailView.as_view(), name='comp_detail'),
     # ex: /data/comp/1/edit/
     url(r'^comp/(?P<pk>\d+)/edit/$',
-        views.CompUpdateView.as_view(), name='comp_update')
+        views.CompUpdateView.as_view(), name='comp_update'),
+    # ex: /data/comp/1/comp-name-slug
+    url(r'^comp/(?P<pk>\d+)(?:/(?P<slug>[\w\d-]+))?/$',
+        views.CompDetailView.as_view(), name='comp_detail'),
     )
