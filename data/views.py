@@ -5,38 +5,11 @@ from django.template import RequestContext
 from django.views import generic
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.db.models import Count
+from django.db.models import Count, Q
 
 from infohandball.decorators import login_required
 from .models import Club, Player, Competition, PlayerContract
-from .forms import PlayerContractFormSet, PlayerNameFormSet, PlayerForm
-
-
-class LoginRequiredMixin(object):
-
-    @classmethod
-    def as_view(cls, **initkwargs):
-        view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
-        return login_required(view)
-
-
-class LoveMixin(object):
-    """
-    Mixin to add fan status and number of fans to the context.
-    """
-
-    def is_fan(self):
-        if self.request.user.is_authenticated():
-            return self.object.fans.filter(
-                username=self.request.user.username).exists()
-        else:
-            return False
-
-    def get_context_data(self, **kwargs):
-        context = super(LoveMixin, self).get_context_data(**kwargs)
-        context['fan'] = self.is_fan()
-        context['fan_count'] = self.object.fans.count()
-        return context
+from .mixins import LoveMixin, LoginRequiredMixin
 
 
 class ClubIndexView(generic.ListView):
@@ -148,19 +121,45 @@ def club_love(request, club_id):
 class PlayerIndexView(generic.ListView):
     template_name = 'data/player_index.html'
     context_object_name = 'player_list'
-    paginate_by = 125
+    paginate_by = 120
+
+    def get(self, request, *args, **kwargs):
+        if self.request.is_ajax():
+            if 'name' in self.request.GET:
+                terms = self.request.GET['name']
+                query = Q(last_name__icontains=terms) | \
+                    Q(first_name__icontains=terms) | \
+                    Q(playername__first_name__icontains=terms) | \
+                    Q(playername__last_name__icontains=terms)
+                players = Player.objects.filter(query)
+            else:
+                players = None
+            return render_to_response(
+                'data/player_search.html',
+                {'player_list': players},
+                context_instance=RequestContext(self.request)
+            )
+        return super(PlayerIndexView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
-        filtered = Player.objects.all()
-        if 'country' in self.request.GET:
-            filtered = filtered.filter(country=self.request.GET['country'])
-        if 'position' in self.request.GET:
-            filtered = filtered.filter(position=self.request.GET['position'])
-        return filtered.order_by('last_name')
+        query = Player.objects.all()
+        if 'country' in self.request.GET and self.request.GET['country']:
+            query = query.filter(country=self.request.GET['country'])
+        if 'position' in self.request.GET and self.request.GET['position']:
+            query = query.filter(position=self.request.GET['position'])
+        if not 'retired' in self.request.GET:
+            query = query.exclude(retired=True)
+        return query.order_by('last_name')
 
     def get_context_data(self, **kwargs):
         context = super(PlayerIndexView, self).get_context_data(**kwargs)
         context['player_count'] = Player.objects.count()
+        context['popular_list'] = Player.objects.annotate(
+            num_fans=Count('fans')).filter(num_fans__gt=0)\
+            .order_by('-num_fans')[:10]
+        context['countries'] = Player.objects.values_list(
+            'country', flat=True).order_by('country').distinct()
+        context['positions'] = Player.POSITION_CHOICES
         return context
 
 
@@ -193,61 +192,6 @@ class PlayerUpdateView(LoginRequiredMixin, generic.UpdateView):
               'birth_place', 'height', 'main_hand', 'retired',
               'retirement_date']
     template_name_suffix = '_update_form'
-    form_class = PlayerForm
-
-    def get(self, request, *args, **kwargs):
-        """
-        Handles GET requests and instantiates blank versions of the form
-        and its inline formsets.
-        """
-        self.object = self.get_object()
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
-        contract_form = PlayerContractFormSet(instance=self.object)
-        names_form = PlayerNameFormSet(instance=self.object)
-        return self.render_to_response(
-            self.get_context_data(form=form,
-                                  contract_form=contract_form,
-                                  names_form=names_form))
-
-    def post(self, request, *args, **kwargs):
-        """
-        Handles POST requests, instantiating a form instance and its inline
-        formsets with the passed POST variables and then checking them for
-        validity.
-        """
-        self.object = self.get_object()
-        form_class = self.get_form_class()
-        frm = self.get_form(form_class)
-        contract_frm = PlayerContractFormSet(self.request.POST)
-        names_frm = PlayerNameFormSet(self.request.POST)
-        if frm.is_valid() and contract_frm.is_valid() and names_frm.is_valid():
-            return self.form_valid(frm, contract_frm, names_frm)
-        else:
-            return self.form_invalid(frm, contract_frm, names_frm)
-
-    def form_valid(self, form, contract_form, names_form):
-        """
-        Called if all forms are valid. Creates a Player instance along with
-        associated Contracts and Names and then redirects to a
-        success page.
-        """
-        self.object = form.save()
-        contract_form.instance = self.object
-        contract_form.save()
-        names_form.instance = self.object
-        names_form.save()
-        return HttpResponseRedirect(self.get_success_url())
-
-    def form_invalid(self, form, contract_form, names_form):
-        """
-        Called if a form is invalid. Re-renders the context data with the
-        data-filled forms and errors.
-        """
-        return self.render_to_response(
-            self.get_context_data(form=form,
-                                  contract_form=contract_form,
-                                  names_form=names_form))
 
 
 @login_required

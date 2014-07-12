@@ -6,56 +6,9 @@
     <form action="" method="post">
         {% csrf_token %}
         <div>
-            {{ form }}
+            {{ form|bootstrap }}
         </div>
-        <fieldset>
-            <legend>Contract</legend>
-            {{ contract_form.management_form }}
-            {{ contract_form.non_form_errors }}
-            {% for form in contract_form %}
-                {{ form.id }}
-                <div class="inline {{ contract_form.prefix }}">
-                {% for field in form.visible_fields %}
-                    <div class="form-group">
-                        {{ field.errors }}
-                        {{ field.label_tag }} {{ field }}
-                        {{ field.help_text }}
-                    </div>
-                {% endfor %}
-                </div>
-            {% endfor %}
-        </fieldset>
-        <fieldset>
-            <legend>Player name</legend>
-            {{ names_form.management_form }}
-            {{ names_form.non_form_errors }}
-            {% for form in names_form %}
-                {{ form.id }}
-                <div class="inline {{ names_form.prefix }}">
-                    {{ form.first_name.errors }}
-                    {{ form.first_name.label_tag }}
-                    {{ form.first_name }}
-                    {{ form.last_name.errors }}
-                    {{ form.last_name.label_tag }}
-                    {{ form.last_name }}
-                </div>
-            {% endfor %}
-        </fieldset>
         <input type="submit" value="Update" class="btn btn-danger" />
         <a href="{{ player.get_absolute_url }}" class="btn btn-default">Cancel</a>
     </form>
-{% endblock %}
-
-{% block extra_script %}
-<script src="{% static "js/jquery.formset.min.js" %}"></script>
-<script type="text/javascript">
-        $(function() {
-            $(".inline.{{ contract_form.prefix }}").formset({
-                prefix: "{{ contract_form.prefix }}",
-            })
-            $(".inline.{{ names_form.prefix }}").formset({
-                prefix: "{{ names_form.prefix }}",
-            })
-        })
-    </script>
 {% endblock %}

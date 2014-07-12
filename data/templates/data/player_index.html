@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load bootstrap %}
+{% load th_extra %}
 {% block title %}Player index{% endblock %}
 {% block active_player %}active{% endblock %}
 
@@ -12,28 +14,124 @@
 {% endblock %}
 
 {% block content %}
-{% if paginator %}
-<ul class="pagination">
-    <li class="{% if not page_obj.has_previous %}disabled{% endif %}"><a href="?page=1">&laquo;</a></li>
-    {% for pnum in paginator.page_range %}
-    <li class="{% if page_obj.number == pnum %}active{% endif %}"><a href="?page={{ pnum }}">{{ pnum }}</a></li>
-    {% endfor %}
-    <li class="{% if not page_obj.has_next %}disabled{% endif %}"><a href="?page=last">&raquo;</a></li>
-</ul>
-{% endif %}
 <div class="row">
-    <div class="col-md-3">
-        <ul>
-        {% for player in player_list %}
-        <li><a href="{{ player.get_absolute_url }}">{{ player.last_name }}, {{ player.first_name }}</a></li>
-        {% if forloop.counter|divisibleby:35 %}
-        </ul>
+    <div class="col-sm-5 col-md-3">
+        <form action="" method="get" id="search-form">
+            <div class="input-group input-group-lg">
+                <input type="text" class="form-control" id="id_query" name="name" placeholder="Search here!">
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
+                </span>
+            </div>
+        </form>
+        <p></p>
+        <div id="search-results">
+            {% include "data/player_search.html" %}
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-heart"></i> Popular Players</h3>
+            </div>
+            <div class="list-group media-list">
+                {% for player in popular_list %}
+                <a href="{{ player.get_absolute_url }}" class="list-group-item media">
+                    <div class="pull-left">
+                      <img class="media-object" src="{{ player.photo_url }}" alt="{{ player.full_name }}">
+                    </div>
+                    <div class="media-body">
+                      <h5 class="list-group-item-heading">{{ player.full_name }}</h5> <small>{{ player.country }}</small>
+                      <small class="pull-right red-card">{{ player.num_fans }} <i class="fa fa-heart"></i></small>
+                    </div>
+                </a>
+                {% empty %}
+                <a href="#" class="list-group-item">No popular players found.</a>
+                {% endfor %}
+            </div>
+        </div>
     </div>
-    <div class="col-md-3">
-        <ul>
-        {% endif%}
-        {% endfor %}
+    <div class="col-sm-7 col-md-8">
+        <div class="row">
+            <div class="col-md-7">
+                <div class="well">
+                    <p class="lead">Country</p>
+                    <ul class="list-inline">
+                        <li><a href="{% append_to_get country='',page='' %}"><b>Show all</b></a></li>
+                        {% for country in countries %}
+                        <li><a href="{% append_to_get country=country,page='' %}">{{ country }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="well">
+                    <p class="lead">Playing position</p>
+                    <ul class="list-inline">
+                        <li><a href="{% append_to_get position='',page='' %}"><b>Show all</b></a></li>
+                        {% for position in positions %}
+                        <li><a href="{% append_to_get position=position.0,page='' %}">{{ position.1 }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            
+        <!-- </div>
+        <div class="well"> -->
+            
+        </div>
+        {% if request.GET.country or request.GET.position %}
+        <h4><i>Showing <b>{{ paginator.count }}</b>
+        {% if request.GET.position %} {{ request.GET.position|choice_display:positions }}{{ player_list|pluralize }}
+        {% else %} player{{ player_list|pluralize }}{% endif %}
+        {% if request.GET.country %} from {{ request.GET.country }}{% endif %}
+        </i></h4>
+        {% else %}
+        <h4><i>Showing <b>all</b> players</i></h4>
+        {% endif %}
+        <hr>
+        {% if paginator %}
+        <ul class="pagination pagination-sm">
+            <li class="{% if not page_obj.has_previous %}disabled{% endif %}"><a href="{% append_to_get page=1 %}">&laquo;</a></li>
+            {% for pnum in paginator.page_range %}
+            <li class="{% if page_obj.number == pnum %}active{% endif %}"><a href="{% append_to_get page=pnum %}">{{ pnum }}</a></li>
+            {% endfor %}
+            <li class="{% if not page_obj.has_next %}disabled{% endif %}"><a href="{% append_to_get page='last' %}">&raquo;</a></li>
         </ul>
+        {% endif %}
+        <div class="row">
+            <div class="col-md-3">
+                <ul>
+                {% for player in player_list %}
+                <li><a href="{{ player.get_absolute_url }}">{{ player.last_name }}, {{ player.first_name }}</a></li>
+                {% if forloop.counter|divisibleby:30 %}
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <ul>
+                {% endif%}
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
+{% endblock %}
+{% block extra_script %}
+<script type="text/javascript">
+    
+    $(document).ready(function() {
+        $("#search-form").submit(search_submit);
+    });
+
+    function search_submit() {
+        var query = $("#id_query").val();
+
+        $("#search-results").load(
+            "?name=" + encodeURIComponent(query)
+        );
+        $("#id_query").val("")
+
+        return false;
+    }
+
+</script>
 {% endblock %}

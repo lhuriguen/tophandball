@@ -1,0 +1,21 @@
+{% if request.GET.name %}
+    {% if player_list|length > 0 %}
+    <div class="alert alert-success" role="alert">{{ player_list|length }} result{{ player_list|pluralize }} for <i>{{ request.GET.name }}</i>.</div>
+    <div id="search_results">
+        <div class="list-group media-list">
+            {% for player in player_list %}
+            <a href="{{ player.get_absolute_url }}" class="list-group-item media">
+                <div class="pull-left">
+                  <img class="media-object" src="{{ player.photo_url }}" alt="{{ player.full_name }}">
+                </div>
+                <div class="media-body">
+                  <h5 class="list-group-item-heading">{{ player.full_name }}</h5> <small>{{ player.country }}</small>               
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-danger" role="alert">No results found for <i>{{ request.GET.name }}</i>.</div>
+    {% endif %}
+{% endif %}
