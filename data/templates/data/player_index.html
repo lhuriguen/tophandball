@@ -50,9 +50,9 @@
         </div>
     </div>
     <div class="col-sm-7 col-md-8">
-        <div class="row">
-            <div class="col-md-7">
-                <div class="well">
+        <div class="well">
+            <div class="row">
+                <div class="col-md-7">
                     <p class="lead">Country</p>
                     <ul class="list-inline">
                         <li><a href="{% append_to_get country='',page='' %}"><b>Show all</b></a></li>
@@ -61,9 +61,7 @@
                         {% endfor %}
                     </ul>
                 </div>
-            </div>
-            <div class="col-md-5">
-                <div class="well">
+                <div class="col-md-5">
                     <p class="lead">Playing position</p>
                     <ul class="list-inline">
                         <li><a href="{% append_to_get position='',page='' %}"><b>Show all</b></a></li>
@@ -73,10 +71,6 @@
                     </ul>
                 </div>
             </div>
-            
-        <!-- </div>
-        <div class="well"> -->
-            
         </div>
         {% if request.GET.country or request.GET.position %}
         <h4><i>Showing <b>{{ paginator.count }}</b>
@@ -88,29 +82,26 @@
         <h4><i>Showing <b>all</b> players</i></h4>
         {% endif %}
         <hr>
-        {% if paginator %}
-        <ul class="pagination pagination-sm">
-            <li class="{% if not page_obj.has_previous %}disabled{% endif %}"><a href="{% append_to_get page=1 %}">&laquo;</a></li>
-            {% for pnum in paginator.page_range %}
-            <li class="{% if page_obj.number == pnum %}active{% endif %}"><a href="{% append_to_get page=pnum %}">{{ pnum }}</a></li>
-            {% endfor %}
-            <li class="{% if not page_obj.has_next %}disabled{% endif %}"><a href="{% append_to_get page='last' %}">&raquo;</a></li>
-        </ul>
-        {% endif %}
-        <div class="row">
-            <div class="col-md-3">
-                <ul>
+        <div id="player_display">
+            {% include "data/pagination.html" %}
+            <div class="row">
                 {% for player in player_list %}
-                <li><a href="{{ player.get_absolute_url }}">{{ player.last_name }}, {{ player.first_name }}</a></li>
-                {% if forloop.counter|divisibleby:30 %}
-                </ul>
-            </div>
-            <div class="col-md-3">
-                <ul>
-                {% endif%}
+                <div class="col-xs-6 col-md-3">
+                    <a href="{{ player.get_absolute_url }}" class="th-card">
+                        <h5 class="th-card-heading"><b>{{ player.last_name }}</b></h5>
+                        <p class="th-card-body">{{ player.first_name }}</p>
+                        <small class="text-info th-card-body">{{ player.get_position_display }}, {{ player.country }}</small>
+                    </a>
+                </div>
+                {% if forloop.counter|divisibleby:4 %}
+                </div>
+                <div class="row">
+                {% elif forloop.counter|divisibleby:2 %}
+                <div class="clearfix visible-sm visible-xs"></div>
+                {% endif %}
                 {% endfor %}
-                </ul>
             </div>
+            {% include "data/pagination.html" %}
         </div>
     </div>
 </div>

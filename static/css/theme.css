@@ -141,11 +141,38 @@ html {
 .th-masthead p {
     margin-bottom: 0;
 }
-.th-card, .th-card:focus, .th-card:hover {
+.th-card {
     color: #333;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: block;
+    line-height: 1.42857;
+    margin-bottom: 20px;
+    padding: 4px;
+    transition: all 0.2s ease-in-out 0s;
+}
+a.th-card:focus, a.th-card:hover {
+    background-color: #f5f5f5;
     text-decoration: none;
-    text-align: center;
+    color: #333;
 }
 .th-card p {
     margin-top: 5px;
+}
+.th-card img {
+    max-height: 150px;
+}
+.th-card-heading {
+    margin-bottom: 5px;
+    margin-top: 0;
+    color: #333;
+    padding-left: 4px;
+}
+.th-card-body {
+    padding-left: 4px;
+    margin-bottom: 5px;
+}
+#player_display .pagination {
+    margin: 0 0 10px;
 }
