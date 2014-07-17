@@ -160,6 +160,10 @@ class PlayerIndexView(generic.ListView):
         context['countries'] = Player.objects.values_list(
             'country', flat=True).order_by('country').distinct()
         context['positions'] = Player.POSITION_CHOICES
+        if self.request.user.is_authenticated():
+            context['user_favs'] = Player.objects.filter(
+                fans__username=self.request.user.username).values_list(
+                'id', flat=True)
         return context
 
 
@@ -206,6 +210,16 @@ def player_love(request, player_id):
             p.fans.remove(request.user)
             fan = False
         if request.is_ajax():
+            # Template depends on location
+            if request.POST['location'] == 'list':
+                user_favs = Player.objects.filter(
+                    fans__username=request.user.username
+                    ).values_list('id', flat=True)
+                return render_to_response(
+                    'data/list_love.html',
+                    {'item': p, 'user_favs': user_favs},
+                    context_instance=RequestContext(request)
+                )
             return render_to_response(
                 'data/form_love.html',
                 {'fan': fan, 'fan_count': p.fans.count()},

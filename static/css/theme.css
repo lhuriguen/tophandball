@@ -162,6 +162,8 @@ a.th-card:focus, a.th-card:hover {
 }
 .th-card img {
     max-height: 150px;
+    height: auto;
+    max-width: 100%;
 }
 .th-card-heading {
     margin-bottom: 5px;

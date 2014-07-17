@@ -1,0 +1,13 @@
+{% csrf_token %}
+<input type="hidden" name="location" value="list" />
+{% if item.id in user_favs %}
+    <input type="hidden" name="choice" value="unfollow" />
+    <button class="btn btn-link btn-xs">
+        <i class="fa fa-heart red-card"></i>
+    </button>
+{% else %}
+    <input type="hidden" name="choice" value="follow" />
+    <button class="btn btn-link btn-xs">
+        <i class="fa fa-heart-o red-card"></i>
+    </button>
+{% endif %}

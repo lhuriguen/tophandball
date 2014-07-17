@@ -85,12 +85,19 @@
         <div id="player_display">
             {% include "data/pagination.html" %}
             <div class="row">
-                {% for player in player_list %}
+                {% for item in player_list %}
                 <div class="col-xs-6 col-md-3">
-                    <a href="{{ player.get_absolute_url }}" class="th-card">
-                        <h5 class="th-card-heading"><b>{{ player.last_name }}</b></h5>
-                        <p class="th-card-body">{{ player.first_name }}</p>
-                        <small class="text-info th-card-body">{{ player.get_position_display }}, {{ player.country }}</small>
+                    <a href="{{ item.get_absolute_url }}" class="th-card">
+                        <h5 class="th-card-heading"><b>{{ item.last_name }}</b></h5>
+                        <p class="th-card-body">{{ item.first_name }}</p>
+                        <small class="text-info th-card-body">{{ item.get_position_display }}, {{ item.country }}</small>
+                        <!-- <button id="follow" class="btn btn-link btn-xs pull-right">
+                            {% if player.id in user_favs %}<i class="fa fa-heart red-card"></i>
+                            {% else %}<i class="fa fa-heart-o red-card"></i>{% endif %}
+                        </button> -->
+                        <form class="pull-right list_follow" action="{% url 'data:player_love' item.id %}" method="post" id="list_follow_{{ forloop.counter }}">
+                        {% include "data/list_love.html" %}
+                        </form>
                     </a>
                 </div>
                 {% if forloop.counter|divisibleby:4 %}
@@ -123,6 +130,34 @@
 
         return false;
     }
+
+    $(document).ready(function() {
+        $("#follow").click(function(e) {
+            e.preventDefault();
+        });
+    });
+
+    $(document).on('submit', '.list_follow', function() {
+        var frm = $(this);
+        $.ajax({
+            type: frm.attr('method'),
+            url: frm.attr('action'),
+            data: frm.serialize(),
+            success: function(data) {
+                //alert("Something went OK!");
+                frm.html(data);
+            },
+            error: function(data) {
+                if (data.status == 401) {
+                    window.location.href = data.responseText + '?next=' + window.location.pathname;
+                } else {
+                    alert("Something went wrong!");
+                }
+            }
+        });
+        return false;
+    });
+
 
 </script>
 {% endblock %}
