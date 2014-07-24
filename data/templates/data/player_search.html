@@ -1,5 +1,7 @@
 {% if request.GET.name %}
-    {% if player_list|length > 0 %}
+    {% if player_list|length > 30 %}
+    <div class="alert alert-danger" role="alert">Too many results. Please refine your search terms.</div>
+    {% elif player_list|length > 0 %}
     <div class="alert alert-success" role="alert">{{ player_list|length }} result{{ player_list|pluralize }} for <i>{{ request.GET.name }}</i>.</div>
     <div id="search_results">
         <div class="list-group media-list">

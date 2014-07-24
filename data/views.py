@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 from django.db.models import Count, Q
 
 from infohandball.decorators import login_required
-from .models import Club, Player, Competition, PlayerContract
+from .models import *
 from .mixins import LoveMixin, LoginRequiredMixin
 
 
@@ -44,9 +44,13 @@ class ClubIndexView(generic.ListView):
         context['club_count'] = Club.objects.count()
         context['popular_list'] = Club.objects.annotate(
             num_fans=Count('fans')).filter(num_fans__gt=0)\
-            .order_by('-num_fans')[:10]
+            .order_by('-num_fans')[:5]
         context['countries'] = Club.objects.values_list('country', flat=True)\
             .order_by('country').distinct()
+        if self.request.user.is_authenticated():
+            context['user_favs'] = Club.objects.filter(
+                fans__username=self.request.user.username).values_list(
+                'id', flat=True)
         return context
 
 
@@ -94,6 +98,40 @@ class ClubMatchView(LoveMixin, generic.ListView):
             return self.object.get_matches()[:5]
 
 
+class ClubTeamView(LoveMixin, generic.ListView):
+    #model = Club
+    template_name = 'data/club_team.html'
+    context_object_name = 'staff_list'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(ClubTeamView, self).get_context_data(**kwargs)
+        # Add in the club
+        context['club'] = self.object
+        context['seasons'] = Season.objects.filter(
+            playercontract__club=self.object).distinct()
+        if self.request.user.is_authenticated():
+            context['user_favs'] = Player.objects.filter(
+                fans__username=self.request.user.username).values_list(
+                'id', flat=True)
+        if 'season' in self.request.GET:
+            year = self.request.GET['season']
+            context['coach_list'] = CoachContract.objects.select_related(
+                'coach').filter(club=self.object, season__year_from=year)
+        else:
+            context['coach_list'] = self.object.get_current_coaches()
+        return context
+
+    def get_queryset(self):
+        self.object = get_object_or_404(Club, pk=self.kwargs['pk'])
+        if 'season' in self.request.GET:
+            year = self.request.GET['season']
+            return PlayerContract.objects.select_related(
+                'player').filter(club=self.object, season__year_from=year)\
+                .order_by('shirt_number')
+        return self.object.get_current_team().order_by('shirt_number')
+
+
 @login_required
 def club_love(request, club_id):
     c = get_object_or_404(Club, pk=club_id)
@@ -106,6 +144,16 @@ def club_love(request, club_id):
             c.fans.remove(request.user)
             fan = False
         if request.is_ajax():
+            # Template depends on location
+            if request.POST['location'] == 'list':
+                user_favs = Club.objects.filter(
+                    fans__username=request.user.username
+                    ).values_list('id', flat=True)
+                return render_to_response(
+                    'data/list_love.html',
+                    {'item': c, 'user_favs': user_favs},
+                    context_instance=RequestContext(request)
+                )
             return render_to_response(
                 'data/form_love.html',
                 {'fan': fan, 'fan_count': c.fans.count()},
@@ -147,8 +195,8 @@ class PlayerIndexView(generic.ListView):
             query = query.filter(country=self.request.GET['country'])
         if 'position' in self.request.GET and self.request.GET['position']:
             query = query.filter(position=self.request.GET['position'])
-        if not 'retired' in self.request.GET:
-            query = query.exclude(retired=True)
+        # if not 'retired' in self.request.GET:
+        #     query = query.exclude(retired=True)
         return query.order_by('last_name')
 
     def get_context_data(self, **kwargs):
@@ -156,7 +204,7 @@ class PlayerIndexView(generic.ListView):
         context['player_count'] = Player.objects.count()
         context['popular_list'] = Player.objects.annotate(
             num_fans=Count('fans')).filter(num_fans__gt=0)\
-            .order_by('-num_fans')[:10]
+            .order_by('-num_fans')[:5]
         context['countries'] = Player.objects.values_list(
             'country', flat=True).order_by('country').distinct()
         context['positions'] = Player.POSITION_CHOICES

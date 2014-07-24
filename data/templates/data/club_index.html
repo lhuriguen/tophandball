@@ -49,6 +49,7 @@
     </div>
     <div class="col-sm-7 col-md-8">
         <div class="well">
+            <p class="lead">Country</p>
             <ul class="list-inline">
                 <li><a href="."><b>Show all</b></a></li>
                 {% for country in countries %}
@@ -64,11 +65,19 @@
         <hr>
         <div id="country_clubs">
             <div class="row">
-            {% for club in club_list %}
+            {% for item in club_list %}
                 <div class="col-xs-6 col-md-3">
-                    <a href="{{ club.get_absolute_url }}" class="th-card text-center">
-                      <img src="{{ club.logo_url }}" alt="{{ club.name }}">
-                      <p>{{ club.name }}</p>
+                    <a href="{{ item.get_absolute_url }}" class="th-card text-center">
+                        <img class="th-card-poster" style="max-height: 100px;" src="{{ item.logo_url }}" alt="{{ item.name }}">
+                        <div class="th-card-div">
+                            <h5 class="th-card-heading"><b>{{ item.name }}</b></h5>
+                            <small class="text-info th-card-body">{{ item.country }}</small>
+                            <div class="th-card-btn">
+                                <form class="list_follow" action="{% url 'data:club_love' item.id %}" method="post">
+                                    {% include "data/list_love.html" %}
+                                </form>
+                            </div>
+                        </div>
                     </a>
                 </div>
                 {% if forloop.counter|divisibleby:4 %}
@@ -82,25 +91,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block extra_script %}
-<script type="text/javascript">
-    
-    $(document).ready(function() {
-        $("#search-form").submit(search_submit);
-    });
-
-    function search_submit() {
-        var query = $("#id_query").val();
-
-        $("#search-results").load(
-            "?name=" + encodeURIComponent(query)
-        );
-        $("#id_query").val("")
-
-        return false;
-    }
-
-</script>
 {% endblock %}

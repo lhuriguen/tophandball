@@ -3,11 +3,11 @@
 {% if item.id in user_favs %}
     <input type="hidden" name="choice" value="unfollow" />
     <button class="btn btn-link btn-xs">
-        <i class="fa fa-heart red-card"></i>
+        <span class="btn-love"><i class="fa fa-heart"></i></span>
     </button>
 {% else %}
     <input type="hidden" name="choice" value="follow" />
     <button class="btn btn-link btn-xs">
-        <i class="fa fa-heart-o red-card"></i>
+        <span class="btn-love"><i class="fa fa-heart-o"></i></span>
     </button>
 {% endif %}

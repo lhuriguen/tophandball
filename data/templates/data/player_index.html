@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load bootstrap %}
 {% load th_extra %}
 {% block title %}Player index{% endblock %}
 {% block active_player %}active{% endblock %}
@@ -14,6 +13,7 @@
 {% endblock %}
 
 {% block content %}
+
 <div class="row">
     <div class="col-sm-5 col-md-3">
         <form action="" method="get" id="search-form">
@@ -36,10 +36,10 @@
                 {% for player in popular_list %}
                 <a href="{{ player.get_absolute_url }}" class="list-group-item media">
                     <div class="pull-left">
-                      <img class="media-object" src="{{ player.photo_url }}" alt="{{ player.full_name }}">
+                      <img class="media-object media-object-bordered" src="{{ player.photo_url }}" alt="{{ player.full_name }}">
                     </div>
                     <div class="media-body">
-                      <h5 class="list-group-item-heading">{{ player.full_name }}</h5> <small>{{ player.country }}</small>
+                      <h5 class="list-group-item-heading">{{ player.full_name }}</h5> <small>{{ player.get_position_display }}, {{ player.country }}</small>
                       <small class="pull-right red-card">{{ player.num_fans }} <i class="fa fa-heart"></i></small>
                     </div>
                 </a>
@@ -88,16 +88,16 @@
                 {% for item in player_list %}
                 <div class="col-xs-6 col-md-3">
                     <a href="{{ item.get_absolute_url }}" class="th-card">
+                    <div class="th-card-div">
                         <h5 class="th-card-heading"><b>{{ item.last_name }}</b></h5>
                         <p class="th-card-body">{{ item.first_name }}</p>
                         <small class="text-info th-card-body">{{ item.get_position_display }}, {{ item.country }}</small>
-                        <!-- <button id="follow" class="btn btn-link btn-xs pull-right">
-                            {% if player.id in user_favs %}<i class="fa fa-heart red-card"></i>
-                            {% else %}<i class="fa fa-heart-o red-card"></i>{% endif %}
-                        </button> -->
-                        <form class="pull-right list_follow" action="{% url 'data:player_love' item.id %}" method="post" id="list_follow_{{ forloop.counter }}">
-                        {% include "data/list_love.html" %}
-                        </form>
+                        <div class="th-card-btn">
+                            <form class="list_follow" action="{% url 'data:player_love' item.id %}" method="post">
+                                {% include "data/list_love.html" %}
+                            </form>
+                        </div>
+                    </div>
                     </a>
                 </div>
                 {% if forloop.counter|divisibleby:4 %}
@@ -112,52 +112,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
-{% block extra_script %}
-<script type="text/javascript">
-    
-    $(document).ready(function() {
-        $("#search-form").submit(search_submit);
-    });
-
-    function search_submit() {
-        var query = $("#id_query").val();
-
-        $("#search-results").load(
-            "?name=" + encodeURIComponent(query)
-        );
-        $("#id_query").val("")
-
-        return false;
-    }
-
-    $(document).ready(function() {
-        $("#follow").click(function(e) {
-            e.preventDefault();
-        });
-    });
-
-    $(document).on('submit', '.list_follow', function() {
-        var frm = $(this);
-        $.ajax({
-            type: frm.attr('method'),
-            url: frm.attr('action'),
-            data: frm.serialize(),
-            success: function(data) {
-                //alert("Something went OK!");
-                frm.html(data);
-            },
-            error: function(data) {
-                if (data.status == 401) {
-                    window.location.href = data.responseText + '?next=' + window.location.pathname;
-                } else {
-                    alert("Something went wrong!");
-                }
-            }
-        });
-        return false;
-    });
-
-
-</script>
 {% endblock %}

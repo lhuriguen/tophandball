@@ -1,11 +1,7 @@
 {% extends "data/base_club.html" %}
 {% load tz %}
-{% block active_match %}active{% endblock %}
 
-{% block under_nav %}
-<a href="{{ club.get_absolute_url }}" class="btn btn-default btn-sm"><i class="fa fa-level-up fa-rotate-270"></i> Back</a>
-{% endblock %}
-
+{% block active_matches %}active{% endblock %}
 {% block specific %}
 <div class="row">
     <div class="col-md-2">

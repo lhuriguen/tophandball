@@ -1,9 +1,8 @@
 {% extends "data/base_club.html" %}
-{% block active_info %}active{% endblock %}
-
+{% block active_home %}active{% endblock %}
 {% block specific %}
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-sm-4 col-md-3">
         <div class="panel panel-default">
             <div class="panel-body">
                 <small>
@@ -33,7 +32,7 @@
         </div>
         <div id="map_canvas" class="thumbnail">{% if not club.address %}Sorry, cannot show map without an address.{% endif %}</div>
     </div>
-    <div class="col-md-6">
+    <div class="col-sm-8 col-md-6">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> {{ club.name }}'s Competitions</h3>
@@ -58,12 +57,9 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <div class="panel-footer">
-                <p class="panel-title text-center"><a href="{% url 'data:club_matches' pk=club.id %}">Match History</a></p>
-            </div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-sm-4 col-md-3">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title"><i class="fa fa-group"></i> Current players</h3>
@@ -83,16 +79,12 @@
                 <a href="#" class="list-group-item">No players found.</a>
                 {% endfor %}
             </div>
-            <div class="panel-footer">
-                <p class="panel-title text-center"><a href="#">Player History</a></p>
-            </div>
         </div>
     </div>
 </div>
 {% endblock %}
 
 {% block extra_script %}
-{{ block.super }}
 <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
 <script>
     var geocoder, map;

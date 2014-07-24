@@ -7,25 +7,26 @@
 
 <div id="header-box">
     <div class="row">
-        <div class="col-md-2">
+        <div class="col-sm-3 col-md-2">
             <img class="img-logo img-responsive" src="{{ club.logo_url }}" alt="{{ club.name }} logo">
         </div>
-        <div class="col-md-8">
+        <div class="col-sm-9 col-md-10">
             <h1>{{ club.name }} <small>{{ club.country }}</small></h1>
+            <div class="btn-toolbar">
+                <div class="btn-group btn-group-sm">
+                    <a class="btn btn-link {% block active_home %}{% endblock %}" href="{{ club.get_absolute_url }}"><i class="fa fa-home"></i> Home</a>
+                    <a class="btn btn-link {% block active_matches %}{% endblock %}" href="{% url 'data:club_matches' pk=club.id %}"><i class="fa fa-calendar"></i> Matches</a>
+                    <a class="btn btn-link {% block active_team %}{% endblock %}" href="{% url 'data:club_team' pk=club.id %}"><i class="fa fa-group"></i> Team</a>
+                </div>
+                <div class="btn-group btn-group-sm">
+                    <form action="{% url 'data:club_love' club.id %}" method="post" id="follow_form">
+                        {% include "data/form_love.html" %}
+                    </form>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="top-button-bar">
-        <form action="{% url 'data:club_love' club.id %}" method="post" id="follow_form">
-            {% include "data/form_love.html" %}
-        </form>
-    </div>
-    <div class="bottom-button-bar">
-        {% block under_nav %}{% endblock %}
     </div>
 </div>
 
 {% block specific %}{% endblock %}
 {% endblock content %}
-{% block extra_script %}
-<script src="{% static "js/custom.js" %}"></script>
-{% endblock %}
