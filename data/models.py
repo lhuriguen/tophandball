@@ -33,6 +33,14 @@ class Season(models.Model):
     def __unicode__(self):
         return u'%s' % (self.name)
 
+    @staticmethod
+    def curr_year():
+        today = datetime.datetime.today()
+        middle = datetime.datetime(today.year, 7, 1)
+        if today < middle:
+            return today.year - 1
+        return today.year
+
 
 class Club(models.Model):
     name = models.CharField(max_length=100)
@@ -153,7 +161,7 @@ class Person(models.Model):
         if self.photo:
             return self.photo.url
         else:
-            return u'http://placehold.it/160x220&text=No+Image'
+            return u'http://placehold.it/320x400&text=No+Image'
 
     class Meta:
         abstract = True

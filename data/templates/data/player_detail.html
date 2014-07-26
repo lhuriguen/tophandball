@@ -1,5 +1,5 @@
 {% extends "data/base_player.html" %}
-
+{% block active_home %}active{% endblock %}
 {% block specific %}
 
 <div class="row">
@@ -29,7 +29,7 @@
                     <strong>Club career: </strong>
                     <ul class="list-unstyled">
                     {% for contract in club_career %}
-                        <li>{{ contract.season.name }} - <a href="{{ contract.club.get_absolute_url }}">{{ contract.club.name }}</a>{% if contract.arrival_month %} (since {{ contract.get_arrival_month_display }}){% endif %}{% if contract.departure_month %} (until {{ contract.get_departure_month_display }}){% endif %}</li>
+                        <li><a href="{% url 'data:club_team' pk=contract.club.id %}?season={{ contract.season.year_from }}">{{ contract.season.name }}</a> - <a href="{{ contract.club.get_absolute_url }}">{{ contract.club.name }}</a>{% if contract.arrival_month %} (since {{ contract.get_arrival_month_display }}){% endif %}{% if contract.departure_month %} (until {{ contract.get_departure_month_display }}){% endif %}</li>
                     {% endfor %}
                     </ul>
                     <hr>

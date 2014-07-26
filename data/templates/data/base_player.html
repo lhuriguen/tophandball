@@ -7,20 +7,23 @@
 
 <div id="header-box">
     <div class="row">
-        <div class="col-md-2">
+        <div class="col-sm-3 col-md-2">
             <img class="img-person img-responsive" src="{{ player.photo_url }}" alt="photo">
         </div>
-        <div class="col-md-8">
+        <div class="col-sm-9 col-md-10">
             <h1>{{ player.full_name }} <small>{{ player.country }}</small></h1>
+            <div class="btn-toolbar" style="margin-top: 38px;">
+                <div class="btn-group btn-group-sm">
+                    <a class="btn btn-link {% block active_home %}{% endblock %}" href="{{ player.get_absolute_url }}"><i class="fa fa-home"></i> Home</a>
+                    <a class="btn btn-link {% block active_matches %}{% endblock %}" href="#"><i class="fa fa-calendar"></i> Matches</a>
+                </div>
+                <div class="btn-group btn-group-sm">
+                    <form action="{% url 'data:player_love' player.id %}" method="post" id="follow_form">
+                        {% include "data/form_love.html" %}
+                    </form>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="top-button-bar">
-        <form action="{% url 'data:player_love' player.id %}" method="post" id="follow_form">
-            {% include "data/form_love.html" %}
-        </form>
-    </div>
-    <div class="bottom-button-bar">
-        {% block under_nav %}{% endblock %}
     </div>
 </div>
 

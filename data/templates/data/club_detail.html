@@ -10,9 +10,13 @@
                     <strong>Short name: </strong> {{ club.short_name }}<br>
                     <strong>Initials: </strong> {{ club.initials }}<br>
                     <hr>
-                    <strong>Website: </strong> {{ club.website|urlize }}<br>
-                    <strong>Twitter: </strong> {{ club.twitter|urlize }}<br>
-                    <strong>Facebook: </strong> {{ club.facebook|urlize }}<br>
+                    <i class="fa fa-external-link fa-fw"></i> <a target="_blank" href="{{ club.website }}">Official website</a><br>
+                    {% if club.twitter %}
+                    <i class="fa fa-twitter fa-fw"></i> <a target="_blank" href="{{ club.twitter }}">Twitter</a><br>
+                    {% endif %}
+                    {% if club.facebook %}
+                    <i class="fa fa-facebook fa-fw"></i> <a target="_blank" href="{{ club.facebook }}">Facebook</a><br>
+                    {% endif %}
                     <hr>
                     <strong>Address:</strong><br>
                     {{ club.address }}
@@ -76,7 +80,7 @@
                     </div>
                 </a>
                 {% empty %}
-                <a href="#" class="list-group-item">No players found.</a>
+                <div class="list-group-item">No current players found. Check past seasons under the <a href="{% url 'data:club_team' pk=club.id %}"><i class="fa fa-group"></i> Team</a> section.</div>
                 {% endfor %}
             </div>
         </div>

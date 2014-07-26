@@ -5,7 +5,7 @@ from django.template import RequestContext
 from django.views import generic
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Avg, Sum
 
 from infohandball.decorators import login_required
 from .models import *
@@ -110,16 +110,28 @@ class ClubTeamView(LoveMixin, generic.ListView):
         context['club'] = self.object
         context['seasons'] = Season.objects.filter(
             playercontract__club=self.object).distinct()
+
         if self.request.user.is_authenticated():
             context['user_favs'] = Player.objects.filter(
                 fans__username=self.request.user.username).values_list(
                 'id', flat=True)
+
         if 'season' in self.request.GET:
             year = self.request.GET['season']
-            context['coach_list'] = CoachContract.objects.select_related(
-                'coach').filter(club=self.object, season__year_from=year)
         else:
-            context['coach_list'] = self.object.get_current_coaches()
+            year = Season.curr_year()
+
+        context['coach_list'] = CoachContract.objects.select_related(
+            'coach').filter(club=self.object, season__year_from=year)
+
+        context['scorers_list'] = Player.objects.filter(
+            matchplayerstats__match_team__club=self.object,
+            matchplayerstats__match_team__match__group__stage__comp_season__season__year_from=year
+            ).annotate(sum_goals=Sum('matchplayerstats__goals'),
+                       yellows=Sum('matchplayerstats__yellow_card'),
+                       two_mins=Sum('matchplayerstats__two_minutes'),
+                       reds=Sum('matchplayerstats__red_card')
+                       ).order_by('-sum_goals')
         return context
 
     def get_queryset(self):
@@ -148,7 +160,7 @@ def club_love(request, club_id):
             if request.POST['location'] == 'list':
                 user_favs = Club.objects.filter(
                     fans__username=request.user.username
-                    ).values_list('id', flat=True)
+                ).values_list('id', flat=True)
                 return render_to_response(
                     'data/list_love.html',
                     {'item': c, 'user_favs': user_favs},
@@ -234,7 +246,7 @@ class PlayerDetailView(LoveMixin, generic.DetailView):
         # Matches
         matches = self.player.matchplayerstats_set.select_related().order_by(
             '-match_team__match__match_datetime')
-        context['matches'] = matches[0:8]
+        context['matches'] = matches #[0:8]
         return context
 
 
@@ -262,7 +274,7 @@ def player_love(request, player_id):
             if request.POST['location'] == 'list':
                 user_favs = Player.objects.filter(
                     fans__username=request.user.username
-                    ).values_list('id', flat=True)
+                ).values_list('id', flat=True)
                 return render_to_response(
                     'data/list_love.html',
                     {'item': p, 'user_favs': user_favs},

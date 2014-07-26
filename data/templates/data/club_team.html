@@ -5,6 +5,7 @@
 {% block specific %}
 <div class="well well-sm">
     <ul class="list-inline">
+        <li><b>Seasons:</b></li>
     {% for season in seasons reversed %}
         <li><a href="?season={{ season.year_from }}">{{ season.name }}</a></li>
     {% endfor %}
@@ -26,7 +27,12 @@
                     </div>
                     <div class="th-card-div">
                         <h5 class="th-card-heading"><b>{{ player.player.last_name }}</b>, {{ player.player.first_name }}</h5>
-                        <small class="text-info th-card-body">#{{ player.shirt_number }}. {{ player.player.get_position_display }}, {{ player.player.country }}</small>
+                        <p class="text-muted th-card-body small">
+                        {{ player.player.birth_date|date:"d/m/Y" }} (age {{ player.player.age }}), {{ player.player.country }}
+                        </p>
+                        <p class="text-info th-card-body small">
+                        #{{ player.shirt_number }}. {{ player.player.get_position_display }}
+                        </p>
                         <div class="th-card-btn">
                             <form class="list_follow" action="{% url 'data:player_love' player.player.id %}" method="post">
                                 {% with item=player.player %}
@@ -44,8 +50,10 @@
         <div class="clearfix visible-xs"></div>
             {% endif %}
         {% empty %}
-            <div class="alert alert-warning" role="alert">
-                <h4><i class="fa fa-warning"></i> Warning!</h4> No players found for the selected season.
+            <div class="col-md-12">
+                <div class="alert alert-warning" role="alert">
+                    <i class="fa fa-warning"></i> No players found for the selected season.
+                </div>
             </div>
         {% endfor %}
         </div>
@@ -59,7 +67,10 @@
                     </div>
                     <div class="th-card-div">
                         <h5 class="th-card-heading"><b>{{ coach.coach.last_name }}</b>, {{ coach.coach.first_name }}</h5>
-                        <small class="text-info th-card-body">{{ coach.get_role_display }}, {{ coach.coach.country }}</small>
+                        <p class="text-muted th-card-body small">
+                        {{ coach.coach.birth_date|date:"d/m/Y" }} (age {{ coach.coach.age }}), {{ coach.coach.country }}
+                        </p>
+                        <p class="text-info th-card-body small">{{ coach.get_role_display }}</p>
                     </div>
                 </a>
             </div>
@@ -70,9 +81,10 @@
         <div class="clearfix visible-xs"></div>
             {% endif %}
         {% empty %}
-            <div class="alert alert-warning" role="alert">
-            <h4><i class="fa fa-warning"></i> Warning!</h4>
-            No coaches found for the selected season.
+            <div class="col-md-12">
+                <div class="alert alert-warning" role="alert">
+                    <i class="fa fa-warning"></i> No coaches found for the selected season.
+                </div>
             </div>
         {% endfor %}
         </div>
@@ -81,42 +93,31 @@
     <div class="col-md-3">
         <div class="panel panel-default">
         <div class="panel-body">
-            <p class="text-warning"><i class="fa fa-warning"></i> <small>Season statistics are gathered <b>exclusively</b> from data recorded on TopHandball.</small></p>
+            <span class="text-danger small"><i class="fa fa-warning"></i> Season statistics are gathered <b>exclusively</b> from data recorded on TopHandball.</span>
           </div>
-        <table class="table">
+        <table class="table table-condensed">
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th><abbr title="Goals"><i class="fa fa-bullseye" ></i></abbr></th>
+                    <th>&nbsp;</th>
+                    <th><abbr title="Goals"><i class="fa fa-bullseye"></i></abbr></th>
+                    <th><abbr title="Yellow cards"><i class="fa fa-square yellow-card"></i></abbr></th>
+                    <th><abbr title="Two minutes"><i class="fa fa-clock-o" ></i></abbr></th>
+                    <th><abbr title="Red cards"><i class="fa fa-square red-card"></i></abbr></th>
                 </tr>
             </thead>
             <tbody>
+                {% for p in scorers_list %}
                 <tr>
-                    <td>1</td>
-                    <td>Test Player Name</td>
-                    <td>33</td>
+                    <td><a href="{{ p.get_absolute_url }}">{{ p.first_name|first }}. {{ p.last_name }}</a></td>
+                    <td>{{ p.sum_goals }}</td>
+                    <td>{{ p.yellows }}</td>
+                    <td>{{ p.two_mins }}</td>
+                    <td>{{ p.reds }}</td>
                 </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Test Player Name</td>
-                    <td>33</td>
+                {% empty %}
+                <tr><td colspan="5" class="warning text-warning">No data found for the selected season.</td>
                 </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Test Player Name</td>
-                    <td>33</td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>Test Player Name</td>
-                    <td>33</td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td>Test Player Name</td>
-                    <td>33</td>
-                </tr>
+                {% endfor %}
             </tbody>
         </table>
         </div>
