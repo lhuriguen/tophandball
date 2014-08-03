@@ -8,9 +8,21 @@ class LoveMixin(object):
     Mixin to add fan status and number of fans to the context.
     """
 
+    fan_object = None
+
+    def get_fan_object(self):
+        if self.fan_object:
+            return self.fan_object
+        if hasattr(self.object, 'fans'):
+            return self.object
+        else:
+            raise ImproperlyConfigured(
+                "LoveMixin requires either a definition of "
+                "'fan_object' or an object that has the 'fans' attribute.")
+
     def is_fan(self):
         if self.request.user.is_authenticated():
-            return self.object.fans.filter(
+            return self.get_fan_object().fans.filter(
                 username=self.request.user.username).exists()
         else:
             return False
@@ -18,7 +30,7 @@ class LoveMixin(object):
     def get_context_data(self, **kwargs):
         context = super(LoveMixin, self).get_context_data(**kwargs)
         context['fan'] = self.is_fan()
-        context['fan_count'] = self.object.fans.count()
+        context['fan_count'] = self.get_fan_object().fans.count()
         return context
 
 

@@ -54,3 +54,8 @@ def choice_display(value, arg):
         return dict(arg)[value]
     except KeyError:
         return ''
+
+
+@register.filter
+def to_int(value):
+    return int(value)

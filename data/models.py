@@ -304,8 +304,29 @@ class Contract(models.Model):
 
 
 class PlayerContract(Contract):
+
+    def player_contract_filename(instance, filename):
+        """
+        Construct the filepath to store contract photos.
+        Ex: /contracts/2013/cid_pid.ext
+        """
+        ext = filename.split('.')[-1]
+        new_file = '%s_%s.%s' % (instance.club_id, instance.player_id, ext)
+        return '/'.join([
+            'contracts', str(instance.season.year_from), new_file
+            ])
+
     player = models.ForeignKey(Player)
     shirt_number = models.PositiveSmallIntegerField(blank=True, default=0)
+    photo = models.ImageField(
+        upload_to=player_contract_filename, blank=True, null=True)
+
+    @property
+    def photo_url(self):
+        if self.photo:
+            return self.photo.url
+        else:
+            return self.player.photo_url
 
     def __unicode__(self):
         return u'%s (%s) in %s (%s)' % (

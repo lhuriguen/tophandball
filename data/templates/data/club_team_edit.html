@@ -1,0 +1,16 @@
+{% extends "data/base_club.html" %}
+{% load bootstrap %}
+
+{% block active_team %}active{% endblock %}
+
+{% block specific %}
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ formset.management_form }}
+        {% for form in formset %}
+            {{ form|bootstrap }}
+            <hr>
+        {% endfor %}
+        <input type="submit" value="Submit" class="btn btn-danger" />
+    </form>
+{% endblock %}

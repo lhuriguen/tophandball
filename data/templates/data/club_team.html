@@ -1,4 +1,5 @@
 {% extends "data/base_club.html" %}
+{% load th_extra %}
 
 {% block active_team %}active{% endblock %}
 
@@ -6,36 +7,48 @@
 <div class="well well-sm">
     <ul class="list-inline">
         <li><b>Seasons:</b></li>
-    {% for season in seasons reversed %}
+        <li>{% if not request.GET.season %}Current{% else %}<a href=".">Current</a>{% endif %}</li>
+    {% for season in seasons %}
+        {% if request.GET.season|to_int == season.year_from %}
+        <li>{{ season.name }}</li>
+        {% else %}
         <li><a href="?season={{ season.year_from }}">{{ season.name }}</a></li>
+        {% endif %}
     {% endfor %}
     </ul>
 </div>
 <div class="row">
     <div class="col-md-9">
-    
-        <h4><i>Showing team for the <b>
-        {% if request.GET.season %} {{ request.GET.season }}/{{ request.GET.season|add:"1" }}
-        {% else %} current{% endif %}</b> season.</i></h4>
-        <hr>
+        <div class="btn-group btn-group-sm" style="margin-bottom: 15px;">
+          <a href="{% url 'data:club_team_add' pk=club.id %}" type="button" class="btn btn-default">
+          <i class="fa fa-plus"></i> Add player</a>
+          <a href="#" type="button" class="btn btn-default"><i class="fa fa-edit"></i> Edit team</a>
+          <a href="#" type="button" class="btn btn-default"><i class="fa fa-exchange"></i> Transfers</a>
+        </div>
         <div class="row">
-        {% for player in staff_list %}
+        {% for contract in staff_list %}
             <div class="col-xs-6 col-sm-3">
-                <a href="{{ player.player.get_absolute_url }}" class="th-card">
+                <a href="{{ contract.player.get_absolute_url }}" class="th-card">
                     <div class="text-center">
-                        <img class="th-card-poster" src="{{ player.player.photo_url }}" alt="photo">
+                        <img class="th-card-poster" src="{{ contract.photo_url }}" alt="photo">
                     </div>
                     <div class="th-card-div">
-                        <h5 class="th-card-heading"><b>{{ player.player.last_name }}</b>, {{ player.player.first_name }}</h5>
+                        <h5 class="th-card-heading"><b>{{ contract.player.last_name }}</b>, {{ contract.player.first_name }}</h5>
                         <p class="text-muted th-card-body small">
-                        {{ player.player.birth_date|date:"d/m/Y" }} (age {{ player.player.age }}), {{ player.player.country }}
+                        {{ contract.player.birth_date|date:"d/m/Y" }} (age {{ contract.player.age }}), {{ contract.player.country }}
                         </p>
+                        {% if contract.arrival_month %}
+                        <span class="label label-success">Since {{ contract.get_arrival_month_display }}</span>
+                        {% endif %}
+                        {% if contract.departure_month %}
+                        <span class="label label-danger">Until {{ contract.get_departure_month_display }}</span>
+                        {% endif %}
                         <p class="text-info th-card-body small">
-                        #{{ player.shirt_number }}. {{ player.player.get_position_display }}
+                        #{{ contract.shirt_number }}. {{ contract.player.get_position_display }}
                         </p>
                         <div class="th-card-btn">
-                            <form class="list_follow" action="{% url 'data:player_love' player.player.id %}" method="post">
-                                {% with item=player.player %}
+                            <form class="list_follow" action="{% url 'data:player_love' contract.player.id %}" method="post">
+                                {% with item=contract.player %}
                                 {% include "data/list_love.html" %}
                                 {% endwith %}
                             </form>

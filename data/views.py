@@ -5,16 +5,18 @@ from django.template import RequestContext
 from django.views import generic
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.db.models import Count, Q, Avg, Sum
+from django.db.models import Count, Q, Sum
+from django.forms.models import modelformset_factory
 
 from infohandball.decorators import login_required
 from .models import *
 from .mixins import LoveMixin, LoginRequiredMixin
+from .forms import *
 
 
 class ClubIndexView(generic.ListView):
-    template_name = 'data/club_index.html'
-    context_object_name = 'club_list'
+    model = Club
+    queryset = Club.objects.order_by('name')
 
     def get(self, request, *args, **kwargs):
         if self.request.is_ajax():
@@ -31,13 +33,14 @@ class ClubIndexView(generic.ListView):
         return super(ClubIndexView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
+        queryset = super(ClubIndexView, self).get_queryset()
         if 'name' in self.request.GET:
-            return Club.objects.filter(
-                name__icontains=self.request.GET['name']).order_by('name')
+            return queryset.filter(
+                name__icontains=self.request.GET['name'])
         if 'country' in self.request.GET:
-            return Club.objects.filter(
-                country=self.request.GET['country']).order_by('name')
-        return Club.objects.order_by('name')
+            return queryset.filter(
+                country=self.request.GET['country'])
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super(ClubIndexView, self).get_context_data(**kwargs)
@@ -61,9 +64,8 @@ class ClubDetailView(LoveMixin, generic.DetailView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(ClubDetailView, self).get_context_data(**kwargs)
-        self.club = self.object
         # Prepare context data for matches
-        context['comp_list'] = self.club.grouptable_set.order_by(
+        context['comp_list'] = self.object.grouptable_set.order_by(
             'group__stage__comp_season__competition__is_international',
             'group__stage__comp_season__competition__level',
             'group__stage__order')
@@ -79,14 +81,12 @@ class ClubUpdateView(LoginRequiredMixin, generic.edit.UpdateView):
 
 
 class ClubMatchView(LoveMixin, generic.ListView):
-    #model = Club
     template_name = 'data/club_matches.html'
     context_object_name = 'match_list'
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(ClubMatchView, self).get_context_data(**kwargs)
-        # Add in the club
         context['club'] = self.object
         return context
 
@@ -99,17 +99,15 @@ class ClubMatchView(LoveMixin, generic.ListView):
 
 
 class ClubTeamView(LoveMixin, generic.ListView):
-    #model = Club
     template_name = 'data/club_team.html'
     context_object_name = 'staff_list'
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(ClubTeamView, self).get_context_data(**kwargs)
-        # Add in the club
         context['club'] = self.object
         context['seasons'] = Season.objects.filter(
-            playercontract__club=self.object).distinct()
+            playercontract__club=self.object).distinct().order_by('-year_to')
 
         if self.request.user.is_authenticated():
             context['user_favs'] = Player.objects.filter(
@@ -138,10 +136,11 @@ class ClubTeamView(LoveMixin, generic.ListView):
         self.object = get_object_or_404(Club, pk=self.kwargs['pk'])
         if 'season' in self.request.GET:
             year = self.request.GET['season']
-            return PlayerContract.objects.select_related(
-                'player').filter(club=self.object, season__year_from=year)\
-                .order_by('shirt_number')
-        return self.object.get_current_team().order_by('shirt_number')
+        else:
+            year = Season.curr_year()
+        return PlayerContract.objects.select_related(
+            'player').filter(club=self.object, season__year_from=year)\
+            .order_by('shirt_number')
 
 
 @login_required
@@ -179,8 +178,7 @@ def club_love(request, club_id):
 
 
 class PlayerIndexView(generic.ListView):
-    template_name = 'data/player_index.html'
-    context_object_name = 'player_list'
+    model = Player
     paginate_by = 120
 
     def get(self, request, *args, **kwargs):
@@ -202,14 +200,14 @@ class PlayerIndexView(generic.ListView):
         return super(PlayerIndexView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
-        query = Player.objects.all()
+        queryset = super(PlayerIndexView, self).get_queryset()
         if 'country' in self.request.GET and self.request.GET['country']:
-            query = query.filter(country=self.request.GET['country'])
+            queryset = queryset.filter(country=self.request.GET['country'])
         if 'position' in self.request.GET and self.request.GET['position']:
-            query = query.filter(position=self.request.GET['position'])
+            queryset = queryset.filter(position=self.request.GET['position'])
         # if not 'retired' in self.request.GET:
-        #     query = query.exclude(retired=True)
-        return query.order_by('last_name')
+        #     queryset = queryset.exclude(retired=True)
+        return queryset.order_by('last_name')
 
     def get_context_data(self, **kwargs):
         context = super(PlayerIndexView, self).get_context_data(**kwargs)
@@ -235,7 +233,7 @@ class PlayerDetailView(LoveMixin, generic.DetailView):
         context = super(PlayerDetailView, self).get_context_data(**kwargs)
         self.player = self.object
         context['club_career'] = self.player.playercontract_set.select_related(
-            'club', 'season').all()
+            'club', 'season').order_by('-season__year_from', '-arrival_month')
         # Add teammates
         ct = self.player.current_contract
         context['cur_contract'] = ct
@@ -246,7 +244,7 @@ class PlayerDetailView(LoveMixin, generic.DetailView):
         # Matches
         matches = self.player.matchplayerstats_set.select_related().order_by(
             '-match_team__match__match_datetime')
-        context['matches'] = matches #[0:8]
+        context['matches'] = matches  # [0:8]
         return context
 
 
@@ -292,29 +290,77 @@ def player_love(request, player_id):
             reverse('data:player_detail', kwargs={'pk': p.id}))
 
 
-class CompIndexView(generic.ListView):
-    template_name = 'data/comp_index.html'
-    context_object_name = 'comp_list'
+class PlayerContractCreateView(LoginRequiredMixin, LoveMixin, generic.CreateView):
+    model = PlayerContract
+    form_class = PlayerContractForm
+    template_name = 'data/club_team_add.html'
+    club = None
 
-    def get_queryset(self):
-        return Competition.objects.all()
+    def get_context_data(self, **kwargs):
+        context = super(PlayerContractCreateView,
+                        self).get_context_data(**kwargs)
+        context['club'] = self.club
+        return context
+
+    def get_initial(self):
+        initial = super(PlayerContractCreateView, self).get_initial()
+        self.club = get_object_or_404(Club, pk=self.kwargs['pk'])
+        self.fan_object = self.club
+        initial['club'] = self.club
+        if 'season' in self.request.GET:
+            year = self.request.GET['season']
+        else:
+            year = Season.curr_year()
+        initial['season'] = get_object_or_404(Season, year_from=year)
+        return initial
+
+    def get_success_url(self):
+        return reverse('data:club_team', kwargs={'pk': self.club.pk})
+
+
+@login_required
+def club_team_edit(request, club_id):
+    c = get_object_or_404(Club, pk=club_id)
+    queryset = PlayerContract.objects.filter(
+        club=c, season__year_from=Season.curr_year)
+    ContractFormSet = modelformset_factory(PlayerContract, form=PlayerContractForm)
+
+    formset = ContractFormSet(request.POST or None, request.FILES or None,
+                              queryset=queryset)
+
+    if request.method == 'POST':
+        if formset.is_valid():
+            formset.save()
+            # Do something.
+            return HttpResponseRedirect(
+                reverse('data:club_team', kwargs={'pk': c.id}))
+    else:
+        return render_to_response(
+            'data/club_team_edit.html',
+            {'formset': formset, 'club': c},
+            context_instance=RequestContext(request)
+        )
+
+
+class CompIndexView(generic.ListView):
+    model = Competition
+    context_object_name = 'comp_list'
 
 
 class CompDetailView(generic.DetailView):
     model = Competition
-    template_name = 'data/comp_detail.html'
+    #template_name = 'data/comp_detail.html'
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(CompDetailView, self).get_context_data(**kwargs)
-        self.competition = get_object_or_404(Competition, pk=self.kwargs['pk'])
         # Prepare context data for latest or selected season
-        year = datetime.now().year
+        year = datetime.datetime.now().year
         if 's' in self.request.GET:
             str_year = self.request.GET['s']
             if str_year.isdigit():
                 year = int(str_year)
-        context['comp_season'] = self.competition.get_season_or_latest(year)
+        context['comp_season'] = self.object.get_season_or_latest(year)
         return context
 
 

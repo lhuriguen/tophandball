@@ -51,7 +51,6 @@ INSTALLED_APPS = (
     'allauth.socialaccount.providers.twitter',
     'bootstrapform',
     'django_extensions',
-    'django_filters',
 )
 
 MIDDLEWARE_CLASSES = (
