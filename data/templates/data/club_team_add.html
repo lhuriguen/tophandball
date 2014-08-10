@@ -2,10 +2,6 @@
 {% load bootstrap %}
 
 {% block active_team %}active{% endblock %}
-{% block extra_head %}
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.css">
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2-bootstrap.min.css">
-{% endblock %}
 
 {% block specific %}
     <h4><i>Adding player for the <b>
@@ -13,21 +9,9 @@
     {% else %} current{% endif %}</b> season.</i>
     </h4>
     <hr>
-    <form action="" method="post">{% csrf_token %}
+    <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
         {{ form|bootstrap }}
-        <input type="submit" value="Add" class="btn btn-danger" />
+        <hr>
+        <input type="submit" value="Add player" class="btn btn-danger btn-lg center-block" />
     </form>
-{% endblock %}
-
-{% block extra_script %}
-<script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
-
-<script>
-    $(document).ready(function() { 
-        $("#id_player").select2({
-            placeholder: "Select a player",
-            minimumInputLength: 2
-        }); 
-    });
-</script>
 {% endblock %}

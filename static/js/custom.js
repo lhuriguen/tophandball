@@ -42,6 +42,11 @@ var main = function() {
     $(".list_follow").submit(follow);
     $("#follow_form").submit(follow);
 
+    $(".selectable").select2({
+        placeholder: "Select an item",
+        minimumInputLength: 2
+    });
+
 };
 
 $(document).ready(main);

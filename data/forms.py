@@ -25,3 +25,7 @@ class PlayerContractForm(forms.ModelForm):
                   'arrival_month', 'departure_month', 'photo']
         widgets = {'club': forms.HiddenInput(),
                    'season': forms.HiddenInput()}
+
+    def __init__(self, *args, **kwargs):
+        super(PlayerContractForm, self).__init__(*args, **kwargs)
+        self.fields['player'].widget.attrs['class'] = 'selectable'

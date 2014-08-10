@@ -295,6 +295,7 @@ class PlayerContractCreateView(LoginRequiredMixin, LoveMixin, generic.CreateView
     form_class = PlayerContractForm
     template_name = 'data/club_team_add.html'
     club = None
+    year = None
 
     def get_context_data(self, **kwargs):
         context = super(PlayerContractCreateView,
@@ -308,23 +309,31 @@ class PlayerContractCreateView(LoginRequiredMixin, LoveMixin, generic.CreateView
         self.fan_object = self.club
         initial['club'] = self.club
         if 'season' in self.request.GET:
-            year = self.request.GET['season']
+            self.year = self.request.GET['season'] or Season.curr_year()
         else:
-            year = Season.curr_year()
-        initial['season'] = get_object_or_404(Season, year_from=year)
+            self.year = Season.curr_year()
+        initial['season'] = get_object_or_404(Season, year_from=self.year)
         return initial
 
     def get_success_url(self):
-        return reverse('data:club_team', kwargs={'pk': self.club.pk})
+        url = reverse('data:club_team', kwargs={'pk': self.club.pk})
+        return url + '?season=' + str(self.year)
 
 
 @login_required
 def club_team_edit(request, club_id):
+    # Get data from url.
     c = get_object_or_404(Club, pk=club_id)
+    if 'season' in request.GET:
+        year = request.GET['season'] or Season.curr_year
+    else:
+        year = Season.curr_year
+    # Get contracts for club and season.
     queryset = PlayerContract.objects.filter(
-        club=c, season__year_from=Season.curr_year)
-    ContractFormSet = modelformset_factory(PlayerContract, form=PlayerContractForm)
-
+        club=c, season__year_from=year)
+    # Build formset.
+    ContractFormSet = modelformset_factory(
+        PlayerContract, form=PlayerContractForm, extra=0, can_delete=True)
     formset = ContractFormSet(request.POST or None, request.FILES or None,
                               queryset=queryset)
 
@@ -332,8 +341,8 @@ def club_team_edit(request, club_id):
         if formset.is_valid():
             formset.save()
             # Do something.
-            return HttpResponseRedirect(
-                reverse('data:club_team', kwargs={'pk': c.id}))
+            url = reverse('data:club_team', kwargs={'pk': c.id})
+            return HttpResponseRedirect(url + '?season=' + str(year))
     else:
         return render_to_response(
             'data/club_team_edit.html',

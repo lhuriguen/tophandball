@@ -175,7 +175,8 @@ class Person(models.Model):
 
     def admin_thumbnail(self):
         if self.photo:
-            return u'<img src="%s" />' % (self.photo.url)
+            return u'<img style="height: 300px;" src="%s" />' % (
+                self.photo.url)
         else:
             return u'No image.'
     admin_thumbnail.short_description = 'Photo preview'
