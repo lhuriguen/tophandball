@@ -290,7 +290,7 @@ def player_love(request, player_id):
             reverse('data:player_detail', kwargs={'pk': p.id}))
 
 
-class PlayerContractCreateView(LoginRequiredMixin, LoveMixin, generic.CreateView):
+class ClubTeamAddView(LoginRequiredMixin, LoveMixin, generic.CreateView):
     model = PlayerContract
     form_class = PlayerContractForm
     template_name = 'data/club_team_add.html'
@@ -298,13 +298,13 @@ class PlayerContractCreateView(LoginRequiredMixin, LoveMixin, generic.CreateView
     year = None
 
     def get_context_data(self, **kwargs):
-        context = super(PlayerContractCreateView,
+        context = super(ClubTeamAddView,
                         self).get_context_data(**kwargs)
         context['club'] = self.club
         return context
 
     def get_initial(self):
-        initial = super(PlayerContractCreateView, self).get_initial()
+        initial = super(ClubTeamAddView, self).get_initial()
         self.club = get_object_or_404(Club, pk=self.kwargs['pk'])
         self.fan_object = self.club
         initial['club'] = self.club
@@ -325,9 +325,9 @@ def club_team_edit(request, club_id):
     # Get data from url.
     c = get_object_or_404(Club, pk=club_id)
     if 'season' in request.GET:
-        year = request.GET['season'] or Season.curr_year
+        year = request.GET['season'] or Season.curr_year()
     else:
-        year = Season.curr_year
+        year = Season.curr_year()
     # Get contracts for club and season.
     queryset = PlayerContract.objects.filter(
         club=c, season__year_from=year)

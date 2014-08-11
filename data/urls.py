@@ -24,7 +24,7 @@ urlpatterns = patterns(
         views.ClubTeamView.as_view(), name='club_team'),
     # ex: /data/clubs/1/team/add/
     url(r'^clubs/(?P<pk>\d+)/team/add/$',
-        views.PlayerContractCreateView.as_view(), name='club_team_add'),
+        views.ClubTeamAddView.as_view(), name='club_team_add'),
     # ex: /data/clubs/1/team/edit/
     url(r'^clubs/(?P<club_id>\d+)/team/edit/$',
         views.club_team_edit, name='club_team_edit'),
