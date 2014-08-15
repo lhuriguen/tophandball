@@ -42,10 +42,45 @@ var main = function() {
     $(".list_follow").submit(follow);
     $("#follow_form").submit(follow);
 
-    $(".selectable").select2({
-        placeholder: "Select an item",
-        minimumInputLength: 2
+    $(".select-player").select2({
+        minimumInputLength: 2,
+        ajax: {
+            url: "/data/api/player_search/",
+            dataType: 'json',
+            type: "GET",
+            quietMillis: 50,
+            data: function (term) {
+                return {
+                    q: term
+                };
+            },
+            results: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            text: item.fields.first_name + ' ' + item.fields.last_name ,
+                            id: item.pk
+                        }
+                    })
+                };
+            }
+        },
+        initSelection : function (element, callback) {
+            var id=$(element).val();
+            if (id!=="") {
+                $.ajax("/data/api/player/" + id +"/", {
+                    dataType: "json"
+                }).done(function (data) {
+                    callback({
+                        id: data[0].pk,
+                        text: data[0].fields.first_name + ' ' + data[0].fields.last_name
+                    });
+                });
+            }
+        }
     });
+
+    $(".selectable").select2();
 
 };
 

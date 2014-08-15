@@ -3,7 +3,7 @@ from datetime import datetime
 from django.shortcuts import render, get_object_or_404, render_to_response
 from django.template import RequestContext
 from django.views import generic
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.db.models import Count, Q, Sum
 from django.forms.models import modelformset_factory
@@ -320,6 +320,46 @@ class ClubTeamAddView(LoginRequiredMixin, LoveMixin, generic.CreateView):
         return url + '?season=' + str(self.year)
 
 
+from django.core import serializers
+
+
+class PlayerJSONView(generic.ListView):
+    model = Player
+
+    def get_queryset(self):
+        base_qs = super(PlayerJSONView, self).get_queryset()
+        if 'q' in self.request.GET:
+            words = self.request.GET['q'].split()
+            # Turn list of values into list of Q objects
+            queries = [Q(first_name__icontains=value)
+                       for value in words]
+            queries += [Q(last_name__icontains=value)
+                        for value in words]
+            # Take one Q object from the list
+            query = queries.pop()
+            # Or the Q object with the ones remaining in the list
+            for item in queries:
+                query |= item
+            return base_qs.filter(query)
+        return base_qs
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponse(
+            serializers.serialize('json', self.get_queryset()),
+            content_type='application/json'
+        )
+
+
+class PlayerAPIView(generic.DetailView):
+    model = Player
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponse(
+            serializers.serialize('json', [self.get_object()]),
+            content_type='application/json'
+        )
+
+
 @login_required
 def club_team_edit(request, club_id):
     # Get data from url.
@@ -333,7 +373,7 @@ def club_team_edit(request, club_id):
         club=c, season__year_from=year)
     # Build formset.
     ContractFormSet = modelformset_factory(
-        PlayerContract, form=PlayerContractForm, extra=0, can_delete=True)
+        PlayerContract, form=PlayerContractForm, extra=1, can_delete=True)
     formset = ContractFormSet(request.POST or None, request.FILES or None,
                               queryset=queryset)
 
@@ -343,6 +383,11 @@ def club_team_edit(request, club_id):
             # Do something.
             url = reverse('data:club_team', kwargs={'pk': c.id})
             return HttpResponseRedirect(url + '?season=' + str(year))
+        return render_to_response(
+            'data/club_team_edit.html',
+            {'formset': formset, 'club': c},
+            context_instance=RequestContext(request)
+        )
     else:
         return render_to_response(
             'data/club_team_edit.html',

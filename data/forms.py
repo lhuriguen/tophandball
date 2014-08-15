@@ -1,7 +1,11 @@
 from django import forms
 from django.forms.models import inlineformset_factory
 
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
+
 from .models import Player, PlayerContract, PlayerName
+from .widgets import SingleImageInput
 
 
 class PlayerForm(forms.ModelForm):
@@ -21,11 +25,17 @@ class PlayerContractForm(forms.ModelForm):
 
     class Meta:
         model = PlayerContract
-        fields = ['club', 'season', 'player', 'shirt_number',
-                  'arrival_month', 'departure_month', 'photo']
+        fields = ['club', 'season', 'player', 'shirt_number', 'photo',
+                  'arrival_month', 'departure_month']
         widgets = {'club': forms.HiddenInput(),
-                   'season': forms.HiddenInput()}
+                   'season': forms.HiddenInput(),
+                   'player': forms.TextInput(),
+                   'photo': SingleImageInput(max_size=50),
+                   }
 
     def __init__(self, *args, **kwargs):
         super(PlayerContractForm, self).__init__(*args, **kwargs)
-        self.fields['player'].widget.attrs['class'] = 'selectable'
+        self.helper = FormHelper(self)
+        self.helper.template = 'crispy_forms/table_inline_formset.html'
+        self.helper.add_input(Submit('submit', 'Submit changes'))
+        self.fields['player'].widget.attrs['class'] = 'select-player'

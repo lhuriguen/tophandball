@@ -51,6 +51,7 @@ INSTALLED_APPS = (
     'allauth.socialaccount.providers.twitter',
     'bootstrapform',
     'django_extensions',
+    'crispy_forms',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -125,6 +126,14 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'allauth.socialaccount.context_processors.socialaccount',
 )
 
+# For production try this:
+# TEMPLATE_LOADERS = (
+#     ('django.template.loaders.cached.Loader', (
+#         'django.template.loaders.filesystem.Loader',
+#         'django.template.loaders.app_directories.Loader',
+#     )),
+# )
+
 # auth and allauth settings
 LOGIN_REDIRECT_URL = '/'
 SOCIALACCOUNT_QUERY_EMAIL = True
@@ -138,3 +147,6 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
 SITE_ID = 1
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+CRISPY_FAIL_SILENTLY = not DEBUG

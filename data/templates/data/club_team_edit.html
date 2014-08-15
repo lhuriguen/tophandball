@@ -1,20 +1,8 @@
 {% extends "data/base_club.html" %}
-{% load bootstrap %}
+{% load crispy_forms_tags %}
 
 {% block active_team %}active{% endblock %}
 
 {% block specific %}
-<form method="post" action="" role="form" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ formset.management_form }}
-    <ul class="list-group">
-    {% for form in formset %}
-        <li class="list-group-item">
-            {{ form|bootstrap }}
-        </li>
-    {% endfor %}
-    </ul>
-    <hr>
-    <input type="submit" value="Submit changes" class="btn btn-danger btn-lg center-block" />
-</form>
+{% crispy formset formset.form.helper %}
 {% endblock %}
