@@ -31,18 +31,8 @@ function search_submit() {
     return false;
 }
 
-var main = function() {
-
-    $("#search-form").submit(search_submit);
-
-    $("#follow").click(function(e) {
-        e.preventDefault();
-    });
-
-    $(".list_follow").submit(follow);
-    $("#follow_form").submit(follow);
-
-    $(".select-player").select2({
+function makeSelect2Player(sel) {
+    sel.select2({
         minimumInputLength: 2,
         ajax: {
             url: "/data/api/player_search/",
@@ -79,6 +69,58 @@ var main = function() {
             }
         }
     });
+}
+
+var main = function() {
+
+    $("#search-form").submit(search_submit);
+
+    $("#follow").click(function(e) {
+        e.preventDefault();
+    });
+
+    $(".list_follow").submit(follow);
+    $("#follow_form").submit(follow);
+
+    makeSelect2Player($(".select-player"));
+
+    // $(".select2-player").select2({
+    //     minimumInputLength: 2,
+    //     ajax: {
+    //         url: "/data/api/player_search/",
+    //         dataType: 'json',
+    //         type: "GET",
+    //         quietMillis: 50,
+    //         data: function (term) {
+    //             return {
+    //                 q: term
+    //             };
+    //         },
+    //         results: function (data) {
+    //             return {
+    //                 results: $.map(data, function (item) {
+    //                     return {
+    //                         text: item.fields.first_name + ' ' + item.fields.last_name ,
+    //                         id: item.pk
+    //                     }
+    //                 })
+    //             };
+    //         }
+    //     },
+    //     initSelection : function (element, callback) {
+    //         var id=$(element).val();
+    //         if (id!=="") {
+    //             $.ajax("/data/api/player/" + id +"/", {
+    //                 dataType: "json"
+    //             }).done(function (data) {
+    //                 callback({
+    //                     id: data[0].pk,
+    //                     text: data[0].fields.first_name + ' ' + data[0].fields.last_name
+    //                 });
+    //             });
+    //         }
+    //     }
+    // });
 
     $(".selectable").select2();
 

@@ -368,19 +368,20 @@ def club_team_edit(request, club_id):
         year = request.GET['season'] or Season.curr_year()
     else:
         year = Season.curr_year()
+    s = get_object_or_404(Season, year_from=year)
     # Get contracts for club and season.
     queryset = PlayerContract.objects.filter(
-        club=c, season__year_from=year)
+        club=c, season=s)
     # Build formset.
     ContractFormSet = modelformset_factory(
         PlayerContract, form=PlayerContractForm, extra=1, can_delete=True)
     formset = ContractFormSet(request.POST or None, request.FILES or None,
-                              queryset=queryset)
+                              queryset=queryset,
+                              initial=[{'club': c.id, 'season': s.id}])
 
     if request.method == 'POST':
         if formset.is_valid():
             formset.save()
-            # Do something.
             url = reverse('data:club_team', kwargs={'pk': c.id})
             return HttpResponseRedirect(url + '?season=' + str(year))
         return render_to_response(

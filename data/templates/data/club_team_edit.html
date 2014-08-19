@@ -1,8 +1,25 @@
 {% extends "data/base_club.html" %}
 {% load crispy_forms_tags %}
+{% load staticfiles %}
 
 {% block active_team %}active{% endblock %}
 
 {% block specific %}
 {% crispy formset formset.form.helper %}
+{% endblock %}
+
+{% block extra_script %}
+<script src="{% static "js/jquery.formset.js" %}"></script>
+<script type="text/javascript">
+    $(function() {
+        $('#teamEditForm_table tbody tr').formset({
+            keepFieldValues: 'input:hidden',
+            added: function(row) {
+                var txt = row.find('input.select-player');
+                // Calling "makeSelect2Player" adds a brand-new set of handlers:
+                makeSelect2Player(txt);
+            }
+        });
+    })
+</script>
 {% endblock %}
