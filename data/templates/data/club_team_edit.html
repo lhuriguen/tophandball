@@ -5,6 +5,15 @@
 {% block active_team %}active{% endblock %}
 
 {% block specific %}
+<div class="alert alert-info" role="alert">
+    <strong><i class="fa fa-info-circle"></i> Atention!</strong>
+    <ul>
+        <li>If a player leaves the club during the regular season, <b>do not remove her</b> from the team. Use the departure month field instead.</li>
+        <li>Images have a size limit of <b>50KB</b> and should not be wider than <b>300px</b>.</li>
+    </ul>
+</div>
+<h3 class="page-header">Editing the {% if request.GET.season %} {{ request.GET.season }}/{{ request.GET.season|add:"1" }}
+{% else %} current{% endif %} season</h3>
 {% crispy formset formset.form.helper %}
 {% endblock %}
 

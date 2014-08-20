@@ -36,13 +36,11 @@ class SingleImageInput(FileInput):
         attrs['accept'] = 'image/*'
         attrs['data-show-caption'] = 'false'
         attrs['data-show-upload'] = 'false'
+        attrs['data-show-remove'] = 'false'
         attrs['data-max-file-size'] = self.max_size
         attrs['data-browse-label'] = 'Browse'
         attrs['data-browse-icon'] = '<i class="fa fa-image"></i> &nbsp;'
-        attrs['data-browse-class'] = 'btn btn-default btn-sm'
-        attrs['data-remove-label'] = 'Clear'
-        attrs['data-remove-icon'] = '<i class="fa fa-ban"></i> &nbsp;'
-        attrs['data-remove-class'] = 'btn btn-default btn-sm'
+        attrs['data-browse-class'] = 'btn btn-default'
 
         if value and hasattr(value, "url"):
             attrs['data-initial-preview'] = self.url_template.format(value.url)
