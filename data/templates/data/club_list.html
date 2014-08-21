@@ -24,7 +24,7 @@
         </form>
         <p></p>
         <div id="search-results">
-            {% include "data/club_search.html" %}
+            {% include "data/_club_search.html" %}
         </div>
         <div class="panel panel-primary">
             <div class="panel-heading">
@@ -74,7 +74,7 @@
                             <small class="text-info th-card-body">{{ item.country }}</small>
                             <div class="th-card-btn">
                                 <form class="list_follow" action="{% url 'data:club_love' item.id %}" method="post">
-                                    {% include "data/list_love.html" %}
+                                    {% include "data/_list_love.html" %}
                                 </form>
                             </div>
                         </div>

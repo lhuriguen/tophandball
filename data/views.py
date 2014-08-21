@@ -6,7 +6,6 @@ from django.views import generic
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.db.models import Count, Q, Sum
-from django.forms.models import modelformset_factory
 
 from extra_views import ModelFormSetView
 
@@ -28,7 +27,7 @@ class ClubIndexView(generic.ListView):
             else:
                 clubs = None
             return render_to_response(
-                'data/club_search.html',
+                'data/_club_search.html',
                 {'club_list': clubs},
                 context_instance=RequestContext(self.request)
             )
@@ -163,12 +162,12 @@ def club_love(request, club_id):
                     fans__username=request.user.username
                 ).values_list('id', flat=True)
                 return render_to_response(
-                    'data/list_love.html',
+                    'data/_list_love.html',
                     {'item': c, 'user_favs': user_favs},
                     context_instance=RequestContext(request)
                 )
             return render_to_response(
-                'data/form_love.html',
+                'data/_form_love.html',
                 {'fan': fan, 'fan_count': c.fans.count()},
                 context_instance=RequestContext(request)
             )
@@ -195,7 +194,7 @@ class PlayerIndexView(generic.ListView):
             else:
                 players = None
             return render_to_response(
-                'data/player_search.html',
+                'data/_player_search.html',
                 {'player_list': players},
                 context_instance=RequestContext(self.request)
             )
@@ -276,12 +275,12 @@ def player_love(request, player_id):
                     fans__username=request.user.username
                 ).values_list('id', flat=True)
                 return render_to_response(
-                    'data/list_love.html',
+                    'data/_list_love.html',
                     {'item': p, 'user_favs': user_favs},
                     context_instance=RequestContext(request)
                 )
             return render_to_response(
-                'data/form_love.html',
+                'data/_form_love.html',
                 {'fan': fan, 'fan_count': p.fans.count()},
                 context_instance=RequestContext(request)
             )
@@ -341,14 +340,17 @@ class ClubTeamEditView(LoginRequiredMixin, LoveMixin, ModelFormSetView):
     club = None
     year = None
 
-    def get_initial(self):
-        initial = super(ClubTeamEditView, self).get_initial()
+    def get(self, request, *args, **kwargs):
         self.club = get_object_or_404(Club, pk=self.kwargs['pk'])
         self.fan_object = self.club
         if 'season' in self.request.GET:
             self.year = self.request.GET['season'] or Season.curr_year()
         else:
             self.year = Season.curr_year()
+        return super(ClubTeamEditView, self).get(request, *args, **kwargs)
+
+    def get_initial(self):
+        initial = super(ClubTeamEditView, self).get_initial()
         season = get_object_or_404(Season, year_from=self.year)
         initial = [{'club': self.club, 'season': season}]
         return initial
@@ -360,7 +362,7 @@ class ClubTeamEditView(LoginRequiredMixin, LoveMixin, ModelFormSetView):
 
     def get_queryset(self):
         qs = super(ClubTeamEditView, self).get_queryset()
-        return qs.filter(club=self.club, season__year_from=self.year)
+        return qs.filter(club_id=self.club, season__year_from=self.year)
 
     def get_success_url(self):
         url = reverse('data:club_team', kwargs={'pk': self.club.pk})

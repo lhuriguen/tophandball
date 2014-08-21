@@ -26,7 +26,7 @@
         </form>
         <p></p>
         <div id="search-results">
-            {% include "data/player_search.html" %}
+            {% include "data/_player_search.html" %}
         </div>
         <div class="panel panel-primary">
             <div class="panel-heading">
@@ -83,7 +83,7 @@
         {% endif %}
         <hr>
         <div id="player_display">
-            {% include "data/pagination.html" %}
+            {% include "data/_pagination.html" %}
             <div class="row">
                 {% for item in player_list %}
                 <div class="col-xs-6 col-md-3">
@@ -94,7 +94,7 @@
                         <small class="text-info th-card-body">{{ item.get_position_display }}, {{ item.country }}</small>
                         <div class="th-card-btn">
                             <form class="list_follow" action="{% url 'data:player_love' item.id %}" method="post">
-                                {% include "data/list_love.html" %}
+                                {% include "data/_list_love.html" %}
                             </form>
                         </div>
                     </div>
@@ -108,7 +108,7 @@
                 {% endif %}
                 {% endfor %}
             </div>
-            {% include "data/pagination.html" %}
+            {% include "data/_pagination.html" %}
         </div>
     </div>
 </div>

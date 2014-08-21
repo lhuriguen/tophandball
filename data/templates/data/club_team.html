@@ -49,7 +49,7 @@
                         <div class="th-card-btn">
                             <form class="list_follow" action="{% url 'data:player_love' contract.player.id %}" method="post">
                                 {% with item=contract.player %}
-                                {% include "data/list_love.html" %}
+                                {% include "data/_list_love.html" %}
                                 {% endwith %}
                             </form>
                         </div>
