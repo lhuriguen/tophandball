@@ -20,7 +20,7 @@ class Country(models.Model):
 
 
 class Season(models.Model):
-    year_from = models.PositiveSmallIntegerField()
+    year_from = models.PositiveSmallIntegerField(db_index=True)
     year_to = models.PositiveSmallIntegerField()
 
     class Meta:
