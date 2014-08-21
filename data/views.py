@@ -8,6 +8,8 @@ from django.core.urlresolvers import reverse
 from django.db.models import Count, Q, Sum
 from django.forms.models import modelformset_factory
 
+from extra_views import ModelFormSetView
+
 from infohandball.decorators import login_required
 from .models import *
 from .mixins import LoveMixin, LoginRequiredMixin
@@ -290,36 +292,6 @@ def player_love(request, player_id):
             reverse('data:player_detail', kwargs={'pk': p.id}))
 
 
-class ClubTeamAddView(LoginRequiredMixin, LoveMixin, generic.CreateView):
-    model = PlayerContract
-    form_class = PlayerContractForm
-    template_name = 'data/club_team_add.html'
-    club = None
-    year = None
-
-    def get_context_data(self, **kwargs):
-        context = super(ClubTeamAddView,
-                        self).get_context_data(**kwargs)
-        context['club'] = self.club
-        return context
-
-    def get_initial(self):
-        initial = super(ClubTeamAddView, self).get_initial()
-        self.club = get_object_or_404(Club, pk=self.kwargs['pk'])
-        self.fan_object = self.club
-        initial['club'] = self.club
-        if 'season' in self.request.GET:
-            self.year = self.request.GET['season'] or Season.curr_year()
-        else:
-            self.year = Season.curr_year()
-        initial['season'] = get_object_or_404(Season, year_from=self.year)
-        return initial
-
-    def get_success_url(self):
-        url = reverse('data:club_team', kwargs={'pk': self.club.pk})
-        return url + '?season=' + str(self.year)
-
-
 from django.core import serializers
 
 
@@ -360,41 +332,39 @@ class PlayerAPIView(generic.DetailView):
         )
 
 
-@login_required
-def club_team_edit(request, club_id):
-    # Get data from url.
-    c = get_object_or_404(Club, pk=club_id)
-    if 'season' in request.GET:
-        year = request.GET['season'] or Season.curr_year()
-    else:
-        year = Season.curr_year()
-    s = get_object_or_404(Season, year_from=year)
-    # Get contracts for club and season.
-    queryset = PlayerContract.objects.filter(
-        club=c, season=s)
-    # Build formset.
-    ContractFormSet = modelformset_factory(
-        PlayerContract, form=PlayerContractForm, extra=1, can_delete=True)
-    formset = ContractFormSet(request.POST or None, request.FILES or None,
-                              queryset=queryset,
-                              initial=[{'club': c.id, 'season': s.id}])
+class ClubTeamEditView(LoginRequiredMixin, LoveMixin, ModelFormSetView):
+    model = PlayerContract
+    form_class = PlayerContractForm
+    template_name = 'data/club_team_edit.html'
+    extra = 1
+    can_delete = True
+    club = None
+    year = None
 
-    if request.method == 'POST':
-        if formset.is_valid():
-            formset.save()
-            url = reverse('data:club_team', kwargs={'pk': c.id})
-            return HttpResponseRedirect(url + '?season=' + str(year))
-        return render_to_response(
-            'data/club_team_edit.html',
-            {'formset': formset, 'club': c},
-            context_instance=RequestContext(request)
-        )
-    else:
-        return render_to_response(
-            'data/club_team_edit.html',
-            {'formset': formset, 'club': c},
-            context_instance=RequestContext(request)
-        )
+    def get_initial(self):
+        initial = super(ClubTeamEditView, self).get_initial()
+        self.club = get_object_or_404(Club, pk=self.kwargs['pk'])
+        self.fan_object = self.club
+        if 'season' in self.request.GET:
+            self.year = self.request.GET['season'] or Season.curr_year()
+        else:
+            self.year = Season.curr_year()
+        season = get_object_or_404(Season, year_from=self.year)
+        initial = [{'club': self.club, 'season': season}]
+        return initial
+
+    def get_context_data(self, **kwargs):
+        context = super(ClubTeamEditView, self).get_context_data(**kwargs)
+        context['club'] = self.club
+        return context
+
+    def get_queryset(self):
+        qs = super(ClubTeamEditView, self).get_queryset()
+        return qs.filter(club=self.club, season__year_from=self.year)
+
+    def get_success_url(self):
+        url = reverse('data:club_team', kwargs={'pk': self.club.pk})
+        return url + '?season=' + str(self.year)
 
 
 class CompIndexView(generic.ListView):

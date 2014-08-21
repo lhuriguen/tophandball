@@ -52,6 +52,7 @@ INSTALLED_APPS = (
     'bootstrapform',
     'django_extensions',
     'crispy_forms',
+    'extra_views',
 )
 
 MIDDLEWARE_CLASSES = (

@@ -23,8 +23,8 @@ urlpatterns = patterns(
     url(r'^clubs/(?P<pk>\d+)/team/$',
         views.ClubTeamView.as_view(), name='club_team'),
     # ex: /data/clubs/1/team/edit/
-    url(r'^clubs/(?P<club_id>\d+)/team/edit/$',
-        views.club_team_edit, name='club_team_edit'),
+    url(r'^clubs/(?P<pk>\d+)/team/edit/$',
+        views.ClubTeamEditView.as_view(), name='club_team_edit'),
     # ex: /data/clubs/1/love/
     url(r'^clubs/(?P<club_id>\d+)/love/$',
         views.club_love, name='club_love'),
