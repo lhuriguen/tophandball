@@ -71,6 +71,12 @@ function makeSelect2Player(sel) {
     });
 }
 
+function makeSelect2(sel) {
+    sel.select2({
+        minimumResultsForSearch: 10
+    });
+}
+
 var main = function() {
 
     $("#search-form").submit(search_submit);
@@ -82,47 +88,15 @@ var main = function() {
     $(".list_follow").submit(follow);
     $("#follow_form").submit(follow);
 
+    $("select").addClass("th-selectable");
     makeSelect2Player($(".select-player"));
+    makeSelect2($(".th-selectable"));
 
-    // $(".select2-player").select2({
-    //     minimumInputLength: 2,
-    //     ajax: {
-    //         url: "/data/api/player_search/",
-    //         dataType: 'json',
-    //         type: "GET",
-    //         quietMillis: 50,
-    //         data: function (term) {
-    //             return {
-    //                 q: term
-    //             };
-    //         },
-    //         results: function (data) {
-    //             return {
-    //                 results: $.map(data, function (item) {
-    //                     return {
-    //                         text: item.fields.first_name + ' ' + item.fields.last_name ,
-    //                         id: item.pk
-    //                     }
-    //                 })
-    //             };
-    //         }
-    //     },
-    //     initSelection : function (element, callback) {
-    //         var id=$(element).val();
-    //         if (id!=="") {
-    //             $.ajax("/data/api/player/" + id +"/", {
-    //                 dataType: "json"
-    //             }).done(function (data) {
-    //                 callback({
-    //                     id: data[0].pk,
-    //                     text: data[0].fields.first_name + ' ' + data[0].fields.last_name
-    //                 });
-    //             });
-    //         }
-    //     }
-    // });
-
-    $(".selectable").select2();
+    $(".dateinput").datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        weekStart: 1
+    });
 
 };
 
