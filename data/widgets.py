@@ -1,4 +1,5 @@
-from django.forms.widgets import FileInput, CheckboxInput, FILE_INPUT_CONTRADICTION
+from django.forms.widgets import (
+    FileInput, CheckboxInput, FILE_INPUT_CONTRADICTION)
 from django.utils.safestring import mark_safe
 from django.utils.html import conditional_escape
 

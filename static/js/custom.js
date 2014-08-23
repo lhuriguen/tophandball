@@ -26,7 +26,7 @@ function search_submit() {
     $("#search-results").load(
         "?name=" + encodeURIComponent(query)
     );
-    $("#id_query").val("")
+    $("#id_query").val("");
 
     return false;
 }
@@ -50,7 +50,7 @@ function makeSelect2Player(sel) {
                         return {
                             text: item.fields.first_name + ' ' + item.fields.last_name ,
                             id: item.pk
-                        }
+                        };
                     })
                 };
             }

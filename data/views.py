@@ -60,7 +60,6 @@ class ClubIndexView(generic.ListView):
 
 class ClubDetailView(LoveMixin, generic.DetailView):
     model = Club
-    #template_name = 'data/club_detail.html'
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
@@ -434,7 +433,6 @@ class CompIndexView(generic.ListView):
 
 class CompDetailView(generic.DetailView):
     model = Competition
-    #template_name = 'data/comp_detail.html'
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context

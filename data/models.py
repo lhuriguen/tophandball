@@ -426,7 +426,6 @@ class CompetitionSeason(models.Model):
     season = models.ForeignKey(Season)
     start_date = models.DateField()
     end_date = models.DateField()
-    #has_playoff = models.BooleanField()
 
     def __unicode__(self):
         return u'%s %s' % (self.competition.name, self.season.name)
@@ -452,7 +451,7 @@ class Stage(models.Model):
     name = models.CharField(max_length=30)
     short_name = models.CharField(max_length=5)
     is_qualification = models.BooleanField(default=False)
-    #tournament = models.CharField(max_length=2, choices=TYPE_CHOICES)
+    # tournament = models.CharField(max_length=2, choices=TYPE_CHOICES)
 
     def __unicode__(self):
         return u'%s %s. %s' % (self.comp_season, self.order, self.name)
@@ -651,7 +650,7 @@ class MatchPlayerStats(models.Model):
     yellow_card = models.BooleanField(default=False)
     two_minutes = models.PositiveSmallIntegerField(blank=True, null=True)
     red_card = models.BooleanField(default=False)
-    #playing_time = models.FloatField(default=0)
+    # playing_time = models.FloatField(default=0)
 
     def __unicode__(self):
         return u'%s in %s' % (self.player, self.match_team)
