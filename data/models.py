@@ -93,7 +93,8 @@ class Club(models.Model):
 
     def get_matches(self):
         query = Q(home_team=self) | Q(away_team=self)
-        return Match.objects.filter(query).order_by('-match_datetime')
+        return Match.objects.filter(query).select_related(
+            ).order_by('-match_datetime')
 
     def address_lines(self):
         if self.address:
