@@ -1,11 +1,40 @@
 {% extends "data/base_club.html" %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
 
-{% load bootstrap %}
+{% block active_home %}active{% endblock %}
+
 {% block specific %}
-
-    <form action="" method="post">{% csrf_token %}
-        {{ form|bootstrap }}
-        <input type="submit" value="Update" class="btn btn-danger" />
+<div class="alert alert-info">
+    <strong><i class="fa fa-info-circle"></i> Atention!</strong>
+    <ul>
+        <li>Images have a size limit of <b>50KB</b> and should not be wider than <b>300px</b>.</li>
+    </ul>
+</div>
+<form method="post" enctype="multipart/form-data">
+    {% crispy form %}
+    <fieldset>
+        <legend>Naming History</legend>
+        {% crispy names_form names_form.form.helper %}
+    </fieldset>
+    <div class="form-actions">
+        <input name="update" value="Update" class="btn btn-primary" id="submit-id-update" type="submit">
         <a href="{{ club.get_absolute_url }}" class="btn btn-default">Cancel</a>
-    </form>
+    </div>
+</form>
+{% endblock %}
+
+{% block extra_script %}
+<script src="{% static "js/jquery.formset.js" %}"></script>
+<script type="text/javascript">
+    $(function() {
+        $('#namesEditForm_table tbody tr').formset({
+            prefix: "{{ names_form.prefix }}",
+            added: function(row) {
+                var txt = row.find('.th-selectable');
+                makeSelect2(txt);
+            }
+        });
+    });
+</script>
 {% endblock %}

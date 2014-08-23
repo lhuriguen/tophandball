@@ -73,11 +73,58 @@ class ClubDetailView(LoveMixin, generic.DetailView):
         return context
 
 
-class ClubUpdateView(LoginRequiredMixin, generic.edit.UpdateView):
+class ClubUpdateView(LoginRequiredMixin, LoveMixin, generic.UpdateView):
     model = Club
-    fields = ['name', 'short_name', 'initials', 'address', 'website',
-              'twitter', 'facebook']
+    form_class = ClubForm
     template_name_suffix = '_update_form'
+
+    def get(self, request, *args, **kwargs):
+        """
+        Handles GET requests and instantiates blank versions of the form
+        and its inline formsets.
+        """
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        names_form = ClubNamesFormSet(
+            instance=self.object, prefix='names',
+            queryset=ClubName.objects.order_by('season__year_from'))
+        return self.render_to_response(
+            self.get_context_data(form=form, names_form=names_form))
+
+    def post(self, request, *args, **kwargs):
+        """
+        Handles POST requests, instantiating a form instance and its inline
+        formsets with the passed POST variables and then checking them for
+        validity.
+        """
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        names_form = ClubNamesFormSet(
+            self.request.POST, instance=self.object, prefix='names')
+        if form.is_valid() and names_form.is_valid():
+            return self.form_valid(form, names_form)
+        else:
+            return self.form_invalid(form, names_form)
+
+    def form_valid(self, form, names_form):
+        """
+        Called if all forms are valid. Creates a model instance along with
+        associated formset models and then redirects to a success page.
+        """
+        self.object = form.save()
+        names_form.instance = self.object
+        names_form.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form, names_form):
+        """
+        Called if a form is invalid. Re-renders the context data with the
+        data-filled forms and errors.
+        """
+        return self.render_to_response(
+            self.get_context_data(form=form, names_form=names_form))
 
 
 class ClubMatchView(LoveMixin, generic.ListView):

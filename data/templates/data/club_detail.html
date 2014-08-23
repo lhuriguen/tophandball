@@ -9,18 +9,29 @@
                     <strong>Country: </strong> {{ club.country }}<br>
                     <strong>Short name: </strong> {{ club.short_name }}<br>
                     <strong>Initials: </strong> {{ club.initials }}<br>
-                    <hr>
+                </small>
+                <hr>
+                <small>
+                    <strong>Online:</strong><br>
+                    {% if club.website %}
                     <i class="fa fa-external-link fa-fw"></i> <a target="_blank" href="{{ club.website }}">Official website</a><br>
+                    {% else %}
+                    Official website unknown.<br>
+                    {% endif %}
                     {% if club.twitter %}
                     <i class="fa fa-twitter fa-fw"></i> <a target="_blank" href="{{ club.twitter }}">Twitter</a><br>
                     {% endif %}
                     {% if club.facebook %}
                     <i class="fa fa-facebook fa-fw"></i> <a target="_blank" href="{{ club.facebook }}">Facebook</a><br>
                     {% endif %}
-                    <hr>
+                </small>
+                <hr>
+                <small>
                     <strong>Address:</strong><br>
-                    {{ club.address }}
-                    <hr>
+                    {{ club.address|default:"Address unknown." }}
+                </small>
+                <hr>
+                <small>
                     <strong>Also known as:</strong>
                     <ul class="list-unstyled">
                     {% for clubname in club.clubname_set.all %}
@@ -29,9 +40,9 @@
                         <li>No alternative names found.</li>
                     {% endfor %}
                     </ul>
-                    <hr>
-                    <p><i class="fa fa-edit"></i> Is this information wrong or incomplete? You can fix it <a href="{% url 'data:club_update' pk=club.id %}">here</a>.</p>
                 </small>
+                <hr>
+                <p class="small"><i class="fa fa-edit"></i> Is this information wrong or incomplete? You can fix it <a href="{% url 'data:club_update' pk=club.id %}">here</a>.</p>
             </div>
         </div>
         <div id="map_canvas" class="thumbnail">{% if not club.address %}Sorry, cannot show map without an address.{% endif %}</div>

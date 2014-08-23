@@ -59,8 +59,10 @@ class Club(models.Model):
     twitter = models.URLField(blank=True)
     facebook = models.URLField(blank=True)
     logo = models.ImageField(upload_to='clubs', blank=True, null=True)
-    players = models.ManyToManyField('Player', through='PlayerContract')
-    coaches = models.ManyToManyField('Coach', through='CoachContract')
+    players = models.ManyToManyField(
+        'Player', through='PlayerContract', blank=True)
+    coaches = models.ManyToManyField(
+        'Coach', through='CoachContract', blank=True)
     fans = models.ManyToManyField(User, related_name='fav_clubs')
 
     def __unicode__(self):

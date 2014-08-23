@@ -5,8 +5,22 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Submit, Row, Field, Div
 from crispy_forms.bootstrap import AppendedText
 
-from .models import Player, PlayerContract, PlayerName
+from .models import Player, PlayerContract, PlayerName, ClubName, Club
 from .widgets import SingleImageInput
+
+
+class BasicInlineTable(forms.ModelForm):
+    """
+    Base ModelForm for use as inline formset with crispy forms
+    helper and table template.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super(BasicInlineTable, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.form_tag = False
+        self.helper.disable_csrf = True
+        self.helper.template = 'crispy_forms/table_inline_formset.html'
 
 
 class PlayerForm(forms.ModelForm):
@@ -105,14 +119,6 @@ class PlayerNamesInline(forms.ModelForm):
         self.helper.template = 'crispy_forms/table_inline_formset.html'
 
 
-PlayerContractFormSet = inlineformset_factory(
-    Player, PlayerContract, form=PlayerContractInline,
-    extra=1, can_delete=True)
-PlayerNameFormSet = inlineformset_factory(
-    Player, PlayerName, form=PlayerNamesInline,
-    extra=1, can_delete=True)
-
-
 class PlayerContractForm(forms.ModelForm):
 
     class Meta:
@@ -132,3 +138,69 @@ class PlayerContractForm(forms.ModelForm):
         self.helper.template = 'crispy_forms/table_inline_formset.html'
         self.helper.add_input(Submit('submit', 'Submit changes'))
         self.fields['player'].widget.attrs['class'] = 'select-player'
+
+
+class ClubForm(forms.ModelForm):
+
+    class Meta:
+        model = Club
+        widgets = {'logo': SingleImageInput(max_size=50)}
+        exclude = ['ehf_id', 'players', 'coaches', 'fans']
+
+    def __init__(self, *args, **kwargs):
+        super(ClubForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.form_tag = False
+        self.helper.layout = Layout(
+            Row(
+                Div(
+                    Fieldset(
+                        'Basic Information',
+                        Row(
+                            Field('name', wrapper_class='col-sm-4'),
+                            Field('short_name', wrapper_class='col-sm-4'),
+                            Field('initials', wrapper_class='col-sm-4'),
+                        ),
+                        Row(
+                            Field('country', wrapper_class='col-sm-4'),
+                            Field('address', wrapper_class='col-sm-8')
+                        ),
+                        Row(
+                            Field('website', wrapper_class='col-sm-4'),
+                            Field('twitter', wrapper_class='col-sm-4'),
+                            Field('facebook', wrapper_class='col-sm-4')
+                        ),
+                    ),
+                    css_class='col-sm-9'
+                ),
+                Div(
+                    Fieldset(
+                        'Profile Logo',
+                        Field('logo')
+                    ),
+                    css_class='col-sm-3'
+                )
+            )
+        )
+
+
+class ClubNamesInline(BasicInlineTable):
+
+    class Meta:
+        model = ClubName
+
+    def __init__(self, *args, **kwargs):
+        super(ClubNamesInline, self).__init__(*args, **kwargs)
+        self.helper.form_id = 'namesEditForm'
+
+
+# Formsets
+PlayerContractFormSet = inlineformset_factory(
+    Player, PlayerContract, form=PlayerContractInline,
+    extra=1, can_delete=True)
+PlayerNameFormSet = inlineformset_factory(
+    Player, PlayerName, form=PlayerNamesInline,
+    extra=1, can_delete=True)
+ClubNamesFormSet = inlineformset_factory(
+    Club, ClubName, form=ClubNamesInline,
+    extra=1, can_delete=True)
