@@ -34,7 +34,7 @@
                 <small>
                     <strong>Also known as:</strong>
                     <ul class="list-unstyled">
-                    {% for clubname in club.clubname_set.all %}
+                    {% for clubname in name_list %}
                         <li>{{ clubname.season }} - {{ clubname.name }}</li>
                     {% empty %}
                         <li>No alternative names found.</li>

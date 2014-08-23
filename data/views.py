@@ -64,8 +64,11 @@ class ClubDetailView(LoveMixin, generic.DetailView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(ClubDetailView, self).get_context_data(**kwargs)
+        context['name_list'] = self.object.clubname_set.select_related(
+            'season').order_by('season__year_from')
         # Prepare context data for matches
-        context['comp_list'] = self.object.grouptable_set.order_by(
+        context['comp_list'] = self.object.grouptable_set.select_related(
+            ).order_by(
             'group__stage__comp_season__competition__is_international',
             'group__stage__comp_season__competition__level',
             'group__stage__order')
