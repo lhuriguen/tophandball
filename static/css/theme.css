@@ -168,3 +168,7 @@ a.th-card:focus, a.th-card:hover {
     right: 0;
     margin-bottom: -4px;
 }
+.file-preview-image {
+    width: 100%;
+    height: auto;
+}
