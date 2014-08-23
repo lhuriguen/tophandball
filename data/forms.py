@@ -90,7 +90,7 @@ class PlayerForm(forms.ModelForm):
         )
 
 
-class PlayerContractInline(forms.ModelForm):
+class PlayerContractInline(BasicInlineTable):
 
     class Meta:
         model = PlayerContract
@@ -98,25 +98,17 @@ class PlayerContractInline(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(PlayerContractInline, self).__init__(*args, **kwargs)
-        self.helper = FormHelper(self)
-        self.helper.form_tag = False
-        self.helper.disable_csrf = True
         self.helper.form_id = 'contractEditForm'
-        self.helper.template = 'crispy_forms/table_inline_formset.html'
 
 
-class PlayerNamesInline(forms.ModelForm):
+class PlayerNamesInline(BasicInlineTable):
 
     class Meta:
         model = PlayerName
 
     def __init__(self, *args, **kwargs):
         super(PlayerNamesInline, self).__init__(*args, **kwargs)
-        self.helper = FormHelper(self)
-        self.helper.form_tag = False
-        self.helper.disable_csrf = True
         self.helper.form_id = 'namesEditForm'
-        self.helper.template = 'crispy_forms/table_inline_formset.html'
 
 
 class PlayerContractForm(forms.ModelForm):
