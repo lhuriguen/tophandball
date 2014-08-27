@@ -56,3 +56,5 @@ docs/_build/
 .directory
 *.back
 *.old
+.ipynb_checkpoints
+*.ipynb

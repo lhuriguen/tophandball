@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'crispy_forms',
     'extra_views',
+    'django_countries',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -151,3 +152,9 @@ SITE_ID = 1
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 CRISPY_FAIL_SILENTLY = not DEBUG
+
+COUNTRIES_OVERRIDE = {
+    'XK': 'Kosovo',
+    'MK': 'Macedonia',
+    'RU': 'Russia',
+}

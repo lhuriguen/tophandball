@@ -1,5 +1,7 @@
 from django import template
 
+from django_countries import countries
+
 register = template.Library()
 
 
@@ -59,3 +61,11 @@ def choice_display(value, arg):
 @register.filter
 def to_int(value):
     return int(value)
+
+
+@register.filter
+def country_name(value):
+    try:
+        return dict(countries)[value]
+    except KeyError:
+        return value

@@ -7,6 +7,8 @@ from django.utils import timezone
 from django.utils.text import slugify
 from django.contrib.auth.models import User
 
+from django_countries.fields import CountryField
+
 
 class Country(models.Model):
     code = models.CharField(max_length=3, primary_key=True)
@@ -50,7 +52,7 @@ class Club(models.Model):
     initials = models.CharField(
         max_length=3, blank=True,
         help_text="For use in matches, ex. GYO, VAR, BUD...")
-    country = models.CharField(max_length=3)
+    country = CountryField()
     ehf_id = models.IntegerField('EHF id', unique=True)
     address = models.CharField(
         max_length=200, blank=True,

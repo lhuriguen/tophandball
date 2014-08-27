@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load th_extra %}
+
 {% block title %}Club index{% endblock %}
 {% block active_club %}active{% endblock %}
 
@@ -37,7 +39,8 @@
                       <img class="media-object" src="{{ club.logo_url }}" alt="{{ club.name }}">
                     </div>
                     <div class="media-body">
-                      <h5 class="list-group-item-heading">{{ club.name }}</h5> <small>{{ club.country }}</small>
+                      <h5 class="list-group-item-heading">{{ club.name }}</h5>
+                      <small><img src="{{ club.country.flag }}" alt="{{ club.country.name }}"> {{ club.country.name }}</small>
                       <small class="pull-right red-card">{{ club.num_fans }} <i class="fa fa-heart"></i></small>
                     </div>
                 </a>
@@ -53,7 +56,7 @@
             <ul class="list-inline">
                 <li><a href="."><b>Show all</b></a></li>
                 {% for country in countries %}
-                <li><a href="?country={{ country }}">{{ country }}</a></li>
+                <li><a href="?country={{ country }}">{{ country|country_name }}</a></li>
                 {% endfor %}
             </ul>
         </div>
@@ -71,7 +74,7 @@
                         <img class="th-card-poster" style="max-height: 100px;" src="{{ item.logo_url }}" alt="{{ item.name }}">
                         <div class="th-card-div">
                             <h5 class="th-card-heading"><b>{{ item.name }}</b></h5>
-                            <small class="text-info th-card-body">{{ item.country }}</small>
+                            <small class="text-info th-card-body">{{ item.country.name }}</small>
                             <div class="th-card-btn">
                                 <form class="list_follow" action="{% url 'data:club_love' item.id %}" method="post">
                                     {% include "data/_list_love.html" %}

@@ -6,7 +6,7 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <small>
-                    <strong>Country: </strong> {{ club.country }}<br>
+                    <strong>Country: </strong> {{ club.country.name }}<br>
                     <strong>Short name: </strong> {{ club.short_name }}<br>
                     <strong>Initials: </strong> {{ club.initials }}<br>
                 </small>
@@ -87,7 +87,7 @@
                     </div>
                     <div class="media-body">
                       <h5 class="list-group-item-heading">{{ player.player.full_name }}</h5>
-                      <small>{{ player.player.get_position_display }}</small>
+                      <p class="small text-info">{{ player.player.get_position_display }}, {{ player.player.country }}</p>
                     </div>
                 </a>
                 {% empty %}

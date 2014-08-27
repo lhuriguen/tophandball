@@ -87,6 +87,7 @@ html {
 }
 .media-list img {
     max-height: 60px;
+    max-width: 60px;
 }
 .media-list .media {
     margin-top: 0;
