@@ -1,0 +1,13 @@
+<a href="{{ item.get_absolute_url }}" class="list-group-item media">
+    <div class="pull-left">
+      <img class="media-object media-object-bordered" src="{{ item.photo_url }}" alt="{{ item.full_name }}">
+    </div>
+    <div class="media-body">
+      <h5 class="list-group-item-heading">{{ item.full_name }}</h5>
+      <p class="small text-info"><img src="{{ item.country.flag }}" title="{{ item.country.name }}"> {{ item.get_position_display }}
+      {% if show_fans %}
+      <span class="pull-right red-card">{{ item.num_fans }} <i class="fa fa-heart"></i></span>
+      {% endif %}
+      </p>
+    </div>
+</a>

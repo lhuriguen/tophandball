@@ -7,7 +7,7 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <small>
-                    <strong>Country: </strong> {{ player.country }}<br>
+                    <strong>Country: </strong> {{ player.country.name }}<br>
                     <strong>Birth date:</strong> {{ player.birth_date|date:"d/m/Y" }} (age {{ player.age }})<br>
                     <strong>Birth place:</strong> {{ player.birth_place|default:"Unknown" }}<br>
                     <strong>Height:</strong> {{ player.height }} cm<br>
@@ -29,7 +29,9 @@
                     <strong>Club career: </strong>
                     <ul class="list-unstyled">
                     {% for contract in club_career %}
-                        <li><a href="{% url 'data:club_team' pk=contract.club.id %}?season={{ contract.season.year_from }}">{{ contract.season.name }}</a> - <a href="{{ contract.club.get_absolute_url }}">{{ contract.club.name }}</a>{% if contract.arrival_month %} (since {{ contract.get_arrival_month_display }}){% endif %}{% if contract.departure_month %} (until {{ contract.get_departure_month_display }}){% endif %}</li>
+                        <li>
+                        <a href="{% url 'data:club_team' pk=contract.club.id %}?season={{ contract.season.year_from }}">{{ contract.season.name }}</a> - <a href="{{ contract.club.get_absolute_url }}">{{ contract.club.name }} <img src="{{ contract.club.country.flag }}" title="{{ contract.club.country.name }}"></a>{% if contract.arrival_month %} (since {{ contract.get_arrival_month_display }}){% endif %}{% if contract.departure_month %} (until {{ contract.get_departure_month_display }}){% endif %}
+                        </li>
                     {% endfor %}
                     </ul>
                     <hr>
@@ -82,15 +84,7 @@
             </div>
             <div class="list-group media-list">
                 {% for mate in teammates %}
-                <a href="{{ mate.player.get_absolute_url }}" class="list-group-item media">
-                    <div class="pull-left">
-                      <img class="media-object" src="{{ mate.player.photo_url }}" alt="{{ mate.player.full_name }}">
-                    </div>
-                    <div class="media-body">
-                      <h5 class="list-group-item-heading">{{ mate.player.full_name }}</h5>
-                      <small>{{ mate.player.get_position_display }}</small>
-                    </div>
-                </a>
+                {% include "data/_player_list_item.html" with item=mate.player %}
                 {% empty %}
                 <a href="#" class="list-group-item">No teammates found.</a>
                 {% endfor %}

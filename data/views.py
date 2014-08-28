@@ -289,8 +289,8 @@ class PlayerDetailView(LoveMixin, generic.DetailView):
         context['cur_contract'] = ct
         if ct:
             context['teammates'] = PlayerContract.objects.select_related(
-                'player').filter(club=ct.club,
-                                 season=ct.season).exclude(pk=ct.id)
+                'player').filter(club=ct.club, season=ct.season
+                                 ).exclude(pk=ct.id)
         # Matches
         matches = self.player.matchplayerstats_set.select_related().order_by(
             '-match_team__match__match_datetime')

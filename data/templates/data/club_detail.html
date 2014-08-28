@@ -81,15 +81,7 @@
             </div>
             <div class="list-group media-list">
                 {% for player in club.get_current_team %}
-                <a href="{{ player.player.get_absolute_url }}" class="list-group-item media">
-                    <div class="pull-left">
-                      <img class="media-object" src="{{ player.player.photo_url }}" alt="{{ player.player.full_name }}">
-                    </div>
-                    <div class="media-body">
-                      <h5 class="list-group-item-heading">{{ player.player.full_name }}</h5>
-                      <p class="small text-info">{{ player.player.get_position_display }}, {{ player.player.country }}</p>
-                    </div>
-                </a>
+                {% include "data/_player_list_item.html" with item=player.player %}
                 {% empty %}
                 <div class="list-group-item">No current players found. Check past seasons under the <a href="{% url 'data:club_team' pk=club.id %}"><i class="fa fa-group"></i> Team</a> section.</div>
                 {% endfor %}

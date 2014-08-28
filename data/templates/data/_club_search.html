@@ -6,14 +6,7 @@
     <div id="search_results">
         <div class="list-group media-list">
             {% for club in club_list %}
-            <a href="{{ club.get_absolute_url }}" class="list-group-item media">
-                <div class="pull-left">
-                  <img class="media-object" src="{{ club.logo_url }}" alt="{{ club.name }}">
-                </div>
-                <div class="media-body">
-                  <h5 class="list-group-item-heading">{{ club.name }}</h5> <small>{{ club.country }}</small>               
-                </div>
-            </a>
+            {% include "data/_club_list_item.html" %}
             {% endfor %}
         </div>
     </div>

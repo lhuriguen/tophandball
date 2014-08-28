@@ -34,15 +34,7 @@
             </div>
             <div class="list-group media-list">
                 {% for player in popular_list %}
-                <a href="{{ player.get_absolute_url }}" class="list-group-item media">
-                    <div class="pull-left">
-                      <img class="media-object media-object-bordered" src="{{ player.photo_url }}" alt="{{ player.full_name }}">
-                    </div>
-                    <div class="media-body">
-                      <h5 class="list-group-item-heading">{{ player.full_name }}</h5> <small>{{ player.get_position_display }}, {{ player.country }}</small>
-                      <small class="pull-right red-card">{{ player.num_fans }} <i class="fa fa-heart"></i></small>
-                    </div>
-                </a>
+                {% include "data/_player_list_item.html" with item=player show_fans=True %}
                 {% empty %}
                 <a href="#" class="list-group-item">No popular players found.</a>
                 {% endfor %}
@@ -57,7 +49,7 @@
                     <ul class="list-inline">
                         <li><a href="{% append_to_get country='',page='' %}"><b>Show all</b></a></li>
                         {% for country in countries %}
-                        <li><a href="{% append_to_get country=country,page='' %}">{{ country }}</a></li>
+                        <li><a href="{% append_to_get country=country,page='' %}">{{ country|country_name }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -76,7 +68,7 @@
         <h4><i>Showing <b>{{ paginator.count }}</b>
         {% if request.GET.position %} {{ request.GET.position|choice_display:positions }}{{ player_list|pluralize }}
         {% else %} player{{ player_list|pluralize }}{% endif %}
-        {% if request.GET.country %} from {{ request.GET.country }}{% endif %}
+        {% if request.GET.country %} from {{ request.GET.country|country_name }}{% endif %}
         </i></h4>
         {% else %}
         <h4><i>Showing <b>all</b> players</i></h4>
@@ -91,7 +83,7 @@
                     <div class="th-card-div">
                         <h5 class="th-card-heading"><b>{{ item.last_name }}</b></h5>
                         <p class="th-card-body">{{ item.first_name }}</p>
-                        <small class="text-info th-card-body">{{ item.get_position_display }}, {{ item.country }}</small>
+                        <small class="text-info th-card-body"><img src="{{ item.country.flag }}" title="{{ item.country.name }}"> {{ item.get_position_display }}</small>
                         <div class="th-card-btn">
                             <form class="list_follow" action="{% url 'data:player_love' item.id %}" method="post">
                                 {% include "data/_list_love.html" %}

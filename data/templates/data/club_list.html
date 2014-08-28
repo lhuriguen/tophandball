@@ -34,16 +34,7 @@
             </div>
             <div class="list-group media-list">
                 {% for club in popular_list %}
-                <a href="{{ club.get_absolute_url }}" class="list-group-item media">
-                    <div class="pull-left">
-                      <img class="media-object" src="{{ club.logo_url }}" alt="{{ club.name }}">
-                    </div>
-                    <div class="media-body">
-                      <h5 class="list-group-item-heading">{{ club.name }}</h5>
-                      <small><img src="{{ club.country.flag }}" alt="{{ club.country.name }}"> {{ club.country.name }}</small>
-                      <small class="pull-right red-card">{{ club.num_fans }} <i class="fa fa-heart"></i></small>
-                    </div>
-                </a>
+                {% include "data/_club_list_item.html" with show_fans=True %}
                 {% empty %}
                 <a href="#" class="list-group-item">No popular clubs found.</a>
                 {% endfor %}

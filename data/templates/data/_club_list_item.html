@@ -1,0 +1,13 @@
+<a href="{{ club.get_absolute_url }}" class="list-group-item media">
+    <div class="pull-left">
+      <img class="media-object" src="{{ club.logo_url }}" alt="{{ club.name }}">
+    </div>
+    <div class="media-body">
+      <h5 class="list-group-item-heading">{{ club.name }}</h5>
+      <p class="small text-info"><img src="{{ club.country.flag }}" title="{{ club.country.name }}"> {{ club.country.name }}
+      {% if show_fans %}
+      <span class="pull-right red-card">{{ club.num_fans }} <i class="fa fa-heart"></i></span>
+      {% endif %}
+      </p>
+    </div>
+</a>

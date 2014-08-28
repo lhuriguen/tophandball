@@ -157,4 +157,5 @@ COUNTRIES_OVERRIDE = {
     'XK': 'Kosovo',
     'MK': 'Macedonia',
     'RU': 'Russia',
+    'MD': 'Moldova',
 }

@@ -35,7 +35,7 @@
                     <div class="th-card-div">
                         <h5 class="th-card-heading"><b>{{ contract.player.last_name }}</b>, {{ contract.player.first_name }}</h5>
                         <p class="text-muted th-card-body small">
-                        {{ contract.player.birth_date|date:"d/m/Y" }} (age {{ contract.player.age }}), {{ contract.player.country }}
+                        <img src="{{ contract.player.country.flag }}" title="{{ contract.player.country.name }}"> {{ contract.player.birth_date|date:"d/m/Y" }} (age {{ contract.player.age }})
                         </p>
                         {% if contract.arrival_month %}
                         <span class="label label-success">Since {{ contract.get_arrival_month_display }}</span>
@@ -81,7 +81,7 @@
                     <div class="th-card-div">
                         <h5 class="th-card-heading"><b>{{ coach.coach.last_name }}</b>, {{ coach.coach.first_name }}</h5>
                         <p class="text-muted th-card-body small">
-                        {{ coach.coach.birth_date|date:"d/m/Y" }} (age {{ coach.coach.age }}), {{ coach.coach.country }}
+                        <img src="{{ coach.coach.country.flag }}" title="{{ coach.coach.country.name }}"> {{ coach.coach.birth_date|date:"d/m/Y" }} (age {{ coach.coach.age }})
                         </p>
                         <p class="text-info th-card-body small">{{ coach.get_role_display }}</p>
                     </div>

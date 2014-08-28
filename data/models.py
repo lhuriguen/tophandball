@@ -142,7 +142,7 @@ class Person(models.Model):
 
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
-    country = models.CharField(max_length=3)
+    country = CountryField()
     birth_date = models.DateField(blank=True, null=True)
     birth_place = models.CharField(max_length=50, blank=True, null=True)
     gender = models.CharField(
