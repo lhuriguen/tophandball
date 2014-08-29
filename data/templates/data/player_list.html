@@ -47,9 +47,13 @@
                 <div class="col-md-7">
                     <p class="lead">Country</p>
                     <ul class="list-inline">
-                        <li><a href="{% append_to_get country='',page='' %}"><b>Show all</b></a></li>
+                        <li><a href="{% append_to_get country='',page='' %}" class=""><b>Show all</b></a></li>
                         {% for country in countries %}
+                        {% if request.GET.country == country %}
+                        <li>{{ country|country_name }}</li>
+                        {% else %}
                         <li><a href="{% append_to_get country=country,page='' %}">{{ country|country_name }}</a></li>
+                        {% endif %}
                         {% endfor %}
                     </ul>
                 </div>
@@ -58,7 +62,11 @@
                     <ul class="list-inline">
                         <li><a href="{% append_to_get position='',page='' %}"><b>Show all</b></a></li>
                         {% for position in positions %}
+                        {% if request.GET.position == position.0 %}
+                        <li>{{ position.1 }}</li>
+                        {% else %}
                         <li><a href="{% append_to_get position=position.0,page='' %}">{{ position.1 }}</a></li>
+                        {% endif %}
                         {% endfor %}
                     </ul>
                 </div>

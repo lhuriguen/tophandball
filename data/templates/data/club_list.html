@@ -47,7 +47,11 @@
             <ul class="list-inline">
                 <li><a href="."><b>Show all</b></a></li>
                 {% for country in countries %}
+                {% if request.GET.country == country %}
+                <li>{{ country|country_name }}</li>
+                {% else %}
                 <li><a href="?country={{ country }}">{{ country|country_name }}</a></li>
+                {% endif %}
                 {% endfor %}
             </ul>
         </div>
