@@ -10,17 +10,6 @@ from django.contrib.auth.models import User
 from django_countries.fields import CountryField
 
 
-class Country(models.Model):
-    code = models.CharField(max_length=3, primary_key=True)
-    name = models.CharField(max_length=255, unique=True)
-
-    class Meta:
-        verbose_name_plural = 'countries'
-
-    def __unicode__(self):
-        return u'%s (%s)' % (self.name, self.code)
-
-
 class Season(models.Model):
     year_from = models.PositiveSmallIntegerField(db_index=True)
     year_to = models.PositiveSmallIntegerField()
@@ -379,7 +368,7 @@ class Competition(models.Model):
     name = models.CharField(max_length=50)
     short_name = models.CharField(max_length=5)
     website = models.URLField(blank=True)
-    country = models.CharField(max_length=3, blank=True, null=True)
+    country = CountryField()
     is_international = models.BooleanField(default=False)
     level = models.PositiveSmallIntegerField(default=1)
     logo = models.ImageField(upload_to='comps', blank=True, null=True)
@@ -667,7 +656,7 @@ class MatchPlayerStats(models.Model):
 
 class Referee(models.Model):
     name = models.CharField(max_length=100)
-    country = models.CharField(max_length=3)
+    country = CountryField()
     pair = models.ForeignKey('self',
                              blank=True,
                              null=True,
@@ -684,7 +673,7 @@ class Referee(models.Model):
 
 class Delegate(models.Model):
     name = models.CharField(max_length=100)
-    country = models.CharField(max_length=3)
+    country = CountryField()
 
     def __unicode__(self):
         return u'%s (%s)' % (self.name, self.country)
