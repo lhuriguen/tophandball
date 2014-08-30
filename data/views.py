@@ -17,6 +17,7 @@ from .forms import *
 
 class ClubIndexView(generic.ListView):
     model = Club
+    paginate_by = 20
     queryset = Club.objects.order_by('name')
 
     def get(self, request, *args, **kwargs):

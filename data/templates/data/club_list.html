@@ -56,17 +56,18 @@
             </ul>
         </div>
         {% if request.GET.country %}
-        <h4><i>Showing <b>{{ club_list|length }}</b> club{{ club_list|pluralize }} from {{ request.GET.country }}</i></h4>
+        <h4><i>Showing <b>{{ club_list|length }}</b> club{{ club_list|pluralize }} from {{ request.GET.country|country_name }}</i></h4>
         {% else %}
         <h4><i>Showing <b>all</b> clubs</i></h4>
         {% endif %}
         <hr>
         <div id="country_clubs">
+            {% include "data/_pagination.html" %}
             <div class="row">
             {% for item in club_list %}
                 <div class="col-xs-6 col-md-3">
                     <a href="{{ item.get_absolute_url }}" class="th-card text-center">
-                        <img class="th-card-poster" style="max-height: 100px;" src="{{ item.logo_url }}" alt="{{ item.name }}">
+                        <img class="th-card-poster th-card-poster-center" src="{{ item.logo_url }}" alt="{{ item.name }}">
                         <div class="th-card-div">
                             <h5 class="th-card-heading"><b>{{ item.name }}</b></h5>
                             <small class="text-info th-card-body">{{ item.country.name }}</small>
@@ -86,6 +87,7 @@
                 {% endif %}
             {% endfor %}
             </div>
+            {% include "data/_pagination.html" %}
         </div>
     </div>
 </div>

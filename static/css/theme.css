@@ -124,7 +124,7 @@ html {
     display: block;
     line-height: 1.42857;
     margin-bottom: 20px;
-    padding: 4px;
+    /*padding: 4px;*/
     transition: all 0.2s ease-in-out 0s;
 }
 a.th-card:focus, a.th-card:hover {
@@ -135,8 +135,15 @@ a.th-card:focus, a.th-card:hover {
 .th-card p {
     margin-top: 5px;
 }
+.th-card-poster-center {
+    max-height: 100px;
+    padding: 4px;
+}
+.th-card-wide-poster {
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+}
 .th-card-poster {
-    /*max-height: 100px;*/
     height: auto;
     max-width: 100%;
     margin-bottom: 10px;
@@ -145,26 +152,26 @@ a.th-card:focus, a.th-card:hover {
     margin-bottom: 5px;
     margin-top: 0;
     color: #333;
-    padding-left: 4px;
 }
 .th-card-body {
-    padding-left: 4px;
     margin-bottom: 5px;
-}
-#player_display .pagination {
-    margin: 0 0 10px;
-}
-.btn-love {
-    color: #E50000;
 }
 .th-card-div {
     position: relative;
+    margin: 4px;
+    padding: 0 4px;
 }
 .th-card-btn {
     position: absolute;
     bottom: 0;
     right: 0;
     margin-bottom: -4px;
+}
+.pagination-index {
+    margin: 0 0 10px;
+}
+.btn-love {
+    color: #E50000;
 }
 .file-preview-image {
     width: 100%;

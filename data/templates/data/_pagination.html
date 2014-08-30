@@ -1,6 +1,6 @@
 {% load th_extra %}
 {% if paginator and paginator.num_pages > 1 %}
-    <ul class="pagination pagination-sm">
+    <ul class="pagination pagination-sm pagination-index">
         <li class="{% if not page_obj.has_previous %}disabled{% endif %}"><a href="{% append_to_get page=1 %}">&laquo;</a></li>
         {% for pnum in paginator.page_range %}
         <li class="{% if page_obj.number == pnum %}active{% endif %}"><a href="{% append_to_get page=pnum %}">{{ pnum }}</a></li>
