@@ -448,15 +448,6 @@ class ClubTeamEditView(LoginRequiredMixin, LoveMixin, ModelFormSetView):
     club = None
     year = None
 
-    def get(self, request, *args, **kwargs):
-        self.club = get_object_or_404(Club, pk=self.kwargs['pk'])
-        self.fan_object = self.club
-        if 'season' in self.request.GET:
-            self.year = self.request.GET['season'] or Season.curr_year()
-        else:
-            self.year = Season.curr_year()
-        return super(ClubTeamEditView, self).get(request, *args, **kwargs)
-
     def get_initial(self):
         initial = super(ClubTeamEditView, self).get_initial()
         season = get_object_or_404(Season, year_from=self.year)
@@ -464,11 +455,14 @@ class ClubTeamEditView(LoginRequiredMixin, LoveMixin, ModelFormSetView):
         return initial
 
     def get_context_data(self, **kwargs):
+        self.fan_object = self.club
         context = super(ClubTeamEditView, self).get_context_data(**kwargs)
         context['club'] = self.club
         return context
 
     def get_queryset(self):
+        self.club = get_object_or_404(Club, pk=self.kwargs['pk'])
+        self.year = self.request.GET.get('season', '') or Season.curr_year()
         qs = super(ClubTeamEditView, self).get_queryset()
         return qs.filter(club_id=self.club, season__year_from=self.year)
 
