@@ -14,7 +14,13 @@
 </div>
 <h3 class="page-header">Editing the {% if request.GET.season %} {{ request.GET.season }}/{{ request.GET.season|add:"1" }}
 {% else %} current{% endif %} season</h3>
-{% crispy formset formset.form.helper %}
+<form id="teamEditForm" method="post" enctype="multipart/form-data">
+    {% crispy formset formset.form.helper %}
+    <div class="form-actions">
+        <input name="submit" value="Submit changes" class="btn btn-primary" id="submit-id-submit" type="submit">
+        <a href="{% url 'data:club_team' pk=club.id %}?season={{ request.GET.season }}" class="btn btn-default">Cancel</a>
+    </div>
+</form>
 {% endblock %}
 
 {% block extra_script %}
@@ -29,6 +35,6 @@
                 makeSelect2Player(txt);
             }
         });
-    })
+    });
 </script>
 {% endblock %}

@@ -165,11 +165,7 @@ class ClubTeamView(LoveMixin, generic.ListView):
                 fans__username=self.request.user.username).values_list(
                 'id', flat=True)
 
-        if 'season' in self.request.GET:
-            year = self.request.GET['season']
-        else:
-            year = Season.curr_year()
-
+        year = self.request.GET.get('season', '') or Season.curr_year()
         context['coach_list'] = CoachContract.objects.select_related(
             'coach').filter(club=self.object, season__year_from=year)
 
@@ -185,10 +181,7 @@ class ClubTeamView(LoveMixin, generic.ListView):
 
     def get_queryset(self):
         self.object = get_object_or_404(Club, pk=self.kwargs['pk'])
-        if 'season' in self.request.GET:
-            year = self.request.GET['season']
-        else:
-            year = Season.curr_year()
+        year = self.request.GET.get('season', '') or Season.curr_year()
         return PlayerContract.objects.select_related(
             'player').filter(club=self.object, season__year_from=year)\
             .order_by('shirt_number')

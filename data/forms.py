@@ -126,9 +126,9 @@ class PlayerContractForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(PlayerContractForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper(self)
+        self.helper.form_tag = False
         self.helper.form_id = 'teamEditForm'
         self.helper.template = 'crispy_forms/table_inline_formset.html'
-        self.helper.add_input(Submit('submit', 'Submit changes'))
         self.fields['player'].widget.attrs['class'] = 'select-player'
 
 
