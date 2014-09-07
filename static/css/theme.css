@@ -135,6 +135,15 @@ a.th-card:focus, a.th-card:hover {
 .th-card p {
     margin-top: 5px;
 }
+.th-card-img {
+    position: relative;
+    text-align: center;
+}
+.th-card-img-overlay {
+    position: absolute;
+    bottom: 15px;
+    right: 4px;
+}
 .th-card-poster-center {
     max-height: 100px;
     padding: 4px;

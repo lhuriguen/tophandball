@@ -160,6 +160,11 @@ class ClubTeamView(LoveMixin, generic.ListView):
         context['seasons'] = Season.objects.filter(
             playercontract__club=self.object).distinct().order_by('-year_to')
 
+        form = SeasonForm()
+        form.fields['season'].queryset = Season.objects.exclude(
+            playercontract__club=self.object)
+        context['form'] = form
+
         if self.request.user.is_authenticated():
             context['user_favs'] = Player.objects.filter(
                 fans__username=self.request.user.username).values_list(
@@ -451,11 +456,16 @@ class ClubTeamEditView(LoginRequiredMixin, LoveMixin, ModelFormSetView):
         self.fan_object = self.club
         context = super(ClubTeamEditView, self).get_context_data(**kwargs)
         context['club'] = self.club
+        context['year'] = self.year
         return context
 
     def get_queryset(self):
         self.club = get_object_or_404(Club, pk=self.kwargs['pk'])
-        self.year = self.request.GET.get('season', '') or Season.curr_year()
+        if 'submit' in self.request.GET:
+            season = get_object_or_404(Season, pk=self.request.GET['season'])
+            self.year = season.year_from
+        else:
+            self.year = self.request.GET.get('season', '') or Season.curr_year()
         qs = super(ClubTeamEditView, self).get_queryset()
         return qs.filter(club_id=self.club, season__year_from=self.year)
 

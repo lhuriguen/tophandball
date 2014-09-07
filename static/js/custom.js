@@ -77,6 +77,19 @@ function makeSelect2(sel) {
     });
 }
 
+function centerModal() {
+    $(this).css('display', 'block');
+    var $dialog = $(this).find(".modal-dialog");
+    var offset = ($(window).height() - $dialog.height()) / 2;
+    // Make sure you don't hide the top part of the modal w/ 
+    // a negative margin if it's longer than the screen height,
+    // and keep the margin equal to the bottom margin of the modal
+    var bottomMargin = $dialog.css('marginBottom');
+    bottomMargin = parseInt(bottomMargin);
+    if(offset < bottomMargin) offset = bottomMargin;
+    $dialog.css("margin-top", offset);
+}
+
 var main = function() {
 
     $("#search-form").submit(search_submit);
@@ -98,6 +111,10 @@ var main = function() {
         weekStart: 1
     });
 
+    $('.modal').on('show.bs.modal', centerModal);
+    $(window).on("resize", function () {
+        $('.modal:visible').each(centerModal);
+    });
 };
 
 $(document).ready(main);

@@ -1,9 +1,30 @@
 {% extends "data/base_club.html" %}
 {% load th_extra %}
+{% load crispy_forms_tags %}
 
 {% block active_team %}active{% endblock %}
 
 {% block specific %}
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">New season team</h4>
+            </div>
+            <form action="{% url 'data:club_team_edit' pk=club.id %}" method="get">
+                <div class="modal-body">
+                    {{ form|crispy }}
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" name="submit" value="new" class="btn btn-primary">Go!</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <div class="well well-sm">
     <ul class="list-inline">
         <li><b>Seasons:</b></li>
@@ -20,8 +41,7 @@
 <div class="row">
     <div class="col-md-9">
         <div class="btn-group btn-group-sm" style="margin-bottom: 15px;">
-          <a href="#" type="button" class="btn btn-default">
-          <i class="fa fa-plus"></i> Add season</a>
+          <button class="btn btn-default" data-toggle="modal" data-target="#myModal"> <i class="fa fa-plus"></i> Add season</button>
           <a href="{% url 'data:club_team_edit' pk=club.id %}?season={{ request.GET.season }}" type="button" class="btn btn-default"><i class="fa fa-edit"></i> Edit team</a>
           <a href="#" type="button" class="btn btn-default"><i class="fa fa-exchange"></i> Transfers</a>
         </div>
@@ -29,20 +49,22 @@
         {% for contract in staff_list %}
             <div class="col-xs-6 col-sm-3">
                 <a href="{{ contract.player.get_absolute_url }}" class="th-card">
-                    <div class="text-center">
+                    <div class="th-card-img">
                         <img class="th-card-poster th-card-wide-poster" src="{{ contract.photo_url }}" alt="{{ contract.player.full_name }}">
+                        <div class="th-card-img-overlay">
+                            {% if contract.arrival_month %}
+                            <span class="label label-success">Since {{ contract.get_arrival_month_display }}</span>
+                            {% endif %}
+                            {% if contract.departure_month %}
+                            <span class="label label-danger">Until {{ contract.get_departure_month_display }}</span>
+                            {% endif %}
+                        </div>
                     </div>
                     <div class="th-card-div">
                         <h5 class="th-card-heading"><b>{{ contract.player.last_name }}</b>, {{ contract.player.first_name }}</h5>
                         <p class="text-muted th-card-body small">
                         <img src="{{ contract.player.country.flag }}" title="{{ contract.player.country.name }}"> {{ contract.player.birth_date|date:"d/m/Y" }} (age {{ contract.player.age }})
                         </p>
-                        {% if contract.arrival_month %}
-                        <span class="label label-success">Since {{ contract.get_arrival_month_display }}</span>
-                        {% endif %}
-                        {% if contract.departure_month %}
-                        <span class="label label-danger">Until {{ contract.get_departure_month_display }}</span>
-                        {% endif %}
                         <p class="text-info th-card-body small">
                         #{{ contract.shirt_number }}. {{ contract.player.get_position_display }}
                         </p>

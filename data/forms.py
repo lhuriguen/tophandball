@@ -5,7 +5,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Submit, Row, Field, Div
 from crispy_forms.bootstrap import AppendedText
 
-from .models import Player, PlayerContract, PlayerName, ClubName, Club
+from .models import *
 from .widgets import SingleImageInput
 
 
@@ -185,6 +185,10 @@ class ClubNamesInline(BasicInlineTable):
         super(ClubNamesInline, self).__init__(*args, **kwargs)
         self.helper.form_id = 'namesEditForm'
 
+
+class SeasonForm(forms.Form):
+    season = forms.ModelChoiceField(
+        queryset=Season.objects.all(), empty_label=None)
 
 # Formsets
 PlayerContractFormSet = inlineformset_factory(
