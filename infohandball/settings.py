@@ -120,6 +120,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.messages.context_processors.messages',
     # Required by allauth template tags
     'django.core.context_processors.request',
     'django.contrib.auth.context_processors.auth',
@@ -127,6 +128,11 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'allauth.account.context_processors.account',
     'allauth.socialaccount.context_processors.socialaccount',
 )
+
+from django.contrib.messages import constants as message_constants
+MESSAGE_TAGS = {
+    message_constants.ERROR: 'danger'
+}
 
 # For production try this:
 # TEMPLATE_LOADERS = (
