@@ -1,3 +1,4 @@
+import hashlib
 from django.db import models
 from django.contrib.auth.models import User
 from allauth.socialaccount.models import SocialAccount
@@ -17,7 +18,10 @@ class UserProfile(models.Model):
         sa = SocialAccount.objects.filter(user_id=self.user.id)
         if len(sa):
             return sa[0].get_avatar_url()
-        return ''
+
+        # Use Gravatar as fallback
+        return 'http://www.gravatar.com/avatar/{}?s=80&d=identicon'.format(hashlib.md5(self.user.email).hexdigest())
+        # return ''
 
     def admin_thumbnail(self):
         url = self.profile_image_url

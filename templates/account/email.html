@@ -55,7 +55,6 @@
       <button class="btn btn-danger" type="submit" name="action_remove" >{% trans 'Remove' %}</button>
 </div>
 
-</fieldset>
 </form>
 
 {% else %} 
@@ -79,13 +78,13 @@
 
 {% block extra_script %}
 <script type="text/javascript">
-$(function(){
-$("button[name='action_remove']").click(function(){
-if (confirm("{% trans 'Do you really want to remove the selected e-mail address?' %}")) {
-return true;
-}
-return false;
-});
-});
+  $(function(){
+    $("button[name='action_remove']").click(function(){
+      if (confirm("{% trans 'Do you really want to remove the selected e-mail address?' %}")) {
+        return true;
+      }
+      return false;
+    });
+  });
 </script>
 {% endblock %}

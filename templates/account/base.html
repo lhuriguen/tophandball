@@ -1,12 +1,28 @@
 {% extends "base.html" %}
-
-{% load url from future %}
 {% load i18n %}
 
 {% block content %}
 
 <h1>{% trans 'My Account' %}</h1>
-<!-- <img src="{{ request.user.profile.get_image_url }}"> -->
+<img src="{{ request.user.profile.profile_image_url }}">
+<p>{{ request.user.first_name }} {{ request.user.last_name }}</p>
+
+<h4><i class="fa fa-heart"></i> My clubs</h4>
+<ul>
+  {% for c in request.user.fav_clubs.all %}
+  <li><a href="{{ c.get_absolute_url }}">{{ c.name }}</a></li>
+  {% empty %}
+  <li>No clubs followed.</li>
+  {% endfor %}
+</ul>
+<h4><i class="fa fa-heart"></i> My players</h4>
+<ul>
+  {% for p in request.user.fav_players.all %}
+  <li><a href="{{ p.get_absolute_url }}">{{ p.full_name }}</a></li>
+  {% empty %}
+  <li>No players followed.</li>
+  {% endfor %}
+</ul>
 
 <ul class="nav nav-tabs">
   <li class="{% block account_nav_email %}{% endblock %}">
