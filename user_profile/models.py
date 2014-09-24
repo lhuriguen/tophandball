@@ -5,7 +5,15 @@ from allauth.socialaccount.models import SocialAccount
 
 
 class UserProfile(models.Model):
+    MALE = 'M'
+    FEMALE = 'F'
+    GENDER_CHOICES = ((FEMALE, 'Female'), (MALE, 'Male'))
+
     user = models.OneToOneField(User, related_name='profile')
+    location = models.CharField(max_length=30, blank=True)
+    birth_date = models.DateField(blank=True, null=True)
+    gender = models.CharField(
+        max_length=1, choices=GENDER_CHOICES, blank=True, null=True)
 
     def __unicode__(self):
         return "{}'s profile".format(self.user.username)
@@ -20,7 +28,8 @@ class UserProfile(models.Model):
             return sa[0].get_avatar_url()
 
         # Use Gravatar as fallback
-        return 'http://www.gravatar.com/avatar/{}?s=80&d=identicon'.format(hashlib.md5(self.user.email).hexdigest())
+        return 'http://www.gravatar.com/avatar/{}?s=80&d=identicon'.format(
+            hashlib.md5(self.user.email).hexdigest())
         # return ''
 
     def admin_thumbnail(self):

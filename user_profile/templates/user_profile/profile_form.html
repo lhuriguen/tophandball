@@ -1,10 +1,10 @@
 {% extends "base.html" %}
-{% load i18n %}
-{% load humanize %}
+{% block title %}Dashboard{% endblock %}
+{% load crispy_forms_tags humanize %}
 
 {% block content %}
 
-<h1>{% trans 'My Account' %}</h1>
+<h1>My Account</h1>
 <img src="{{ request.user.profile.profile_image_url }}">
 <p>{{ request.user.get_full_name }}</p>
 <ul>
@@ -36,22 +36,14 @@
   {% endfor %}
 </ul>
 
-<ul class="nav nav-tabs">
-  <li class="{% block account_nav_email %}{% endblock %}">
-    <a href="{% url 'account_email' %}">{% trans 'E-mail Addresses' %}</a>
-  </li>
-  <li class="{% block account_nav_change_password %}{% endblock %}">
-    <a href="{% url 'account_change_password' %}">{% trans 'Change Password' %}</a>
-  </li>
-  {% url 'socialaccount_connections' as connections_url %}
-  {% if connections_url %}
-  <li class="{% block account_nav_socialaccount_connections %}{% endblock %}">
-    <a href="{{ connections_url}}">{% trans 'Connected Accounts' %}</a>
-  </li>
-  {% endif %}
-</ul>
-{% block account_content %}
-{% endblock %}
+<h1>Profile Edit</h1>
+<form method="POST" action="">
+	{% csrf_token %}
+	{% crispy form %}
+	<div class="form-actions">
+		<button class="btn btn-primary" type="submit" name="action">Change</button>
+		<a href="{% url 'profile:index' %}" class="btn btn-default">Cancel</a>
+    </div>
+</form>
 
 {% endblock %}
-

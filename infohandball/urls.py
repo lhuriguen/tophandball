@@ -13,6 +13,7 @@ urlpatterns = patterns(
     # url(r'^$', 'infohandball.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
     url(r'^data/', include('data.urls', namespace='data')),
+    url(r'^profile/', include('user_profile.urls', namespace='profile')),
     url(r'^admin/', include(admin.site.urls)),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

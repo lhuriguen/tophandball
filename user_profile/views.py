@@ -1,3 +1,21 @@
-from django.shortcuts import render
+from django.views import generic
+from django.core.urlresolvers import reverse
 
-# Create your views here.
+from data.mixins import LoginRequiredMixin
+from .models import UserProfile
+from .forms import UserProfileForm
+
+
+class ProfileUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = UserProfile
+    form_class = UserProfileForm
+    template_name = 'user_profile/profile_form.html'
+
+    def get_object(self):
+        """
+        Returns the request's user profile.
+        """
+        return self.request.user.profile
+
+    def get_success_url(self):
+        return reverse('profile:index')
