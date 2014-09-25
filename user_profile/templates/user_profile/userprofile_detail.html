@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% load humanize %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-3">
+    <ul class="list-group">
+      <div class="list-group-item list-group-item-info">
+        <h4 class="list-group-item-heading">{{ request.user.get_full_name }}</h4>
+        <p>{{ request.user.email }}</p>
+      </div>
+      <div class="list-group-item">
+        <small>
+          <strong>Member since:</strong> {{ request.user.date_joined|naturalday }}<br>
+          <strong>Last login:</strong> {{ request.user.last_login|naturaltime }}<br>
+        </small>
+      </div>
+      <li class="list-group-item small"><a href="{% url 'profile:update' %}"><i class="fa fa-edit"></i> Edit my profile</a></li>
+    </ul>
+  </div>
+  <div class="col-md-9">
+    
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-4">
+    <div class="page-header">
+      <h1><i class="fa fa-heart-o"></i> My clubs</h1>
+    </div>
+    <ul class="list-group">
+      {% for c in request.user.fav_clubs.all %}
+      <li class="list-group-item"><a href="{{ c.get_absolute_url }}"><img src="{{ c.country.flag }}" title="{{ c.country.name }}"> {{ c.name }}</a> <button type="button" class="btn btn-danger btn-xs pull-right"><i class="fa fa-times"></i></button></li>
+      {% empty %}
+      <li class="list-group-item">No clubs followed.</li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="col-md-4">
+    <div class="page-header">
+      <h1><i class="fa fa-heart-o"></i> My players</h1>
+    </div>
+    <ul class="list-group">
+      {% for p in request.user.fav_players.all %}
+      <li class="list-group-item"><a href="{{ p.get_absolute_url }}"><img src="{{ p.country.flag }}" title="{{ p.country.name }}"> {{ p.full_name }}</a> <button type="button" class="btn btn-danger btn-xs pull-right"><i class="fa fa-times"></i></button></li>
+      {% empty %}
+      <li class="list-group-item">You are not following any players. Find your favorites <a href="{% url 'data:player_index' %}">here!</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="col-md-4">
+    <div class="page-header">
+      <h1><i class="fa fa-calendar"></i> Upcoming matches</h1>
+    </div>
+    <div class="alert alert-info">
+        <strong><i class="fa fa-info-circle"></i> Beta notice</strong>
+        <p>Upcoming matches functionality will come soon!</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
