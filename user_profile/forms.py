@@ -1,7 +1,7 @@
 from django import forms
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Fieldset, Submit, Row, Field, Div
+from crispy_forms.layout import Layout, Fieldset, Row, Field, Div
 from crispy_forms.bootstrap import AppendedText
 
 from .models import UserProfile
@@ -58,8 +58,8 @@ class UserProfileForm(forms.ModelForm):
             )
         )
 
-    def save(self, *args, **kw):
-        super(UserProfileForm, self).save(*args, **kw)
+    def save(self, *args, **kwargs):
+        super(UserProfileForm, self).save(*args, **kwargs)
         self.instance.user.first_name = self.cleaned_data.get('first_name')
         self.instance.user.last_name = self.cleaned_data.get('last_name')
         self.instance.user.save()

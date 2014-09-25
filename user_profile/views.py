@@ -6,6 +6,13 @@ from .models import UserProfile
 from .forms import UserProfileForm
 
 
+class ProfileDetailView(LoginRequiredMixin, generic.DetailView):
+    model = UserProfile
+
+    def get_object(self):
+        return self.request.user.profile
+
+
 class ProfileUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = UserProfile
     form_class = UserProfileForm
