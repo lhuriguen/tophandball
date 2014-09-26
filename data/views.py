@@ -5,7 +5,7 @@ from django.template import RequestContext
 from django.views import generic
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
-from django.db.models import Count, Q, Sum
+from django.db.models import Count, Q, Sum, get_model
 
 from extra_views import ModelFormSetView
 
@@ -500,6 +500,23 @@ class CompUpdateView(LoginRequiredMixin, generic.UpdateView):
     template_name_suffix = '_update_form'
     fields = ['name', 'short_name', 'website', 'country', 'is_international',
               'level']
+
+
+@login_required
+def unfollow(request):
+
+    if request.method == 'POST':
+        object_class = request.POST['object']
+        object_id = request.POST['id']
+
+        model = get_model('data', object_class)
+        object = get_object_or_404(model, pk=object_id)
+        object.fans.remove(request.user)
+
+        if request.is_ajax():
+            return HttpResponse('{"result": "OK"}', content_type='application/json')
+        # Fallback in case JavaScript is disabled.
+        return HttpResponseRedirect(reverse('profile:index'))
 
 
 def index(request):
