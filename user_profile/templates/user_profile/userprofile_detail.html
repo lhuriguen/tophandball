@@ -32,7 +32,7 @@
       {% for c in request.user.fav_clubs.all %}
       <li class="list-group-item">
         <a href="{{ c.get_absolute_url }}"><img src="{{ c.country.flag }}" title="{{ c.country.name }}"> {{ c.name }}</a> 
-        <button type="button" class="user-unfollow btn btn-danger btn-xs pull-right" data-object="Club" data-id={{ c.id }} data-csrfmiddlewaretoken="{{ csrf_token }}"><i class="fa fa-minus"></i></button>
+        <button type="button" class="user-unfollow btn btn-danger btn-xs pull-right" title="Click to unfollow" data-object="Club" data-id={{ c.id }} data-csrfmiddlewaretoken="{{ csrf_token }}"><i class="fa fa-times"></i></button>
       </li>
       {% endfor %}
     </ul>
@@ -49,7 +49,7 @@
     </div>
     <ul class="list-group">
       {% for p in request.user.fav_players.all %}
-      <li class="list-group-item"><a href="{{ p.get_absolute_url }}"><img src="{{ p.country.flag }}" title="{{ p.country.name }}"> {{ p.full_name }}</a> <button type="button" class="user-unfollow btn btn-danger btn-xs pull-right" data-object="Player" data-id={{ p.id }} data-csrfmiddlewaretoken="{{ csrf_token }}"><i class="fa fa-times"></i></button></li>
+      <li class="list-group-item"><a href="{{ p.get_absolute_url }}"><img src="{{ p.country.flag }}" title="{{ p.country.name }}"> {{ p.full_name }}</a> <button type="button" class="user-unfollow btn btn-danger btn-xs pull-right" title="Click to unfollow" data-object="Player" data-id={{ p.id }} data-csrfmiddlewaretoken="{{ csrf_token }}"><i class="fa fa-times"></i></button></li>
       {% endfor %}
     </ul>
     {% if request.user.fav_players.all|length_is:"0" %}
