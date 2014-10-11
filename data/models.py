@@ -404,8 +404,7 @@ class Competition(models.Model):
     admin_thumbnail.allow_tags = True
 
     def get_season_or_latest(self, year=None):
-        if not year:
-            year = datetime.datetime.now().year
+        year = year or datetime.datetime.now().year
         cs = self.competitionseason_set.filter(season__year_to=year)
         if not cs:
             cs = self.competitionseason_set.order_by(
@@ -418,8 +417,8 @@ class Competition(models.Model):
 class CompetitionSeason(models.Model):
     competition = models.ForeignKey(Competition)
     season = models.ForeignKey(Season)
-    start_date = models.DateField()
-    end_date = models.DateField()
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
 
     def __unicode__(self):
         return u'%s %s' % (self.competition.name, self.season.name)
@@ -431,21 +430,21 @@ class CompetitionSeason(models.Model):
 class Stage(models.Model):
     """Represents a round or stage in a competition"""
 
-    # KNOCKOUT = 'KO'
-    # ROUND_ROBIN = 'RR'
-    # KO_GROUPS = 'KG'
-    # TYPE_CHOICES = (
-    #     (KNOCKOUT, 'Knockout'),
-    #     (ROUND_ROBIN, 'Round robin'),
-    #     (KO_GROUPS, 'KO groups')
-    #     )
+    KNOCKOUT = 'KO'
+    ROUND_ROBIN = 'RR'
+    KO_GROUPS = 'KG'
+    TYPE_CHOICES = (
+        (KNOCKOUT, 'Knockout'),
+        (ROUND_ROBIN, 'Round robin'),
+        (KO_GROUPS, 'Knockout groups')
+        )
     comp_season = models.ForeignKey(CompetitionSeason,
                                     verbose_name='Competition Season')
     order = models.PositiveSmallIntegerField('Stage order')
     name = models.CharField(max_length=30)
     short_name = models.CharField(max_length=5)
     is_qualification = models.BooleanField(default=False)
-    # tournament = models.CharField(max_length=2, choices=TYPE_CHOICES)
+    type = models.CharField(max_length=2, choices=TYPE_CHOICES)
 
     def __unicode__(self):
         return u'%s %s. %s' % (self.comp_season, self.order, self.name)
@@ -458,7 +457,6 @@ class Group(models.Model):
     stage = models.ForeignKey(Stage)
     order = models.PositiveSmallIntegerField('Group order')
     name = models.CharField(max_length=30)
-    is_single = models.BooleanField('Is single group?', default=False)
     teams = models.ManyToManyField(Club, through='GroupTable')
 
     def __unicode__(self):
@@ -472,8 +470,8 @@ class GroupTable(models.Model):
     group = models.ForeignKey(Group)
     team = models.ForeignKey(Club)
     position = models.PositiveSmallIntegerField(default=0)
-    point_penalty = models.SmallIntegerField(
-        default=0, help_text="Points to take away as a penalty.")
+    start_points = models.SmallIntegerField(
+        default=0, help_text="Additional points to add or take away.")
 
     def __unicode__(self):
         return u'%s %s' % (self.group, self.team)
@@ -544,16 +542,13 @@ class GroupTable(models.Model):
 
     @property
     def points(self):
-        return self.wins[0] * 2 + self.draws[0] * 1 - self.point_penalty
+        return self.wins[0] * 2 + self.draws[0] * 1 + self.start_points
 
 
 class Match(models.Model):
     group = models.ForeignKey(Group)
     home_team = models.ForeignKey(Club, related_name='home_matches')
     away_team = models.ForeignKey(Club, related_name='away_matches')
-    placeholder = models.CharField(
-        help_text="Placeholder text for use when teams are yet unknown.",
-        blank=True, max_length=150)
     match_datetime = models.DateTimeField()
     arena = models.CharField(max_length=100, blank=True)
     location = models.CharField(max_length=100, blank=True)
@@ -575,9 +570,7 @@ class Match(models.Model):
     @property
     def is_future(self):
         now = timezone.now()
-        if self.match_datetime > now:
-            return True
-        return False
+        return self.match_datetime > now
 
     @property
     def is_draw(self):

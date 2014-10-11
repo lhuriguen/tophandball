@@ -61,56 +61,7 @@
 
 <h3>Season {{ comp_season.season.name }}</h3>
     {% for st in comp_season.stage_set.all %}
-    <h4><b>{{ st.name }}</b>, {{ st.short_name }}, {{ st.order }}, {{ st.is_qualification }}</h4>
-    <div class="row">
-        {% for g in st.group_set.all %}
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading"><b>{{ g.name }}</b></div>
-                {% if g.is_single %}
-                <ul class="list-group">
-                    {% for gt in g.grouptable_set.all %}
-                    <li class="list-group-item">{{ gt.position }}, {{ gt.team.name }} - {{ gt.num_matches }}, {{ gt.wins }}, {{ gt.draws }}, {{ gt.losses }}, {{ gt.goals_for.0 }}, {{ gt.goals_against.0 }}, {{ gt.points }}</li>
-                    {% endfor %}
-                </ul>
-                {% else %}
-                <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Team</th>
-                            <th>M</th>
-                            <th>W</th>
-                            <th>D</th>
-                            <th>L</th>
-                            <th>GF</th>
-                            <th>GA</th>
-                            <th>P</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for gt in g.grouptable_set.all %}
-                        <tr>
-                            <td>{{ gt.position }}</td>
-                            <td><a href="{{ gt.team.get_absolute_url }}">{{ gt.team.name }}</a></td>
-                            <td>{{ gt.num_matches }}</td>
-                            <td>{{ gt.wins.0 }}</td>
-                            <td>{{ gt.draws.0 }}</td>
-                            <td>{{ gt.losses.0 }}</td>
-                            <td>{{ gt.goals_for.0 }}</td>
-                            <td>{{ gt.goals_against.0 }}</td>
-                            <td>{{ gt.points }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-        {% endfor %}
-    </div>
+    {% include "data/_stage_item.html" %}
     {% endfor %}
 
 {% endblock %}

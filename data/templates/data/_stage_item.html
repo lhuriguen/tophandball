@@ -1,0 +1,111 @@
+<h4><b>{{ st.name }}</b></h4>
+{% if st.type == 'KO' %}
+<ol>
+    {% for g in st.group_set.all %}
+    <li>
+        {% for gt in g.grouptable_set.all %}
+        <a href="{{ gt.team.get_absolute_url }}">{{ gt.team.name }}</a> {% if forloop.first %}<b>{{ gt.goals_for.0 }}:{{ gt.goals_against.0 }}</b> {% endif %}
+        {% endfor %}
+        <div class="list-group">
+            {% for match in g.match_set.all %}
+            <a href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-md-3 col-sm-4">
+                        <h5 class="list-group-item-heading"><b>{{ match.match_datetime|date:"d/m/Y H:i" }}</b></h5>
+                    </div>
+                    <div class="col-md-6 col-sm-4">
+                        <h5 class="list-group-item-heading">{{ match.home_team.name }} - {{ match.away_team.name }}</h5>
+                    </div>
+                    <div class="col-md-3 col-sm-4">
+                        <h5 class="list-group-item-heading">
+                        {% if match.is_future %} <span class="label label-info">In {{ match.match_datetime|timeuntil }}</span>
+                        {% elif not match.score_home or not match.score_away %} ?:?
+                        {% else %}{{ match.score_home }}:{{ match.score_away }}
+                        {% endif %}
+                        </h5>
+                    </div>
+                </div>
+                <p class="list-group-item-text">{{ match.group.name }}</p>
+            </a>
+            {% empty %}
+            <li class="list-group-item">No matches found.</li>
+            {% endfor %}
+        </div>
+    </li>
+    {% endfor %}
+</ol>
+{% else %}
+<div class="row">
+    {% for g in st.group_set.all %}
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading"><b>{{ g.name }}</b></div>
+            {% if g.is_single %}
+            <ul class="list-group">
+                {% for gt in g.grouptable_set.all %}
+                <li class="list-group-item">{{ gt.position }}, {{ gt.team.name }} - {{ gt.num_matches }}, {{ gt.wins }}, {{ gt.draws }}, {{ gt.losses }}, {{ gt.goals_for.0 }}, {{ gt.goals_against.0 }}, {{ gt.points }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Team</th>
+                        <th>M</th>
+                        <th>W</th>
+                        <th>D</th>
+                        <th>L</th>
+                        <th>GF</th>
+                        <th>GA</th>
+                        <th>P</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for gt in g.grouptable_set.all %}
+                    <tr>
+                        <td>{{ gt.position }}</td>
+                        <td><a href="{{ gt.team.get_absolute_url }}">{{ gt.team.name }}</a></td>
+                        <td>{{ gt.num_matches }}</td>
+                        <td>{{ gt.wins.0 }}</td>
+                        <td>{{ gt.draws.0 }}</td>
+                        <td>{{ gt.losses.0 }}</td>
+                        <td>{{ gt.goals_for.0 }}</td>
+                        <td>{{ gt.goals_against.0 }}</td>
+                        <td>{{ gt.points }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+            {% endif %}
+        </div>
+        <div class="list-group">
+            {% for match in g.match_set.all %}
+            <a href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-md-3 col-sm-4">
+                        <h5 class="list-group-item-heading"><b>{{ match.match_datetime|date:"d/m/Y H:i" }}</b></h5>
+                    </div>
+                    <div class="col-md-6 col-sm-4">
+                        <h5 class="list-group-item-heading">{{ match.home_team.name }} - {{ match.away_team.name }}</h5>
+                    </div>
+                    <div class="col-md-3 col-sm-4">
+                        <h5 class="list-group-item-heading">
+                        {% if match.is_future %} <span class="label label-info">In {{ match.match_datetime|timeuntil }}</span>
+                        {% elif not match.score_home or not match.score_away %} ?:?
+                        {% else %}{{ match.score_home }}:{{ match.score_away }}
+                        {% endif %}
+                        </h5>
+                    </div>
+                </div>
+            </a>
+            {% empty %}
+            <li class="list-group-item">No matches found.</li>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
