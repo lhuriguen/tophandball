@@ -62,5 +62,7 @@ urlpatterns = patterns(
     url(r'api/player_search/$',
         views.PlayerJSONView.as_view(), name='player_search_api'),
     url(r'api/player/(?P<pk>\d+)/$',
-        views.PlayerAPIView.as_view(), name='player_get_api')
+        views.PlayerAPIView.as_view(), name='player_get_api'),
+    # Generic unfollow
+    url(r'unfollow/$', views.unfollow, name='unfollow')
     )

@@ -90,6 +90,25 @@ function centerModal() {
     $dialog.css("margin-top", offset);
 }
 
+function genericUnfollow() {
+    var btn = $(this);
+    $.ajax({
+        type: 'POST',
+        url: '/data/unfollow/',
+        data: btn.data(),
+        success: function(data) {
+            btn.closest('li').remove();
+        },
+        error: function(data) {
+            if (data.status == 401) {
+                window.location.href = data.responseText + '?next=' + window.location.pathname;
+            } else {
+                alert("Something went wrong!");
+            }
+        }
+    });
+}
+
 var main = function() {
 
     $("#search-form").submit(search_submit);
@@ -100,6 +119,7 @@ var main = function() {
 
     $(".list_follow").submit(follow);
     $("#follow_form").submit(follow);
+    $(".user-unfollow").click(genericUnfollow);
 
     $("select").addClass("th-selectable");
     makeSelect2Player($(".select-player"));

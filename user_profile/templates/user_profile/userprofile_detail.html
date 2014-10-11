@@ -6,7 +6,7 @@
 <div class="row">
   <div class="col-md-3">
     <ul class="list-group">
-      <div class="list-group-item list-group-item-info">
+      <div class="list-group-item disabled">
         <h4 class="list-group-item-heading">{{ request.user.get_full_name }}</h4>
         <p>{{ request.user.email }}</p>
       </div>
@@ -30,11 +30,18 @@
     </div>
     <ul class="list-group">
       {% for c in request.user.fav_clubs.all %}
-      <li class="list-group-item"><a href="{{ c.get_absolute_url }}"><img src="{{ c.country.flag }}" title="{{ c.country.name }}"> {{ c.name }}</a> <button type="button" class="btn btn-danger btn-xs pull-right"><i class="fa fa-times"></i></button></li>
-      {% empty %}
-      <li class="list-group-item">No clubs followed.</li>
+      <li class="list-group-item">
+        <a href="{{ c.get_absolute_url }}"><img src="{{ c.country.flag }}" title="{{ c.country.name }}"> {{ c.name }}</a> 
+        <button type="button" class="user-unfollow btn btn-danger btn-xs pull-right" title="Click to unfollow" data-object="Club" data-id={{ c.id }} data-csrfmiddlewaretoken="{{ csrf_token }}"><i class="fa fa-times"></i></button>
+      </li>
       {% endfor %}
     </ul>
+    {% if request.user.fav_clubs.all|length_is:"0" %}
+    <div id="club-alert" class="alert alert-warning">
+        <strong><i class="fa fa-warning"></i> Oh, no!</strong>
+        <p>You are not following any clubs. Find your favorites <a href="{% url 'data:club_index' %}">here!</a></p>
+    </div>
+    {% endif %}
   </div>
   <div class="col-md-4">
     <div class="page-header">
@@ -42,11 +49,15 @@
     </div>
     <ul class="list-group">
       {% for p in request.user.fav_players.all %}
-      <li class="list-group-item"><a href="{{ p.get_absolute_url }}"><img src="{{ p.country.flag }}" title="{{ p.country.name }}"> {{ p.full_name }}</a> <button type="button" class="btn btn-danger btn-xs pull-right"><i class="fa fa-times"></i></button></li>
-      {% empty %}
-      <li class="list-group-item">You are not following any players. Find your favorites <a href="{% url 'data:player_index' %}">here!</a></li>
+      <li class="list-group-item"><a href="{{ p.get_absolute_url }}"><img src="{{ p.country.flag }}" title="{{ p.country.name }}"> {{ p.full_name }}</a> <button type="button" class="user-unfollow btn btn-danger btn-xs pull-right" title="Click to unfollow" data-object="Player" data-id={{ p.id }} data-csrfmiddlewaretoken="{{ csrf_token }}"><i class="fa fa-times"></i></button></li>
       {% endfor %}
     </ul>
+    {% if request.user.fav_players.all|length_is:"0" %}
+    <div id="player-alert" class="alert alert-warning">
+        <strong><i class="fa fa-warning"></i> Oh, no!</strong>
+        <p>You are not following any players. Find your favorites <a href="{% url 'data:player_index' %}">here!</a></p>
+    </div>
+    {% endif %}
   </div>
   <div class="col-md-4">
     <div class="page-header">
