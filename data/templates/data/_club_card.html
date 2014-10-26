@@ -1,0 +1,12 @@
+<a href="{{ item.get_absolute_url }}" class="th-card text-center">
+  <img class="th-card-poster th-card-poster-center" src="{{ item.logo_url }}" alt="{{ item.name }}">
+  <div class="th-card-div">
+    <h5 class="th-card-heading"><b>{{ item.name|truncatechars:16 }}</b></h5>
+    <small class="text-info th-card-body">{{ item.country.name }}</small>
+    <div class="th-card-btn">
+      <form class="list_follow" action="{% url 'data:club_love' item.id %}" method="post">
+          {% include "data/_list_love.html" %}
+      </form>
+    </div>
+  </div>
+</a>

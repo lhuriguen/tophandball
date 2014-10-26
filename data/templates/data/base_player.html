@@ -12,17 +12,17 @@
         </div>
         <div class="col-sm-9 col-md-10">
             <h1>{{ player.full_name }} <small>({{ player.country.name }})</small></h1>
-            <div class="btn-toolbar" style="margin-top: 38px;">
-                <div class="btn-group btn-group-sm">
-                    <a class="btn btn-link {% block active_home %}{% endblock %}" href="{{ player.get_absolute_url }}"><i class="fa fa-home"></i> Home</a>
-                    <a class="btn btn-link {% block active_matches %}{% endblock %}" href="#"><i class="fa fa-calendar"></i> Matches</a>
-                </div>
-                <div class="btn-group btn-group-sm">
-                    <form action="{% url 'data:player_love' player.id %}" method="post" id="follow_form">
-                        {% include "data/_form_love.html" %}
-                    </form>
-                </div>
-            </div>
+            <form action="{% url 'data:player_love' player.id %}" method="post" id="follow_form">
+                {% include "data/_form_love.html" %}
+            </form>
+        </div>
+    </div>
+</div>
+<div class="th-navbar">
+    <div class="btn-toolbar">
+        <div class="btn-group btn-group-sm">
+            <a class="btn btn-link {% block active_home %}{% endblock %}" href="{{ player.get_absolute_url }}"><i class="fa fa-home"></i> Home</a>
+            <a class="btn btn-link {% block active_matches %}{% endblock %}" href="#"><i class="fa fa-calendar"></i> Matches</a>
         </div>
     </div>
 </div>

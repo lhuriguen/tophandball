@@ -5,12 +5,38 @@
 {% block content %}
 
 <div id="header-box">
-    <h1><i class="fa fa-trophy text-primary"></i> {{ competition.name }} {% if competition.country %}<small>{{ competition.country }}</small>{% endif %}</h1>
-    <div class="button-bar">
-        {% block under_nav %}
-        {% endblock %}
+	<div class="row">
+        <div class="col-sm-3 col-md-2">
+            <div class="text-center">
+                <img class="img-logo" src="{{ competition.logo_url }}" alt="{{ competition.name }} logo">
+            </div>
+        </div>
+        <div class="col-sm-9 col-md-10">
+            <h1>{{ competition.name }}{% if competition.country %} <small>({{ competition.country.name }})</small>{% endif %}</h1>
+            <h4><span class="label label-info"><i class="fa fa-map-marker"></i> {% if competition.is_international %}International{% else %}{{ competition.country.name }}{% endif %}</span>
+            {% if competition.level %} <span class="label label-info"><i class="fa fa-trophy"></i> Level {{ competition.level }}</span>{% endif %}
+            </h4>
+        </div>
     </div>
 </div>
+<div class="th-navbar">
+    <div class="btn-toolbar">
+        <div class="btn-group btn-group-sm">
+            <a class="btn btn-link {% block active_home %}{% endblock %}" href="{{ competition.get_absolute_url }}"><i class="fa fa-home fa-fw"></i> Home</a>
+        </div>
+        <div class="btn-group btn-group-sm">
+            <button type="button" class="btn btn-link dropdown-toggle {% block active_seasons %}{% endblock %}" data-toggle="dropdown">
+                <i class="fa fa-calendar fa-fw"></i> Seasons <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                {% for s in competition.seasons.all %}
+                <li><a href="{% url 'data:comp_season' comp_id=competition.id year=s.year_from %}">{{ s.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
 
 {% block specific %}{% endblock %}
 {% endblock content %}

@@ -3,19 +3,20 @@ from datetime import datetime
 from django.shortcuts import render, get_object_or_404, render_to_response
 from django.template import RequestContext
 from django.views import generic
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Q, Sum, get_model
 
 from extra_views import ModelFormSetView
 
 from infohandball.decorators import login_required
 from .models import *
-from .mixins import LoveMixin, LoginRequiredMixin
+from .mixins import LoveMixin, LoginRequiredMixin, FavClubsMixin
 from .forms import *
 
 
-class ClubIndexView(generic.ListView):
+class ClubIndexView(FavClubsMixin, generic.ListView):
     model = Club
     paginate_by = 20
     queryset = Club.objects.order_by('name')
@@ -52,10 +53,6 @@ class ClubIndexView(generic.ListView):
             .order_by('-num_fans')[:5]
         context['countries'] = Club.objects.values_list('country', flat=True)\
             .order_by('country').distinct()
-        if self.request.user.is_authenticated():
-            context['user_favs'] = Club.objects.filter(
-                fans__username=self.request.user.username).values_list(
-                'id', flat=True)
         return context
 
 
@@ -500,6 +497,42 @@ class CompUpdateView(LoginRequiredMixin, generic.UpdateView):
     template_name_suffix = '_update_form'
     fields = ['name', 'short_name', 'website', 'country', 'is_international',
               'level']
+
+
+class CompSeasonDetailView(FavClubsMixin, generic.DetailView):
+    model = CompetitionSeason
+    context_object_name = 'comp_season'
+    template_name = 'data/competition_season.html'
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        comp_id = self.kwargs.get('comp_id', None)
+        year = self.kwargs.get('year', None)
+        queryset = queryset.filter(
+            competition__id=comp_id, season__year_from=year)
+        try:
+            # Get the single item from the filtered queryset
+            obj = queryset.get()
+        except ObjectDoesNotExist:
+            raise Http404(("No %(verbose_name)s found matching the query") %
+                          {'verbose_name': queryset.model._meta.verbose_name})
+        return obj
+
+    def get_context_data(self, **kwargs):
+        context = super(CompSeasonDetailView, self).get_context_data(**kwargs)
+        context['competition'] = self.object.competition
+        return context
+
+
+class StageDetailView(FavClubsMixin, generic.DetailView):
+    model = Stage
+    queryset = Stage.objects.all().select_related()
+
+    def get_context_data(self, **kwargs):
+        context = super(StageDetailView, self).get_context_data(**kwargs)
+        context['competition'] = self.object.comp_season.competition
+        context['comp_season'] = self.object.comp_season
+        return context
 
 
 @login_required

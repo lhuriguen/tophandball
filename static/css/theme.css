@@ -7,10 +7,10 @@ html {
     min-height: 100%;
 }
 #header-box {
-    border: 1px solid #E5E5E5;
-    border-radius: 4px;
-    margin-bottom: 5px;
-    background-color: #F9F9F9;
+    /*border: 1px solid #E5E5E5;*/
+    /*border-radius: 4px;*/
+    margin-bottom: 10px;
+    /* background-color: #F9F9F9;*/
     height: auto;
     position: relative;
 }
@@ -19,16 +19,20 @@ html {
 }
 #header-box .img-logo {
     max-height: 120px;
+    height: auto;
     margin: 1px;
     padding: 0;
     margin-left: 5px;
+    max-width: 100%;
 }
 .img-person {
     max-height: 150px;
     width: auto;
     margin: 0;
     padding: 0;
-    border-radius: 4px 0 0 4px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 1px 1px 2px #ddd;
 }
 #footer {
     position: absolute;
@@ -186,3 +190,43 @@ a.th-card:focus, a.th-card:hover {
     width: 100%;
     height: auto;
 }
+.th-navbar {
+    background-color: #F9F9F9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 1px 1px 2px #ddd;
+    margin-bottom: 20px;
+    padding: 4px;
+}
+.th-flag {
+    vertical-align: baseline;
+}
+.navbar-inverse {
+    background-color: #7A8288;
+    border-color: #62686D;
+    border: 1px solid rgba(0, 0, 0, 0.6);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+    background-image: -webkit-linear-gradient(#8a9196, #7a8288 60%, #70787d);
+    background-image: -o-linear-gradient(#8a9196, #7a8288 60%, #70787d);
+    background-image: linear-gradient(#8a9196, #7a8288 60%, #70787d);
+    background-repeat: no-repeat;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff8a9196', endColorstr='#ff70787d', GradientType=0);
+}
+.navbar-inverse .navbar-brand { color: #CCCCCC}
+.navbar-inverse .navbar-nav>.active>a:hover,.navbar-inverse .navbar-nav>li>a:hover, .navbar-inverse .navbar-nav>li>a:focus { background-color: #5D6368}
+.navbar-inverse .navbar-nav>.active>a,.navbar-inverse .navbar-nav>.open>a,.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:hover,.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:hover, .navbar-inverse .navbar-nav>.open>a:focus { background-color: #5D6368}
+.navbar-inverse .navbar-brand:hover { color: #FFFFFF}
+.navbar-inverse .navbar-nav>li>a { color: #CCCCCC}
+.navbar-inverse .navbar-nav>li>a:hover, .navbar-inverse .navbar-nav>li>a:focus { color: #FFFFFF}
+.navbar-inverse .navbar-nav>.active>a,.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:hover, .navbar-inverse .navbar-nav>.open>a:focus { color: #FFFFFF}
+.navbar-inverse .navbar-nav>.active>a:hover, .navbar-inverse .navbar-nav>.active>a:focus { color: #FFFFFF}
+.navbar-inverse .navbar-nav>.dropdown>a .caret { border-top-color: #999999}
+.navbar-inverse .navbar-nav>.dropdown>a:hover .caret { border-top-color: #FFFFFF}
+.navbar-inverse .navbar-nav>.dropdown>a .caret { border-bottom-color: #999999}
+.navbar-inverse .navbar-nav>.dropdown>a:hover .caret { border-bottom-color: #FFFFFF}
+.navbar-nav .open>a, .navbar-nav .open>a:hover, .navbar-nav .open>a:focus {border-color: transparent;}
+.navbar-nav>li>.dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus {background-color: #5D6368;}
+.navbar-nav>li>.dropdown-menu {text-shadow: none}
+.navbar-nav > li > a { border-right: 1px solid rgba(0, 0, 0, 0.2); border-left: 1px solid rgba(255, 255, 255, 0.1)}
+.navbar-nav > li.active > a { border-left-color: transparent}
+.navbar-right:last-child > li > a { border-right: 0}

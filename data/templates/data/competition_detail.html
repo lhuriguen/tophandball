@@ -1,34 +1,7 @@
 {% extends "data/base_comp.html" %}
+{% block active_home %}active{% endblock %}
 
 {% block specific %}
-
-<div id="sub-nav">
-    <ul class="nav nav-tabs">
-        <li class="{% block active_info %}{% endblock %}"><a href="{{ competition.get_absolute_url }}">Overview</a></li>
-        <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                Rounds <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-                {% for st in comp_season.stage_set.all %}
-                    <li><a href="#{{ st.short_name }}">{{ st.name }}</a></li>
-                {% endfor %}
-            </ul>
-        </li>
-        <li class=""><a href="#">Scorers</a></li>
-        <li class=""><a href="#">Archive</a></li>
-        <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-              Seasons <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-            {% for cs in competition.competitionseason_set.all %}
-                <li><a href="?s={{ cs.season.year_to }}">{{ cs.season.name }}</a></li>
-            {% endfor %}
-            </ul>
-        </li>
-    </ul>
-</div>
 <div class="row">
     <div class="col-md-3">
         <div class="panel panel-default">
@@ -58,10 +31,4 @@
         </div>
     </div>
 </div>
-
-<h3>Season {{ comp_season.season.name }}</h3>
-    {% for st in comp_season.stage_set.all %}
-    {% include "data/_stage_item.html" %}
-    {% endfor %}
-
 {% endblock %}

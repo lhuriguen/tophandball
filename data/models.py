@@ -114,6 +114,10 @@ class Club(models.Model):
         else:
             return u'http://placehold.it/200x200&text=No+Logo'
 
+    @property
+    def display_name(self):
+        return self.short_name or self.name
+
 
 class ClubName(models.Model):
     club = models.ForeignKey(Club)
@@ -423,6 +427,17 @@ class CompetitionSeason(models.Model):
     def __unicode__(self):
         return u'%s %s' % (self.competition.name, self.season.name)
 
+    def get_absolute_url(self):
+        return reverse('data:comp_season',
+                       kwargs={'year': self.season.year_from,
+                               'comp_id': self.competition.id
+                               })
+
+    def get_teams(self):
+        return Club.objects.filter(
+            grouptable__group__stage__comp_season=self
+            ).order_by('name').distinct()
+
     class Meta:
         unique_together = ('competition', 'season')
 
@@ -449,6 +464,18 @@ class Stage(models.Model):
     def __unicode__(self):
         return u'%s %s. %s' % (self.comp_season, self.order, self.name)
 
+    def get_absolute_url(self):
+        return reverse('data:stage_detail',
+                       kwargs={'pk': self.pk,
+                               'comp_id': self.comp_season.competition.id,
+                               'year': self.comp_season.season.year_from
+                               })
+
+    def get_teams(self):
+        return Club.objects.filter(
+            grouptable__group__stage=self
+            ).order_by('name')
+
     class Meta:
         ordering = ['order']
 
@@ -461,6 +488,14 @@ class Group(models.Model):
 
     def __unicode__(self):
         return u'%s - %s' % (self.stage, self.name)
+
+    def get_table(self):
+        return GroupTable.objects.filter(
+            group=self).select_related('team').order_by('position')
+
+    def get_matches(self):
+        return self.match_set.select_related(
+            'home_team', 'away_team').order_by('match_datetime')
 
     class Meta:
         ordering = ['order']
@@ -568,6 +603,12 @@ class Match(models.Model):
         verbose_name_plural = 'matches'
 
     @property
+    def display_result(self):
+        if self.score_home and self.score_away:
+            return str(self.score_home) + ':' + str(self.score_away)
+        return '?:?'
+
+    @property
     def is_future(self):
         now = timezone.now()
         return self.match_datetime > now
@@ -576,6 +617,18 @@ class Match(models.Model):
     def is_draw(self):
         if self.score_home and self.score_away:
             return self.score_home == self.score_away
+        return False
+
+    @property
+    def is_home_win(self):
+        if self.score_home and self.score_away:
+            return self.score_home > self.score_away
+        return False
+
+    @property
+    def is_away_win(self):
+        if self.score_home and self.score_away:
+            return self.score_away > self.score_home
         return False
 
     @property
