@@ -172,8 +172,8 @@ class ClubTeamView(LoveMixin, generic.ListView):
             'coach').filter(club=self.object, season__year_from=year)
 
         context['scorers_list'] = Player.objects.filter(
-            matchplayerstats__match_team__club=self.object,
-            matchplayerstats__match_team__match__group__stage__comp_season__season__year_from=year
+            matchplayerstats__club=self.object,
+            matchplayerstats__match__group__stage__comp_season__season__year_from=year
             ).annotate(sum_goals=Sum('matchplayerstats__goals'),
                        yellows=Sum('matchplayerstats__yellow_card'),
                        two_mins=Sum('matchplayerstats__two_minutes'),
@@ -289,8 +289,8 @@ class PlayerDetailView(LoveMixin, generic.DetailView):
                                  ).exclude(pk=ct.id)
         # Matches
         matches = self.player.matchplayerstats_set.select_related().order_by(
-            '-match_team__match__match_datetime')
-        context['matches'] = matches  # [0:8]
+            '-match__match_datetime')
+        context['matches'] = matches[0:8]
         return context
 
 
@@ -533,6 +533,31 @@ class StageDetailView(FavClubsMixin, generic.DetailView):
         context['competition'] = self.object.comp_season.competition
         context['comp_season'] = self.object.comp_season
         return context
+
+
+class MatchDetailView(FavClubsMixin, generic.DetailView):
+    model = Match
+    queryset = Match.objects.all().select_related()
+
+    def get_context_data(self, **kwargs):
+        context = super(MatchDetailView, self).get_context_data(**kwargs)
+        context['home_stats'] = self.object.get_home_stats()
+        context['away_stats'] = self.object.get_away_stats()
+        self.add_all_scores(context)
+        return context
+
+    def add_all_scores(self, context):
+        home = context['home_stats']
+        away = context['away_stats']
+        valid = self.object and home and away
+        if not valid:
+            return
+        context['HT'] = (home.halftime_score or '?', away.halftime_score or '?')
+        context['ET1'] = (home.score_et1 or '-', away.score_et1 or '-')
+        context['ET2'] = (home.score_et2 or '-', away.score_et2 or '-')
+        context['7m'] = (home.score_7m or '-', away.score_7m or '-')
+        context['7GI'] = (home.given_7m or '-', away.given_7m or '-')
+        context['7GO'] = (home.goals_7m or '-', away.goals_7m or '-')
 
 
 @login_required

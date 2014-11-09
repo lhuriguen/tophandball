@@ -17,7 +17,7 @@ html {
 #header-box h1 {
     padding: 10px;
 }
-#header-box .img-logo {
+.img-logo {
     max-height: 120px;
     height: auto;
     margin: 1px;

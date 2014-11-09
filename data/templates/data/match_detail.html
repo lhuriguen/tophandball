@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}{{ match }}{% endblock %}
+{% block active_comp %}active{% endblock %}
+
+{% block content %}
+<div>
+    <ol class="breadcrumb">
+        <li><a href="{{ match.group.stage.comp_season.competition.get_absolute_url }}">{{ match.group.stage.comp_season.competition }}</a></li>
+        <li><a href="{{ match.group.stage.comp_season.get_absolute_url }}">{{ match.group.stage.comp_season.season }}</a></li>
+        <li><a href="{{ match.group.stage.get_absolute_url }}">{{ match.group.stage.name }}</a></li>
+        <li class="active">{{ match.group.name }}</li>
+    </ol>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="page-header">
+            <img class="pull-left" style="max-height: 40px;" src="{{ match.home_team.logo_url }}"/>
+            <h2 class="text-center" title="{{ match.home_team.name }}"><a href="{{ match.home_team.get_absolute_url }}">{{ match.home_team.display_name|truncatechars:16 }}</a></h2>
+        </div>
+        {% include "data/_match_team_stats.html" with stats=home_stats %}
+    </div>
+    <div class="col-md-3">
+        <ul class="list-group">
+            <li class="list-group-item list-group-item-info"><h1 class="text-center">{{ match.display_result }}</h1></li>
+            <li class="list-group-item text-center">
+                <h4><abbr title="Half time">HT</abbr> {{ HT.0 }}:{{ HT.1 }}</h4>
+                <small><abbr title="Extra time 1" class="initialism"><b>ET1:</b></abbr> {{ ET1.0 }}:{{ ET1.1 }} · <abbr title="Extra time 2" class="initialism"><b>ET2:</b></abbr> {{ ET2.0 }}:{{ ET2.1 }} · <abbr title="7m shootout" class="initialism"><b>7m:</b></abbr> {{ 7m.0 }}:{{ 7m.1 }}</small>
+            </li>
+            <li class="list-group-item text-center small">
+                <abbr title="Team Timeout" class="initialism"><b>TTO:</b></abbr><br>
+                <abbr title="Home">H:</abbr> {{ home_stats.timeout1|default:"-" }} · {{ home_stats.timeout2|default:"-" }} · {{ home_stats.timeout3|default:"-" }}<br>
+                <abbr title="Away">A:</abbr> {{ away_stats.timeout1|default:"-" }} · {{ away_stats.timeout2|default:"-" }} · {{ away_stats.timeout3|default:"-" }}
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-4">
+        <div class="page-header">
+            <img class="pull-left" style="max-height: 40px;" src="{{ match.away_team.logo_url }}"/>
+            <h2 class="text-center" title="{{ match.away_team.name }}"><a href="{{ match.away_team.get_absolute_url }}">{{ match.away_team.display_name|truncatechars:16 }}</a></h2>
+        </div>
+        {% include "data/_match_team_stats.html" with stats=away_stats %}
+    </div>
+</div>
+<p></p>
+<div class="row">
+    <div class="col-md-4">
+        {% include "data/_match_player_stats.html" with stats=match.get_home_player_stats %}
+    </div>
+    <div class="col-md-3">
+        <ul class="list-group">
+          <li class="list-group-item list-group-item-info"><h3><i class="fa fa-fw fa-calendar"></i> {{ match.match_datetime|date:"d/m/Y H:i" }}</h3></li>
+          <li class="list-group-item"><i class="fa fa-fw fa-building"></i> {{ match.arena }}</li>
+          <li class="list-group-item"><i class="fa fa-fw fa-map-marker"></i> {{ match.location }}</li>
+          <li class="list-group-item"><i class="fa fa-fw fa-ticket"></i> {{ match.spectators|default:"?" }}</li>
+          <li class="list-group-item">
+            {% for r in match.referees.all %}<i class="fa fa-fw fa-gavel"></i> {{ r.name }} <img class="th-flag" src="{{ r.country.flag }}" title="{{ r.country.name }}"><br>{% endfor %}
+          </li>
+          <li class="list-group-item">
+            {% for d in match.delegates.all %}<i class="fa fa-fw fa-eye"></i> {{ d.name }} <img class="th-flag" src="{{ d.country.flag }}" title="{{ d.country.name }}"><br>{% endfor %}
+          </li>
+          <li class="list-group-item"><i class="fa fa-fw fa-external-link"></i> <a target="_blank" href="{{ match.report_url }}">Official report</a></li>
+        </ul>
+    </div>
+    <div class="col-md-4">
+        {% include "data/_match_player_stats.html" with stats=match.get_away_player_stats %}
+    </div>
+</div>
+{% endblock %}

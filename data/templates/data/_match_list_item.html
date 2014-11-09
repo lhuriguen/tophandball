@@ -1,4 +1,4 @@
-<a href="#" class="list-group-item">
+<a href="{{ match.get_absolute_url }}" class="list-group-item">
     <h6 class="list-group-item-heading">
     <b>{{ match.match_datetime|date:"d/m/Y H:i" }}</b> <span class="pull-right"><em>{{ match.location }}</em></span></h6>
     <h5 class="list-group-item-heading">{% if match.is_home_win %}<span class="text-success"><b>{% endif %}

@@ -67,6 +67,9 @@ urlpatterns = patterns(
     # ex: /data/comp/1/comp-name-slug
     url(r'^comp/(?P<pk>\d+)(?:/(?P<slug>[\w\d-]+))?/$',
         views.CompDetailView.as_view(), name='comp_detail'),
+    # ex: /data/matches/1/
+    url(r'^matches/(?P<pk>\d+)/$',
+        views.MatchDetailView.as_view(), name='match_detail'),
     # API test
     url(r'api/player_search/$',
         views.PlayerJSONView.as_view(), name='player_search_api'),

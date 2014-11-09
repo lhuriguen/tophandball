@@ -1,0 +1,58 @@
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>&nbsp;</th>
+            <th><abbr title="Two minutes"><i class="fa fa-clock-o" ></i></abbr></th>
+            <th><abbr title="Goals"><i class="fa fa-bullseye"></i></abbr></th>
+            <th><abbr title="Goals 7m">7m</abbr></th>
+            <th><abbr title="Goal shots">GS</abbr></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ps in stats %}
+        {% if not ps.player.is_goalkeeper %}
+        <tr>
+            <td><a href="{{ ps.player.get_absolute_url }}">{{ ps.player.last_name }}, {{ ps.player.first_name|first }}.</a>
+                {% if ps.yellow_card %} <abbr title="Yellow card"><i class="fa fa-square yellow-card"></i></abbr>{% endif %}
+                {% if ps.red_card %} <abbr title="Red card"><i class="fa fa-square red-card"></i></abbr>{% endif %}
+            </td>
+            <td>{{ ps.two_minutes|default:"" }}</td>
+            <td>{{ ps.goals|default:"" }}</td>
+            <td>{{ ps.goals_7m|default:"" }}</td>
+            <td>{{ ps.goals_shots|default:"" }}</td>
+        </tr>
+        {% endif %}
+        {% empty %}
+        <tr><td colspan="3" class="warning text-warning">No player stats found for this match.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <thead>
+        <tr>
+            <th>&nbsp;</th>
+            <th><abbr title="Two minutes"><i class="fa fa-clock-o" ></i></abbr></th>
+            <th><abbr title="Saves"><i class="fa fa-life-ring" ></i></abbr></th>
+            <th><abbr title="Saves 7m">7m</abbr></th>
+            <th><abbr title="Shots received">SR</abbr></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ps in stats %}
+        {% if ps.player.is_goalkeeper %}
+        <tr>
+            <td><a href="{{ ps.player.get_absolute_url }}">{{ ps.player.last_name }}, {{ ps.player.first_name|first }}.</a>
+                {% if ps.yellow_card %} <abbr title="Yellow card"><i class="fa fa-square yellow-card"></i></abbr>{% endif %}
+                {% if ps.red_card %} <abbr title="Red card"><i class="fa fa-square red-card"></i></abbr>{% endif %}
+            </td>
+            <td>{{ ps.two_minutes|default:"" }}</td>
+            <td>{{ ps.saves|default:"" }}</td>
+            <td>{{ ps.saves_7m|default:"" }}</td>
+            <td>{{ ps.saves_shots|default:"" }}</td>
+        </tr>
+        {% endif %}
+        {% empty %}
+        <tr><td colspan="3" class="warning text-warning">No player stats found for this match.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

@@ -59,7 +59,7 @@
                 <tbody>
                     {% for ms in matches %}
                     <tr>
-                        <td><small><strong>{{ ms.match_team.match.match_datetime|date:"d/m/Y H:i" }}</strong></small> <a href="{{ ms.match_team.match.home_team.get_absolute_url }}">{{ ms.match_team.match.home_team }}</a> vs <a href="{{ ms.match_team.match.away_team.get_absolute_url }}">{{ ms.match_team.match.away_team }}</a><br><small>{{ ms.match_team.match.group.stage.comp_season.competition.name }}, {{ ms.match_team.match.group.stage.name }}</small>
+                        <td><small><strong>{{ ms.match.match_datetime|date:"d/m/Y H:i" }}</strong></small> <a href="{{ ms.match.get_absolute_url }}">{{ ms.match.home_team }} vs {{ ms.match.away_team }}</a><br><small>{{ ms.match.group.stage.comp_season.competition.name }}, {{ ms.match.group.stage.name }}</small>
                         </td>
                         {% if player.position == "GK" %}
                         <td>{{ ms.saves|default_if_none:"?" }}{% if ms.saves_7m %} ({{ ms.saves_7m }}){% endif %}</td>

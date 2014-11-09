@@ -1,3 +1,4 @@
+from __future__ import division
 import datetime
 
 from django.core.urlresolvers import reverse
@@ -227,6 +228,10 @@ class Player(Person):
 
     def __unicode__(self):
         return u'%s' % (self.full_name)
+
+    @property
+    def is_goalkeeper(self):
+        return self.position == Player.GOALKEEPER
 
     def get_absolute_url(self):
         return reverse('data:player_detail',
@@ -602,11 +607,23 @@ class Match(models.Model):
     class Meta:
         verbose_name_plural = 'matches'
 
+    def get_absolute_url(self):
+        return reverse('data:match_detail', kwargs={'pk': self.pk})
+
     @property
     def display_result(self):
         if self.score_home and self.score_away:
             return str(self.score_home) + ':' + str(self.score_away)
         return '?:?'
+
+    @property
+    def display_halftime(self):
+        try:
+            home_ht = self.get_home_stats().halftime_score
+            away_ht = self.get_away_stats().halftime_score
+        except:
+            return '?:?'
+        return str(home_ht) + ':' + str(away_ht)
 
     @property
     def is_future(self):
@@ -631,19 +648,25 @@ class Match(models.Model):
             return self.score_away > self.score_home
         return False
 
-    @property
-    def home_stats(self):
-        q = self.matchteamstats_set.filter(club=self.home_team)
-        if q.exists():
-            return q[0]
-        return None
+    def get_home_stats(self):
+        try:
+            return self.matchteamstats_set.get(club=self.home_team)
+        except MatchTeamStats.DoesNotExist:
+            return None
 
-    @property
-    def away_stats(self):
-        q = self.matchteamstats_set.filter(club=self.away_team)
-        if q.exists():
-            return q[0]
-        return None
+    def get_home_player_stats(self):
+        q = self.matchplayerstats_set.filter(club=self.home_team)
+        return q.select_related('player').order_by('-goals')
+
+    def get_away_stats(self):
+        try:
+            return self.matchteamstats_set.get(club=self.away_team)
+        except MatchTeamStats.DoesNotExist:
+            return None
+
+    def get_away_player_stats(self):
+        q = self.matchplayerstats_set.filter(club=self.away_team)
+        return q.select_related('player').order_by('-goals')
 
 
 class MatchTeamStats(models.Model):
@@ -671,13 +694,41 @@ class MatchTeamStats(models.Model):
     def __unicode__(self):
         return u'%s in %s' % (self.club, self.match)
 
+    @property
+    def first_half_ratio(self):
+        return round(self.halftime_score/self.finaltime_score * 100)
+
+    @property
+    def second_half_ratio(self):
+        return round(self.second_half_score/self.finaltime_score * 100)
+
+    @property
+    def second_half_score(self):
+        return self.finaltime_score - self.halftime_score
+
+    @property
+    def penalty_ratio(self):
+        try:
+            return round(self.goals_7m/self.given_7m * 100)
+        except:
+            return 0
+
+    @property
+    def penalty_miss_ratio(self):
+        try:
+            missed = self.given_7m - self.goals_7m
+            return round(missed/self.given_7m * 100)
+        except:
+            return 0
+
     class Meta:
         verbose_name_plural = 'team stats'
         unique_together = ('match', 'club')
 
 
 class MatchPlayerStats(models.Model):
-    match_team = models.ForeignKey(MatchTeamStats)
+    match = models.ForeignKey(Match)
+    club = models.ForeignKey(Club)
     player = models.ForeignKey(Player)
     goals = models.PositiveSmallIntegerField(blank=True, null=True)
     goals_7m = models.PositiveSmallIntegerField(blank=True, null=True)
@@ -693,11 +744,11 @@ class MatchPlayerStats(models.Model):
     # playing_time = models.FloatField(default=0)
 
     def __unicode__(self):
-        return u'%s in %s' % (self.player, self.match_team)
+        return u'%s in %s' % (self.player, self.match)
 
     class Meta:
         verbose_name_plural = 'player stats'
-        unique_together = ('match_team', 'player')
+        unique_together = ('match', 'club', 'player')
 
 
 class Referee(models.Model):
