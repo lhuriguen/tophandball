@@ -1,0 +1,113 @@
+<h4><b>Participants</b></h4>
+<p>
+<button type="button" title="Show/Hide teams" class="btn btn-default btn-xs" data-toggle="collapse" data-target="#teams">
+  <i class="fa fa-eye-slash"></i> Show/Hide
+</button>
+</p>
+<div id="teams" class="collapse">
+    <div class="row">
+    {% for item in st.get_teams %}
+        <div class="col-xs-4 col-md-2">
+        {% include "data/_club_card.html" %}
+        </div>
+        {% if forloop.counter|divisibleby:6 %}
+        </div>
+        <div class="row">
+        {% elif forloop.counter|divisibleby:3 %}
+        <div class="clearfix visible-sm visible-xs"></div>
+        {% endif %}
+    {% endfor %}
+    </div>
+</div>
+
+<h4><b>Results</b></h4>
+{% if st.type == 'KO' %}
+<div class="row">
+    <div class="col-md-6">
+    {% for g in st.group_set.all %}
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                {% for gt in g.get_table %}
+                <img class="th-flag" src="{{ gt.team.country.flag }}" title="{{ gt.team.country.name }}"> <a style="color: inherit;" href="{{ gt.team.get_absolute_url }}"><b>{{ gt.team.name }}</b></a>{% if forloop.first %} vs{% else %} <span class="pull-right"><b>{{ gt.goals_against.0 }}:{{ gt.goals_for.0 }}</b></span>{% endif %}
+                {% endfor %}
+            </div>
+            <!-- Start matches -->
+            <div class="list-group">
+                {% for match in g.get_matches %}
+                {% include "data/_match_list_item.html" %}
+                {% empty %}
+                <li class="list-group-item">No matches found.</li>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+</div>
+{% else %}
+<div class="row">
+    {% for g in st.group_set.all %}
+    <div class="col-xs-12 col-md-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <b>{{ g.name }}</b>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Team</th>
+                            {% if st.type == 'RR' %}
+                            <th>M</th>
+                            <th>W</th>
+                            <th>D</th>
+                            <th>L</th>
+                            <th>GF</th>
+                            <th>GA</th>
+                            <th>P</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for gt in g.get_table %}
+                        <tr>
+                            <td>{{ gt.position }}</td>
+                            <td><img class="th-flag" src="{{ gt.team.country.flag }}" title="{{ gt.team.country.name }}"> <a href="{{ gt.team.get_absolute_url }}">{{ gt.team.name }}</a></td>
+                            {% if st.type == 'RR' %}
+                            <td>{{ gt.num_matches }}</td>
+                            <td>{{ gt.wins.0 }}</td>
+                            <td>{{ gt.draws.0 }}</td>
+                            <td>{{ gt.losses.0 }}</td>
+                            <td>{{ gt.goals_for.0 }}</td>
+                            <td>{{ gt.goals_against.0 }}</td>
+                            <td>{{ gt.points }}</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                        <tr>
+                            <td {% if st.type == 'RR' %}colspan="9"{% else %}colspan="2"{% endif %} class="text-center">
+                                <button title="Show/Hide matches" class="th-toggler btn btn-info btn-xs" data-toggle="collapse" data-target="#matches-{{ g.id }}">
+                                    <i class="fa fa-chevron-up"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Start matches -->
+        <div id="matches-{{ g.id }}" class="list-group collapse">
+            {% for match in g.get_matches %}
+            {% include "data/_match_list_item.html" %}
+            {% empty %}
+            <li class="list-group-item">No matches found.</li>
+            {% endfor %}
+        </div>
+    </div>
+    {% if forloop.counter|divisibleby:2 %}
+    </div>
+    <div class="row">
+    {% endif %}
+    {% endfor %}
+</div>
+{% endif %}

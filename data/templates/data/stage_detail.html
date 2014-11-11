@@ -1,0 +1,16 @@
+{% extends "data/competition_season.html" %}
+
+{% block section_name %} · {{ object.name }}{% endblock %}
+
+{% block stage_detail %}
+{% include "data/_stage_item.html" with st=object %}
+{% endblock %}
+
+{% block extra_script %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#stages").addClass("active");
+		$("#stage-{{ object.id }}").addClass("active");
+	});
+</script>
+{% endblock %}

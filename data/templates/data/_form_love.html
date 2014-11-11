@@ -2,12 +2,12 @@
 <input type="hidden" name="location" value="form" />
 {% if fan %}
 <input type="hidden" name="choice" id="choice" value="unfollow" />
-<button id="submit_follow" type="submit" class="btn btn-link btn-sm" >
-    <span class="btn-love"><i class="fa fa-heart"></i></span> <small>({{ fan_count }} fan{{ fan_count|pluralize }})</small>
+<button id="submit_follow" type="submit" class="btn btn-link" >
+    <span class="btn-love"><i class="fa fa-heart"></i> You are a fan!</span> <small>({{ fan_count }} fan{{ fan_count|pluralize }})</small>
 </button>
 {% else %}
 <input type="hidden" name="choice" id="choice" value="follow" />
-<button id="submit_follow" type="submit" class="btn btn-link btn-sm">
-    <span class="btn-love"><i class="fa fa-heart-o"></i></span> <small>({{ fan_count }} fan{{ fan_count|pluralize }})</small>
+<button id="submit_follow" type="submit" class="btn btn-link">
+    <span class="btn-love"><i class="fa fa-heart-o"></i> Become a fan!</span> <small>({{ fan_count }} fan{{ fan_count|pluralize }})</small>
 </button>
 {% endif %}

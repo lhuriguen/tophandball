@@ -1,6 +1,7 @@
 from django.core.exceptions import ImproperlyConfigured
 
 from infohandball.decorators import login_required
+from .models import Club
 
 
 class LoveMixin(object):
@@ -31,6 +32,20 @@ class LoveMixin(object):
         context = super(LoveMixin, self).get_context_data(**kwargs)
         context['fan'] = self.is_fan()
         context['fan_count'] = self.get_fan_object().fans.count()
+        return context
+
+
+class FavClubsMixin(object):
+    """
+    Mixin to add favorite clubs to the view context.
+    """
+
+    def get_context_data(self, **kwargs):
+        context = super(FavClubsMixin, self).get_context_data(**kwargs)
+        if self.request.user.is_authenticated():
+            context['user_favs'] = Club.objects.filter(
+                fans__username=self.request.user.username).values_list(
+                'id', flat=True)
         return context
 
 

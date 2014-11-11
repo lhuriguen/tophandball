@@ -7,6 +7,7 @@ urlpatterns = patterns(
     '',
     # ex: /data/
     url(r'^$', views.index, name='index'),
+    # Club urls:
     # ex: /data/clubs/
     url(r'^clubs/$',
         views.ClubIndexView.as_view(), name='club_index'),
@@ -31,6 +32,7 @@ urlpatterns = patterns(
     # ex: /data/clubs/1/club-name-slug/
     url(r'^clubs/(?P<pk>\d+)(?:/(?P<slug>[\w\d-]+))?/$',
         views.ClubDetailView.as_view(), name='club_detail'),
+    # Player urls:
     # ex: /data/players/
     url(r'^players/$',
         views.PlayerIndexView.as_view(), name='player_index'),
@@ -46,6 +48,7 @@ urlpatterns = patterns(
     # ex: /data/players/1/player-name-slug/
     url(r'^players/(?P<pk>\d+)(?:/(?P<slug>[\w\d-]+))?/$',
         views.PlayerDetailView.as_view(), name='player_detail'),
+    # Competition urls:
     # ex: /data/comp/
     url(r'^comp/$',
         views.CompIndexView.as_view(), name='comp_index'),
@@ -55,9 +58,18 @@ urlpatterns = patterns(
     # ex: /data/comp/1/edit/
     url(r'^comp/(?P<pk>\d+)/edit/$',
         views.CompUpdateView.as_view(), name='comp_update'),
+    # ex: /data/comp/1/season_year/
+    url(r'^comp/(?P<comp_id>\d+)/(?P<year>\d\d\d\d)/$',
+        views.CompSeasonDetailView.as_view(), name='comp_season'),
+    # ex: /data/comp/1/season_year/7/
+    url(r'^comp/(?P<comp_id>\d+)/(?P<year>\d\d\d\d)/(?P<pk>\d+)/$',
+        views.StageDetailView.as_view(), name='stage_detail'),
     # ex: /data/comp/1/comp-name-slug
     url(r'^comp/(?P<pk>\d+)(?:/(?P<slug>[\w\d-]+))?/$',
         views.CompDetailView.as_view(), name='comp_detail'),
+    # ex: /data/matches/1/
+    url(r'^matches/(?P<pk>\d+)/$',
+        views.MatchDetailView.as_view(), name='match_detail'),
     # API test
     url(r'api/player_search/$',
         views.PlayerJSONView.as_view(), name='player_search_api'),

@@ -131,6 +131,10 @@ var main = function() {
         weekStart: 1
     });
 
+    $(".th-toggler").click(function() {
+        $(this).children("i").toggleClass("fa-chevron-up fa-chevron-down");
+    });
+
     $('.modal').on('show.bs.modal', centerModal);
     $(window).on("resize", function () {
         $('.modal:visible').each(centerModal);

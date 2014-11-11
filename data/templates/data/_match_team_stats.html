@@ -1,0 +1,15 @@
+7m given/goals: {{ stats.goals_7m|default:"0" }}/{{ stats.given_7m|default:"0" }}
+<div class="progress">
+    <div class="progress-bar" style="width: {{ stats.penalty_ratio }}%">
+      <span>{{ stats.penalty_ratio }}%</span>
+    </div>
+  </div>
+Goals by half:
+<div class="progress">
+  <div class="progress-bar" style="width: {{ stats.first_half_ratio }}%">
+    <span>H1: {{ stats.halftime_score }} goals</span>
+  </div>
+  <div class="progress-bar progress-bar-success" style="width: {{ stats.second_half_ratio }}%">
+    <span>H2: {{ stats.second_half_score }} goals</span>
+  </div>
+</div>
