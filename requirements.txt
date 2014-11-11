@@ -1,0 +1,15 @@
+Django==1.6.8
+South==1.0.1
+django-allauth==0.18.0
+django-bootstrap-form==3.1
+django-countries==3.0.1
+django-crispy-forms==1.4.0
+django-debug-toolbar==1.2.2
+django-extensions==1.4.6
+django-extra-views==0.6.5
+oauthlib==0.7.1
+python-openid==2.2.5
+requests==2.4.3
+requests-oauthlib==0.4.2
+six==1.5.2
+sqlparse==0.1.13
