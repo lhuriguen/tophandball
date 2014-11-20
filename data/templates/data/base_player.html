@@ -5,7 +5,7 @@
 
 {% block content %}
 
-<div id="header-box">
+<div id="header-box" class="th-content">
     <div class="row">
         <div class="col-sm-3 col-md-2">
             <img class="img-person img-responsive" src="{{ player.photo_url }}" alt="{{ player.full_name }}">
@@ -28,4 +28,5 @@
 </div>
 
 {% block specific %}{% endblock %}
+
 {% endblock content %}

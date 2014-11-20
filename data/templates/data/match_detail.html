@@ -13,14 +13,16 @@
 </div>
 <div class="row">
     <div class="col-md-4">
-        <div class="page-header">
-            <img class="pull-left" style="max-height: 40px;" src="{{ match.home_team.logo_url }}"/>
-            <h2 class="text-center" title="{{ match.home_team.name }}"><a href="{{ match.home_team.get_absolute_url }}">{{ match.home_team.display_name|truncatechars:16 }}</a></h2>
+        <div class="th-content">
+            <div class="page-header">
+                <img class="pull-left" style="max-height: 40px;" src="{{ match.home_team.logo_url }}"/>
+                <h2 class="text-center" title="{{ match.home_team.name }}"><a href="{{ match.home_team.get_absolute_url }}">{{ match.home_team.display_name|truncatechars:16 }}</a></h2>
+            </div>
+            {% include "data/_match_team_stats.html" with stats=home_stats %}
         </div>
-        {% include "data/_match_team_stats.html" with stats=home_stats %}
     </div>
-    <div class="col-md-3">
-        <ul class="list-group">
+    <div class="col-md-4">
+        <ul class="list-group" style="margin-top:10px;">
             <li class="list-group-item list-group-item-info"><h1 class="text-center">{{ match.display_result }}</h1></li>
             <li class="list-group-item text-center">
                 <h4><abbr title="Half time">HT</abbr> {{ HT.0 }}:{{ HT.1 }}</h4>
@@ -34,20 +36,24 @@
         </ul>
     </div>
     <div class="col-md-4">
+        <div class="th-content">
         <div class="page-header">
             <img class="pull-left" style="max-height: 40px;" src="{{ match.away_team.logo_url }}"/>
             <h2 class="text-center" title="{{ match.away_team.name }}"><a href="{{ match.away_team.get_absolute_url }}">{{ match.away_team.display_name|truncatechars:16 }}</a></h2>
         </div>
         {% include "data/_match_team_stats.html" with stats=away_stats %}
+        </div>
     </div>
 </div>
 <p></p>
 <div class="row">
     <div class="col-md-4">
+        <div class="th-content">
         {% include "data/_match_player_stats.html" with stats=match.get_home_player_stats %}
+        </div>
     </div>
-    <div class="col-md-3">
-        <ul class="list-group">
+    <div class="col-md-4">
+        <ul class="list-group" style="margin-top: 10px;">
           <li class="list-group-item list-group-item-info"><h3><i class="fa fa-fw fa-calendar"></i> {{ match.match_datetime|date:"d/m/Y H:i" }}</h3></li>
           <li class="list-group-item"><i class="fa fa-fw fa-building"></i> {{ match.arena }}</li>
           <li class="list-group-item"><i class="fa fa-fw fa-map-marker"></i> {{ match.location }}</li>
@@ -62,7 +68,9 @@
         </ul>
     </div>
     <div class="col-md-4">
+        <div class="th-content">
         {% include "data/_match_player_stats.html" with stats=match.get_away_player_stats %}
+        </div>
     </div>
 </div>
 {% endblock %}
