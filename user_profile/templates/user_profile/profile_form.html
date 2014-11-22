@@ -3,6 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+<div class="th-content">
 <form method="POST" action="">
 	{% csrf_token %}
 	{% crispy form %}
@@ -11,4 +12,5 @@
 		<a href="{% url 'profile:index' %}" class="btn btn-default">Cancel</a>
     </div>
 </form>
+</div>
 {% endblock %}

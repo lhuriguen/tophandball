@@ -13,10 +13,10 @@
 </div>
 <div class="row">
     <div class="col-md-4">
-        <div class="th-content">
+        <div class="th-content th-match-header">
+            <div class="th-match-logo" style="background-image: url('{{ match.home_team.logo_url }}')"></div>
             <div class="page-header">
-                <img class="pull-left" style="max-height: 40px;" src="{{ match.home_team.logo_url }}"/>
-                <h2 class="text-center" title="{{ match.home_team.name }}"><a href="{{ match.home_team.get_absolute_url }}">{{ match.home_team.display_name|truncatechars:16 }}</a></h2>
+                <h2 class="text-center" title="{{ match.home_team.name }}"><a href="{{ match.home_team.get_absolute_url }}"><b>{{ match.home_team.display_name|truncatechars:16 }}</b></a></h2>
             </div>
             {% include "data/_match_team_stats.html" with stats=home_stats %}
         </div>
@@ -36,12 +36,12 @@
         </ul>
     </div>
     <div class="col-md-4">
-        <div class="th-content">
-        <div class="page-header">
-            <img class="pull-left" style="max-height: 40px;" src="{{ match.away_team.logo_url }}"/>
-            <h2 class="text-center" title="{{ match.away_team.name }}"><a href="{{ match.away_team.get_absolute_url }}">{{ match.away_team.display_name|truncatechars:16 }}</a></h2>
-        </div>
-        {% include "data/_match_team_stats.html" with stats=away_stats %}
+        <div class="th-content th-match-header">
+            <div class="th-match-logo" style="background-image: url('{{ match.away_team.logo_url }}')"></div>
+            <div class="page-header">
+                <h2 class="text-center" title="{{ match.away_team.name }}"><a href="{{ match.away_team.get_absolute_url }}"><b>{{ match.away_team.display_name|truncatechars:16 }}</b></a></h2>
+            </div>
+            {% include "data/_match_team_stats.html" with stats=away_stats %}
         </div>
     </div>
 </div>

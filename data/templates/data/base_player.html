@@ -4,7 +4,6 @@
 {% block active_player %}active{% endblock %}
 
 {% block content %}
-
 <div id="header-box" class="th-content">
     <div class="row">
         <div class="col-sm-3 col-md-2">
@@ -18,15 +17,13 @@
         </div>
     </div>
 </div>
-<div class="th-navbar">
-    <div class="btn-toolbar">
-        <div class="btn-group btn-group-sm">
-            <a class="btn btn-link {% block active_home %}{% endblock %}" href="{{ player.get_absolute_url }}"><i class="fa fa-home"></i> Home</a>
-            <a class="btn btn-link {% block active_matches %}{% endblock %}" href="#"><i class="fa fa-calendar"></i> Matches</a>
-        </div>
+<div class="text-center">
+    <div class="btn-group">
+        <a class="btn btn-default {% block active_home %}{% endblock %}" href="{{ player.get_absolute_url }}"><i class="fa fa-home"></i> Home</a>
+        <a class="btn btn-default {% block active_matches %}{% endblock %}" href="#"><i class="fa fa-calendar"></i> Matches</a>
     </div>
 </div>
-
+<div class="th-content">
 {% block specific %}{% endblock %}
-
+</div>
 {% endblock content %}

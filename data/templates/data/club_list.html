@@ -5,15 +5,16 @@
 {% block active_club %}active{% endblock %}
 
 {% block over_content %}
-<div class="jumbotron th-masthead">
-  <div class="container">
-    <h1>Clubs</h1>
-    <p>We currently have {{ club_count }} clubs in our database. You can search by club name or browse by country.</p>
-  </div>
+<div class="jumbotron th-masthead th-masthead-image th-masthead-clubs">
+    <div class="container">
+        <h1>Clubs</h1>
+        <p>We currently have {{ club_count }} clubs in our database. You can search by club name or browse by country.</p>
+    </div>
 </div>
 {% endblock %}
 
 {% block content %}
+<div class="th-content">
 <div class="row">
     <div class="col-sm-5 col-md-3">
         <form action="" method="get" id="search-form">
@@ -79,5 +80,6 @@
             {% include "data/_pagination.html" %}
         </div>
     </div>
+</div>
 </div>
 {% endblock %}

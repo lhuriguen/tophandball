@@ -1,25 +1,31 @@
 body {
     padding-bottom: 30px;
     margin-bottom: 50px;
-    /*background-image: url('../img/1337.png');*/
+    /*background-image: url('../img/881.png');*/
     background-color: #EEE;
 }
 html {
     position: relative;
     min-height: 100%;
 }
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 50px;
+    background-color: #F9F9F9;
+    border-top: 1px solid #E5E5E5;
+    padding: 10px 0;
+    text-align: center;
+}
 .th-content {
     padding: 10px;
     margin: 10px 0;
     background-color: #FFF;
-    /*box-shadow: 1px 0px 5px rgba(0, 0, 0, 0.5);*/
     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
 }
 #header-box {
-    /*border: 1px solid #E5E5E5;*/
-    /*border-radius: 4px;*/
-    /*margin-bottom: 10px;*/
-    /* background-color: #F9F9F9;*/
     height: auto;
     position: relative;
 }
@@ -42,17 +48,6 @@ html {
     border: 1px solid #ddd;
     border-radius: 4px;
     box-shadow: 1px 1px 2px #ddd;
-}
-footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    /* Set the fixed height of the footer here */
-    height: 50px;
-    background-color: #F9F9F9;
-    border-top: 1px solid #E5E5E5;
-    padding: 10px 0;
-    text-align: center;
 }
 #map_canvas {
     width: auto;
@@ -104,6 +99,11 @@ footer {
 .media-object-bordered {
     border: 1px solid #ddd;
 }
+.th-media-fans {
+    position: absolute;
+    bottom: 10px;
+    right: 5px;
+}
 .yellow-card {
     color: #FFD700;
 }
@@ -116,17 +116,26 @@ footer {
 .brand {
     color: #FF7920;
 }
+.jumbotron {
+    margin-top: -20px;
+}
 .th-masthead {
-    color: #777777;
+    color: rgba(55, 55, 55, 1);
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
     margin-top: -20px;
 }
-.th-masthead h1 {
-    color: #428BCA;
-    margin-top: 0;
+.th-masthead-image {
+    background-size: cover;
+    background-position: center center;
 }
-.th-masthead p {
-    margin-bottom: 0;
+.th-masthead-image .container {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+.th-masthead-clubs {
+    background-image: url('../img/fans.jpg')
+}
+.th-masthead-players {
+    background-image: url('../img/players.jpg')
 }
 .th-card {
     color: #333;
@@ -199,18 +208,31 @@ a.th-card:focus, a.th-card:hover {
     width: 100%;
     height: auto;
 }
-.th-navbar {
-    background-color: #FFF;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-shadow: 1px 1px 2px #ddd;
-    margin-bottom: 20px;
-    padding: 4px;
-}
 .th-flag {
     vertical-align: baseline;
 }
 .navbar-custom {
    background-color: #FFF;
    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+}
+.th-match-logo {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    opacity: 0.1;
+    z-index: -1;
+}
+.th-match-header {
+    position: relative;
+    z-index: 1;
+}
+.th-match-header .page-header {
+    border-bottom: 0;
 }
