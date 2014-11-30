@@ -75,10 +75,12 @@ class MatchTeamStatsInline(admin.TabularInline):
     model = MatchTeamStats
     extra = 1
     max_num = 2
+    raw_id_fields = ('club', )
 
 
 class MatchPlayerStatsInline(admin.TabularInline):
     model = MatchPlayerStats
+    raw_id_fields = ('club', 'player')
 
 
 class ClubAdmin(admin.ModelAdmin):
@@ -167,10 +169,11 @@ class MatchAdmin(admin.ModelAdmin):
             {'fields': [('referees', 'delegates')]}
          )
     ]
-    inlines = [MatchTeamStatsInline]
+    inlines = [MatchTeamStatsInline, MatchPlayerStatsInline]
     list_filter = ['match_datetime', 'group__stage__comp_season']
     list_display = ('home_team', 'away_team', 'match_datetime', 'location')
     search_fields = ['home_team__name', 'away_team__name']
+    raw_id_fields = ('referees', 'delegates')
 
 
 class GroupAdmin(admin.ModelAdmin):
@@ -185,10 +188,13 @@ class GroupAdmin(admin.ModelAdmin):
 
 
 class MatchTeamStatsAdmin(admin.ModelAdmin):
-    inlines = [MatchPlayerStatsInline]
     list_display = ['club', 'match', 'halftime_score', 'finaltime_score']
     list_filter = ['match__match_datetime', 'match__group__stage__comp_season']
     search_fields = ['club__name']
+
+
+class RefereeAdmin(admin.ModelAdmin):
+    search_fields = ['name', 'country']
 
 
 admin.site.register(Season)
@@ -200,6 +206,6 @@ admin.site.register(CompetitionSeason, CompetitionSeasonAdmin)
 admin.site.register(Stage, StageAdmin)
 admin.site.register(Group, GroupAdmin)
 admin.site.register(Match, MatchAdmin)
-admin.site.register(Referee)
+admin.site.register(Referee, RefereeAdmin)
 admin.site.register(Delegate)
 admin.site.register(MatchTeamStats, MatchTeamStatsAdmin)
