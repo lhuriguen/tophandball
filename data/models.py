@@ -674,6 +674,8 @@ class MatchTeamStats(models.Model):
     club = models.ForeignKey(Club)
     halftime_score = models.PositiveSmallIntegerField(blank=True, null=True)
     finaltime_score = models.PositiveSmallIntegerField(blank=True, null=True)
+    score_pt = models.PositiveSmallIntegerField(
+        'Score after playing time', blank=True, null=True)
     score_et1 = models.PositiveSmallIntegerField(
         'Score after ET1', blank=True, null=True)
     score_et2 = models.PositiveSmallIntegerField(
