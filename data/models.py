@@ -597,8 +597,8 @@ class Match(models.Model):
     score_away = models.PositiveSmallIntegerField(blank=True, null=True)
     report_url = models.URLField(blank=True)
     week = models.SmallIntegerField(default=0)
-    referees = models.ManyToManyField('Referee')
-    delegates = models.ManyToManyField('Delegate')
+    referees = models.ManyToManyField('Referee', blank=True)
+    delegates = models.ManyToManyField('Delegate', blank=True)
 
     def __unicode__(self):
         return u'%s vs %s on %s' % (
@@ -612,7 +612,7 @@ class Match(models.Model):
 
     @property
     def display_result(self):
-        if self.score_home and self.score_away:
+        if self.score_home or self.score_away:
             return str(self.score_home) + ':' + str(self.score_away)
         return '?:?'
 
@@ -632,19 +632,19 @@ class Match(models.Model):
 
     @property
     def is_draw(self):
-        if self.score_home and self.score_away:
+        if self.score_home or self.score_away:
             return self.score_home == self.score_away
         return False
 
     @property
     def is_home_win(self):
-        if self.score_home and self.score_away:
+        if self.score_home or self.score_away:
             return self.score_home > self.score_away
         return False
 
     @property
     def is_away_win(self):
-        if self.score_home and self.score_away:
+        if self.score_home or self.score_away:
             return self.score_away > self.score_home
         return False
 
@@ -698,11 +698,13 @@ class MatchTeamStats(models.Model):
 
     @property
     def first_half_ratio(self):
-        return round(self.halftime_score/self.finaltime_score * 100)
+        return round(
+            (self.halftime_score or 0)/(self.finaltime_score or 1) * 100)
 
     @property
     def second_half_ratio(self):
-        return round(self.second_half_score/self.finaltime_score * 100)
+        return round(
+            (self.second_half_score or 0)/(self.finaltime_score or 1) * 100)
 
     @property
     def second_half_score(self):

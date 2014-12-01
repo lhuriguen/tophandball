@@ -35,7 +35,7 @@
                     <div class="col-md-3 col-sm-4">
                         <h5 class="list-group-item-heading">
                         {% if match.is_future %} <span class="label label-info">In {{ match.match_datetime|timeuntil }}</span>
-                        {% elif not match.score_home or not match.score_away %} ?:?
+                        {% elif not match.score_home and not match.score_away %} ?:?
                         {% else %}{{ match.score_home }}:{{ match.score_away }}
                             {% if match.is_draw %} <span class="label label-warning">D</span>
                             {% else %}

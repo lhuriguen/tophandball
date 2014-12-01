@@ -145,6 +145,7 @@ class CompetitionAdmin(admin.ModelAdmin):
 
 class CompetitionSeasonAdmin(admin.ModelAdmin):
     inlines = [StageInline]
+    list_filter = ['competition', 'season']
 
 
 class StageAdmin(admin.ModelAdmin):

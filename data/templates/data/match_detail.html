@@ -55,14 +55,14 @@
     <div class="col-md-4">
         <ul class="list-group" style="margin-top: 10px;">
           <li class="list-group-item list-group-item-info"><h3><i class="fa fa-fw fa-calendar"></i> {{ match.match_datetime|date:"d/m/Y H:i" }}</h3></li>
-          <li class="list-group-item"><i class="fa fa-fw fa-building"></i> {{ match.arena }}</li>
+          <li class="list-group-item"><i class="fa fa-fw fa-building"></i> {{ match.arena|default:"Arena unknown" }}</li>
           <li class="list-group-item"><i class="fa fa-fw fa-map-marker"></i> {{ match.location }}</li>
           <li class="list-group-item"><i class="fa fa-fw fa-ticket"></i> {{ match.spectators|default:"?" }}</li>
           <li class="list-group-item">
-            {% for r in match.referees.all %}<i class="fa fa-fw fa-gavel"></i> {{ r.name }} <img class="th-flag" src="{{ r.country.flag }}" title="{{ r.country.name }}"><br>{% endfor %}
+            {% for r in match.referees.all %}<i class="fa fa-fw fa-gavel"></i> {{ r.name }} <img class="th-flag" src="{{ r.country.flag }}" title="{{ r.country.name }}"><br>{% empty %}<i class="fa fa-fw fa-gavel"></i> Referees unknown{% endfor %}
           </li>
           <li class="list-group-item">
-            {% for d in match.delegates.all %}<i class="fa fa-fw fa-eye"></i> {{ d.name }} <img class="th-flag" src="{{ d.country.flag }}" title="{{ d.country.name }}"><br>{% endfor %}
+            {% for d in match.delegates.all %}<i class="fa fa-fw fa-eye"></i> {{ d.name }} <img class="th-flag" src="{{ d.country.flag }}" title="{{ d.country.name }}"><br>{% empty %}<i class="fa fa-fw fa-eye"></i> Delegate unknown{% endfor %}
           </li>
           <li class="list-group-item"><i class="fa fa-fw fa-external-link"></i> <a target="_blank" href="{{ match.report_url }}">Official report</a></li>
         </ul>

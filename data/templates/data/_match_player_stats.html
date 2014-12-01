@@ -1,3 +1,8 @@
+{% if stats|length == 0 %}
+<div class="alert alert-warning" role="alert">
+    <i class="fa fa-warning"></i> No player stats found for this match.
+</div>
+{% else %}
 <table class="table table-condensed">
     <thead>
         <tr>
@@ -22,9 +27,6 @@
             <td>{{ ps.goals_shots|default:"" }}</td>
         </tr>
         {% endif %}
-        {% empty %}
-        <tr><td colspan="3" class="warning text-warning">No player stats found for this match.</td>
-        </tr>
         {% endfor %}
     </tbody>
     <thead>
@@ -50,9 +52,7 @@
             <td>{{ ps.saves_shots|default:"" }}</td>
         </tr>
         {% endif %}
-        {% empty %}
-        <tr><td colspan="3" class="warning text-warning">No player stats found for this match.</td>
-        </tr>
         {% endfor %}
     </tbody>
 </table>
+{% endif %}
