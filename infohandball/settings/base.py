@@ -10,7 +10,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 
 
@@ -30,7 +30,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,10 +40,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.flatpages',
     'django.contrib.humanize',
-    'data',
-    'user_profile',
     'south',
-    'debug_toolbar',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -55,7 +52,9 @@ INSTALLED_APPS = (
     'crispy_forms',
     'extra_views',
     'django_countries',
-)
+    'data',
+    'user_profile',
+]
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -106,9 +105,6 @@ STATICFILES_DIRS = (
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-
-# For development only
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Authentication with AllAuth
 # https://github.com/pennersr/django-allauth
