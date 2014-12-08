@@ -23,8 +23,8 @@
 <h4><b>Results</b></h4>
 {% if st.type == 'KO' %}
 <div class="row">
-    <div class="col-md-6">
     {% for g in st.group_set.all %}
+    <div class="col-md-6">
         <div class="panel panel-info">
             <div class="panel-heading">
                 {% for gt in g.get_table %}
@@ -40,6 +40,11 @@
                 {% endfor %}
             </div>
         </div>
+    </div>
+    {% if forloop.counter|divisibleby:2 %}
+    </div>
+    <div class="row">
+        {% endif %}
     {% endfor %}
     </div>
 </div>
