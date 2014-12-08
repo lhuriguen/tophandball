@@ -12,7 +12,7 @@
     </ol>
 </div>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-sm-4">
         <div class="th-content th-match-header">
             <div class="th-match-logo" style="background-image: url('{{ match.home_team.logo_url }}')"></div>
             <div class="page-header">
@@ -21,7 +21,7 @@
             {% include "data/_match_team_stats.html" with stats=home_stats %}
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-sm-4">
         <ul class="list-group" style="margin-top:10px;">
             <li class="list-group-item list-group-item-info"><h1 class="text-center">{{ match.display_result }}</h1></li>
             <li class="list-group-item text-center">
@@ -35,7 +35,7 @@
             </li>
         </ul>
     </div>
-    <div class="col-md-4">
+    <div class="col-sm-4">
         <div class="th-content th-match-header">
             <div class="th-match-logo" style="background-image: url('{{ match.away_team.logo_url }}')"></div>
             <div class="page-header">
@@ -47,12 +47,12 @@
 </div>
 <p></p>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-sm-4">
         <div class="th-content">
         {% include "data/_match_player_stats.html" with stats=match.get_home_player_stats %}
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-sm-4">
         <ul class="list-group" style="margin-top: 10px;">
           <li class="list-group-item list-group-item-info"><h3><i class="fa fa-fw fa-calendar"></i> {{ match.match_datetime|date:"d/m/Y H:i" }}</h3></li>
           <li class="list-group-item"><i class="fa fa-fw fa-building"></i> {{ match.arena|default:"Arena unknown" }}</li>
@@ -67,7 +67,7 @@
           <li class="list-group-item"><i class="fa fa-fw fa-external-link"></i> <a target="_blank" href="{{ match.report_url }}">Official report</a></li>
         </ul>
     </div>
-    <div class="col-md-4">
+    <div class="col-sm-4">
         <div class="th-content">
         {% include "data/_match_player_stats.html" with stats=match.get_away_player_stats %}
         </div>

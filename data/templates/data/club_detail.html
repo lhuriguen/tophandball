@@ -63,9 +63,9 @@
                 <tbody>
                     {% for gt in comp_list %}
                     <tr>
-                        <td><a href="{{ gt.group.stage.comp_season.get_absolute_url }}">{{ gt.group.stage.comp_season.season }}</a></td>
-                        <td><a href="{{ gt.group.stage.comp_season.competition.get_absolute_url }}">{{ gt.group.stage.comp_season.competition.short_name }}</a></td>
-                        <td><a href="{{ gt.group.stage.get_absolute_url }}">{{ gt.group.stage.name }} {% if gt.group.stage.type != 'KO' %} - {{ gt.group.name }}{% endif %}</a></td>
+                        <td><a href="{{ gt.group.stage.comp_season.get_absolute_url }}" title="{{ gt.group.stage.comp_season }}">{{ gt.group.stage.comp_season.season }}</a></td>
+                        <td><a href="{{ gt.group.stage.comp_season.competition.get_absolute_url }}" title="{{ gt.group.stage.comp_season.competition.name }}">{{ gt.group.stage.comp_season.competition.short_name }}</a></td>
+                        <td><a href="{{ gt.group.stage.get_absolute_url }}" title="{{ gt.group.stage.name }}">{{ gt.group.stage.name }} {% if gt.group.stage.type != 'KO' %} - {{ gt.group.name }}{% endif %}</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
