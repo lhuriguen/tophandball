@@ -88,6 +88,16 @@ class Club(models.Model):
         return Match.objects.filter(query).select_related(
             ).order_by('-match_datetime')
 
+    def get_matches_with_rival(self, club_id):
+        query = Q(home_team=club_id) | Q(away_team=club_id)
+        return self.get_matches().filter(query)
+
+    def get_competitions(self):
+        return self.grouptable_set.select_related().order_by(
+            '-group__stage__comp_season__season__year_from',
+            '-group__stage__comp_season__competition__level',
+            '-group__stage__order')
+
     def address_lines(self):
         if self.address:
             return self.address.split(',')

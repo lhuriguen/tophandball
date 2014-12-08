@@ -1,0 +1,31 @@
+{% for match in match_list %}
+<a href="{{ match.get_absolute_url }}" class="list-group-item">
+    <div class="row">
+        <div class="col-sm-3">
+            <h5 class="list-group-item-heading"><b>{{ match.match_datetime|date:"d/m/Y H:i" }}</b></h5>
+        </div>
+        <div class="col-sm-7">
+            <h5 class="list-group-item-heading"><img class="th-flag" src="{{ match.home_team.country.flag }}" title="{{ match.home_team.country.name }}"> {{ match.home_team.name }} &ndash; {{ match.away_team.name }} <img class="th-flag" src="{{ match.away_team.country.flag }}" title="{{ match.away_team.country.name }}"></h5>
+        </div>
+        <div class="col-sm-2">
+            <h5 class="list-group-item-heading">
+            {% if match.is_future %} <span class="label label-info">In {{ match.match_datetime|timeuntil }}</span>
+            {% else %}{{ match.display_result }}
+                {% if match.is_draw %}
+                <span class="label label-warning" title="Draw">D</span>
+                {% elif match.is_home_win and match.home_team == club %}
+                <span class="label label-success" title="Win">W</span>
+                {% elif match.is_away_win and match.away_team == club %}
+                <span class="label label-success" title="Win">W</span>
+                {% else %}
+                <span class="label label-danger" title="Loss">L</span>
+                {% endif %}
+            {% endif %}
+            </h5>
+        </div>
+    </div>
+    <p class="list-group-item-text text-info">{{ match.group.stage.comp_season.season }} {{ match.group.stage.comp_season.competition.name }}, {{ match.group.stage.name }}</p>
+</a>
+{% empty %}
+<li class="list-group-item list-group-item-warning">No matches found. Check your filters and try again.</li>
+{% endfor %}

@@ -2,7 +2,7 @@ from django import forms
 from django.forms.models import inlineformset_factory
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Fieldset, Submit, Row, Field, Div
+from crispy_forms.layout import Layout, Fieldset, Row, Field, Div
 from crispy_forms.bootstrap import AppendedText
 
 from .models import *
@@ -189,6 +189,28 @@ class ClubNamesInline(BasicInlineTable):
 class SeasonForm(forms.Form):
     season = forms.ModelChoiceField(
         queryset=Season.objects.all(), empty_label=None)
+
+
+class ClubMatchFilterForm(forms.Form):
+    season = forms.ModelChoiceField(
+        queryset=Season.objects.all(),
+        empty_label='All Seasons',
+        required=False)
+    competition = forms.ModelChoiceField(
+        queryset=Competition.objects.all(),
+        empty_label='All Competitions',
+        required=False)
+    club = forms.ModelChoiceField(
+        label='Opponent',
+        queryset=Club.objects.all(),
+        empty_label='All Clubs',
+        required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(ClubMatchFilterForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.form_tag = False
+        self.helper.disable_csrf = True
 
 # Formsets
 PlayerContractFormSet = inlineformset_factory(

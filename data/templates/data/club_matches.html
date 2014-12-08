@@ -1,73 +1,29 @@
 {% extends "data/base_club.html" %}
-{% load tz %}
+{% load tz crispy_forms_tags %}
 
 {% block active_matches %}active{% endblock %}
 {% block specific %}
 <div class="row">
-    <div class="col-md-2">
-        <ul class="nav nav-pills nav-stacked">
-            <li><a href="./">Latest</a></li>
-            <li><a href="?a">All</a></li>
-            <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Filter <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                    <li><a href="#">Champions League</a>
-                    </li>
-                    <li><a href="#">Cup Winners' Cup</a>
-                    </li>
-                    <li><a href="#">EHF Cup</a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
+    <div class="col-md-3">
+        <div class="well">
+            <form id="club-match-filter">
+                {% crispy form %}
+                <div class="form-actions">
+                    <a href="" class="btn btn-default">Clear Filters</a>
+                </div>
+            </form>
+        </div>
     </div>
     <div class="col-md-8">
-        <div class="list-group">
-            {% for match in match_list %}
-            <a href="#" class="list-group-item">
-                <div class="row">
-                    <div class="col-md-3 col-sm-4">
-                        <h5 class="list-group-item-heading"><b>{{ match.match_datetime|date:"d/m/Y H:i" }}</b></h5>
-                    </div>
-                    <div class="col-md-6 col-sm-4">
-                        <h5 class="list-group-item-heading">{{ match.home_team.name }} - {{ match.away_team.name }}</h5>
-                    </div>
-                    <div class="col-md-3 col-sm-4">
-                        <h5 class="list-group-item-heading">
-                        {% if match.is_future %} <span class="label label-info">In {{ match.match_datetime|timeuntil }}</span>
-                        {% elif not match.score_home and not match.score_away %} ?:?
-                        {% else %}{{ match.score_home }}:{{ match.score_away }}
-                            {% if match.is_draw %} <span class="label label-warning">D</span>
-                            {% else %}
-                                {% if match.home_team == club %}
-                                    {% if match.score_home > match.score_away %}
-                                    <span class="label label-success">W</span>
-                                    {% else %}
-                                    <span class="label label-danger">L</span>
-                                    {% endif %}
-                                {% else %}
-                                    {% if match.score_home < match.score_away %}
-                                    <span class="label label-success">W</span>
-                                    {% else %}
-                                    <span class="label label-danger">L</span>
-                                    {% endif %}
-                                {% endif %}
-                            {% endif %}
-                        {% endif %}
-                        </h5>
-                    </div>
-                </div>
-                <p class="list-group-item-text">{{ match.group.stage.comp_season.competition.name }}, {{ match.group.stage.name }}</p>
-            </a>
-            {% empty %}
-            <li class="list-group-item">No matches found.</li>
-            {% endfor %}
+        <div id="macth-list" class="list-group">
+            {% include "data/_club_match_filter.html" %}
         </div>
-
-    </div>
-    <div class="col-md-2">
-        <img src="http://placehold.it/160x600">
     </div>
 </div>
 
+{% endblock %}
+{% block extra_script %}
+<script type="text/javascript">
+    $('#id_season, #id_competition, #id_club').on("change", filterClubMatches);
+</script>
 {% endblock %}

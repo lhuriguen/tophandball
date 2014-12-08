@@ -31,6 +31,16 @@ function search_submit() {
     return false;
 }
 
+function filterClubMatches() {
+    var form_data = $("#club-match-filter").serialize();
+
+    $.get("?", form_data, function(data) {
+        $("#macth-list").html(data);
+    });
+
+    return false;
+}
+
 function makeSelect2Player(sel) {
     sel.select2({
         minimumInputLength: 2,
@@ -112,6 +122,7 @@ function genericUnfollow() {
 var main = function() {
 
     $("#search-form").submit(search_submit);
+    $("#club-match-filter").submit(filterClubMatches);
 
     $("#follow").click(function(e) {
         e.preventDefault();

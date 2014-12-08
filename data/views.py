@@ -65,11 +65,7 @@ class ClubDetailView(LoveMixin, generic.DetailView):
         context['name_list'] = self.object.clubname_set.select_related(
             'season').order_by('season__year_from')
         # Prepare context data for matches
-        context['comp_list'] = self.object.grouptable_set.select_related(
-            ).order_by(
-            'group__stage__comp_season__competition__is_international',
-            'group__stage__comp_season__competition__level',
-            'group__stage__order')
+        context['comp_list'] = self.object.get_competitions()
 
         return context
 
@@ -132,18 +128,44 @@ class ClubMatchView(LoveMixin, generic.ListView):
     template_name = 'data/club_matches.html'
     context_object_name = 'match_list'
 
+    def get(self, request, *args, **kwargs):
+        if self.request.is_ajax():
+            f = {}
+            if self.request.GET.get('season'):
+                f['group__stage__comp_season__season_id'] = self.request.GET['season']
+            if self.request.GET.get('competition'):
+                f['group__stage__comp_season__competition_id'] = self.request.GET['competition']
+            qs = self.get_queryset().filter(**f)
+            return render_to_response(
+                'data/_club_match_filter.html',
+                {'match_list': qs, 'club': self.object},
+                context_instance=RequestContext(self.request)
+            )
+        return super(ClubMatchView, self).get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(ClubMatchView, self).get_context_data(**kwargs)
         context['club'] = self.object
+
+        form = ClubMatchFilterForm()
+        form.fields['season'].queryset = Season.objects.filter(
+            competitionseason__stage__group__teams=self.object).distinct()
+        form.fields['competition'].queryset = Competition.objects.filter(
+            competitionseason__stage__group__teams=self.object).distinct()
+        context['form'] = form
+
         return context
 
     def get_queryset(self):
         self.object = get_object_or_404(Club, pk=self.kwargs['pk'])
-        if 'a' in self.request.GET:
+        if self.request.is_ajax():
+            if self.request.GET.get('club'):
+                return self.object.get_matches_with_rival(
+                    self.request.GET['club'])
             return self.object.get_matches()
         else:
-            return self.object.get_matches()[:5]
+            return self.object.get_matches()[:10]
 
 
 class ClubTeamView(LoveMixin, generic.ListView):
