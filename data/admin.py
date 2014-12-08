@@ -174,13 +174,16 @@ class MatchAdmin(admin.ModelAdmin):
     list_filter = ['match_datetime', 'group__stage__comp_season']
     list_display = ('home_team', 'away_team', 'match_datetime', 'location')
     search_fields = ['home_team__name', 'away_team__name']
-    raw_id_fields = ('referees', 'delegates')
+    # raw_id_fields = ('referees', 'delegates')
+    filter_horizontal = ('referees', 'delegates')
 
 
 class GroupAdmin(admin.ModelAdmin):
     inlines = [GroupTableInline, MatchInline]
     list_display = ['stage', 'order', 'name']
-    list_filter = ['stage__comp_season']
+    list_filter = ['stage__comp_season__competition',
+                   'stage__comp_season__season']
+    search_fields = ['stage__name']
 
     def get_form(self, request, obj=None, **kwargs):
         # just save obj reference for future processing in Inline
