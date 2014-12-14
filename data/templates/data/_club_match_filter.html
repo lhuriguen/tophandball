@@ -1,5 +1,5 @@
 {% for match in match_list %}
-<a href="{{ match.get_absolute_url }}" class="list-group-item">
+<a href="{{ match.get_absolute_url }}" class="list-group-item" title="{{ match.home_team }} vs {{ match.away_team }}">
     <div class="row">
         <div class="col-sm-3">
             <h5 class="list-group-item-heading"><b>{{ match.match_datetime|date:"d/m/Y H:i" }}</b></h5>

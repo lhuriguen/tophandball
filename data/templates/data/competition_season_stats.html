@@ -1,0 +1,70 @@
+{% extends "data/competition_season.html" %}
+
+{% block section_name %} · Statistics{% endblock %}
+
+{% block stage_detail %}
+<div class="row">
+    <div class="col-md-8">
+        <h3>Player statistics:</h3>
+        <table id="player-stats" class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th><abbr title="Matches"><i class="fa fa-calendar"></i></abbr></th>
+                    <th><abbr title="Goals"><i class="fa fa-bullseye"></i></abbr></th>
+                    <th><abbr title="Yellow cards"><i class="fa fa-square yellow-card"></i></abbr></th>
+                    <th><abbr title="Two minutes"><i class="fa fa-clock-o" ></i></abbr></th>
+                    <th><abbr title="Red cards"><i class="fa fa-square red-card"></i></abbr></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in player_stats %}
+                <tr>
+                    <td><a href="{{ p.get_absolute_url }}">{{ p.last_name }}, {{ p.first_name }}</a></td>
+                    <td>{{ p.matches }}</td>
+                    <td>{{ p.sum_goals }}</td>
+                    <td>{{ p.yellows }}</td>
+                    <td>{{ p.two_mins }}</td>
+                    <td>{{ p.reds }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="warning text-warning">No data found for the selected season.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-4 text-right">
+        <h3>Average score at home:</h3>
+        <p class="text-info" style="font-size: 400%;"><b style="border-bottom: 2px solid;">&nbsp{{ match_stats.avg_home|floatformat:"0" }}</b></p>
+        <h3>Average score away:</h3>
+        <p class="text-info" style="font-size: 400%;"><b style="border-bottom: 2px solid;">&nbsp{{ match_stats.avg_away|floatformat:"0" }}</b></p>
+        <h3>Average spectators per match:</h3>
+        <p class="text-info" style="font-size: 400%;"><b style="border-bottom: 2px solid;">&nbsp{{ match_stats.avg_spectators|floatformat:"0" }}</b></p>
+        {% if max_goals_match %}
+            <h3>Most goals in a match:</h3>
+            <p class="text-info" style="font-size: 400%;"><b style="border-bottom: 2px solid;">&nbsp{{ max_goals_match.goals }}</b></p>
+            <h3>by:</h3>
+            <p class="text-info" style="font-size: 200%;"><b>{{ max_goals_match.player.last_name }}</b></p>
+            <h3>for the match:</h3>
+            <p class="text-info" style="font-size: 200%;"><b>{{ max_goals_match.match.display_name }}</b></p>
+        {% endif %}
+    </div>
+</div>
+<div class="alert alert-warning alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <i class="fa fa-warning"></i> <strong>Warning!</strong> Statistics are gathered <b>exclusively</b> from data recorded on TopHandball. We cannot guarantee its accuracy but we try to be as close as possible.
+</div>
+{% endblock stage_detail %}
+
+{% block extra_script %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#stats").addClass("active");
+        $('#player-stats').DataTable({
+            "order": [[ 2, "desc" ]],
+            "pagingType": "full"
+        });
+    });
+</script>
+{% endblock %}

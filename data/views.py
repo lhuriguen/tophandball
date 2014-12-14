@@ -6,7 +6,7 @@ from django.views import generic
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Count, Q, Sum, get_model
+from django.db.models import Count, Q, Sum, get_model, Avg, Max
 
 from extra_views import ModelFormSetView
 
@@ -153,6 +153,7 @@ class ClubMatchView(LoveMixin, generic.ListView):
             competitionseason__stage__group__teams=self.object).distinct()
         form.fields['competition'].queryset = Competition.objects.filter(
             competitionseason__stage__group__teams=self.object).distinct()
+        form.fields['club'].queryset = Club.objects.exclude(pk=self.object.id)
         context['form'] = form
 
         return context
@@ -543,6 +544,45 @@ class CompSeasonDetailView(FavClubsMixin, generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super(CompSeasonDetailView, self).get_context_data(**kwargs)
         context['competition'] = self.object.competition
+        return context
+
+
+class CompSeasonStatsView(generic.DetailView):
+    model = CompetitionSeason
+    context_object_name = 'comp_season'
+    template_name = 'data/competition_season_stats.html'
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        comp_id = self.kwargs.get('comp_id', None)
+        year = self.kwargs.get('year', None)
+        queryset = queryset.filter(
+            competition__id=comp_id, season__year_from=year)
+        try:
+            # Get the single item from the filtered queryset
+            obj = queryset.get()
+        except ObjectDoesNotExist:
+            raise Http404(("No %(verbose_name)s found matching the query") %
+                          {'verbose_name': queryset.model._meta.verbose_name})
+        return obj
+
+    def get_context_data(self, **kwargs):
+        context = super(CompSeasonStatsView, self).get_context_data(**kwargs)
+        context['competition'] = self.object.competition
+        context['player_stats'] = self.object.get_player_stats()
+        max_goals = MatchPlayerStats.objects.filter(
+            match__group__stage__comp_season=self.object).aggregate(
+            max_goals=Max('goals'))['max_goals']
+        if max_goals:
+            context['max_goals_match'] = MatchPlayerStats.objects.filter(
+                match__group__stage__comp_season=self.object,
+                goals=max_goals).select_related('player', 'match')[0]
+        m = Match.objects.filter(group__stage__comp_season=self.object)
+        context['match_stats'] = m.aggregate(
+            avg_home=Avg('score_home'),
+            avg_away=Avg('score_away'),
+            avg_spectators=Avg('spectators'))
+
         return context
 
 

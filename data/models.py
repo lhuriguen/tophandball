@@ -3,7 +3,7 @@ import datetime
 
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.db.models import F, Q, Sum
+from django.db.models import F, Q, Sum, Count
 from django.utils import timezone
 from django.utils.text import slugify
 from django.contrib.auth.models import User
@@ -445,13 +445,27 @@ class CompetitionSeason(models.Model):
     def get_absolute_url(self):
         return reverse('data:comp_season',
                        kwargs={'year': self.season.year_from,
-                               'comp_id': self.competition.id
-                               })
+                               'comp_id': self.competition.id})
+
+    def get_stats_url(self):
+        return reverse('data:comp_season_stats',
+                       kwargs={'year': self.season.year_from,
+                               'comp_id': self.competition.id})
 
     def get_teams(self):
         return Club.objects.filter(
             grouptable__group__stage__comp_season=self
             ).order_by('name').distinct()
+
+    def get_player_stats(self):
+        return Player.objects.filter(
+            matchplayerstats__match__group__stage__comp_season=self).annotate(
+            sum_goals=Sum('matchplayerstats__goals'),
+            yellows=Sum('matchplayerstats__yellow_card'),
+            two_mins=Sum('matchplayerstats__two_minutes'),
+            reds=Sum('matchplayerstats__red_card'),
+            matches=Count('matchplayerstats')
+            ).order_by('-sum_goals')
 
     class Meta:
         unique_together = ('competition', 'season')
@@ -619,6 +633,10 @@ class Match(models.Model):
 
     def get_absolute_url(self):
         return reverse('data:match_detail', kwargs={'pk': self.pk})
+
+    @property
+    def display_name(self):
+        return self.home_team.display_name + ' v ' + self.away_team.display_name
 
     @property
     def display_result(self):
