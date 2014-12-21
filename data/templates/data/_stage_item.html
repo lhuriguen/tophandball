@@ -79,13 +79,15 @@
                             <td>{{ gt.position }}</td>
                             <td><img class="th-flag" src="{{ gt.team.country.flag }}" title="{{ gt.team.country.name }}"> <a href="{{ gt.team.get_absolute_url }}">{{ gt.team.name }}</a></td>
                             {% if st.type == 'RR' %}
-                            <td>{{ gt.num_matches }}</td>
-                            <td>{{ gt.wins.0 }}</td>
-                            <td>{{ gt.draws.0 }}</td>
-                            <td>{{ gt.losses.0 }}</td>
-                            <td>{{ gt.goals_for.0 }}</td>
-                            <td>{{ gt.goals_against.0 }}</td>
-                            <td>{{ gt.points }}</td>
+                            {% with ts=gt.table_stats %}
+                            <td>{{ ts.num_matches }}</td>
+                            <td>{{ ts.wins }}</td>
+                            <td>{{ ts.draws }}</td>
+                            <td>{{ ts.losses }}</td>
+                            <td>{{ ts.goals_for }}</td>
+                            <td>{{ ts.goals_against }}</td>
+                            <td>{{ ts.points }}</td>
+                            {% endwith %}
                             {% endif %}
                         </tr>
                     {% endfor %}

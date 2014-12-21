@@ -520,7 +520,7 @@ class Group(models.Model):
 
     def get_table(self):
         return GroupTable.objects.filter(
-            group=self).select_related('team').order_by('position')
+            group=self).select_related('team', 'group').order_by('position')
 
     def get_matches(self):
         return self.match_set.select_related(
@@ -547,9 +547,32 @@ class GroupTable(models.Model):
     def query(self):
         return Q(home_team=self.team) | Q(away_team=self.team)
 
+    def get_matches(self):
+        return self.group.get_matches().filter(self.query())
+
     @property
-    def matches(self):
-        return self.group.match_set.filter(self.query()).order_by('date')
+    def table_stats(self):
+        stats = {'wins': 0, 'losses': 0, 'draws': 0,
+                 'goals_for': 0, 'goals_against': 0}
+        # Get all the matches first.
+        matches = self.get_matches().filter(score_home__gt=0, score_away__gt=0)
+        stats['num_matches'] = len(matches)
+        # Calculate stats from the queryset.
+        for m in matches:
+            stats['draws'] += m.score_home == m.score_away
+            if m.home_team == self.team:
+                stats['wins'] += m.score_home > m.score_away
+                stats['losses'] += m.score_home < m.score_away
+                stats['goals_for'] += m.score_home
+                stats['goals_against'] += m.score_away
+            else:
+                stats['wins'] += m.score_away > m.score_home
+                stats['losses'] += m.score_away < m.score_home
+                stats['goals_for'] += m.score_away
+                stats['goals_against'] += m.score_home
+        stats['points'] = stats['wins'] * 2 + stats['draws'] * 1
+        stats['points'] += self.start_points
+        return stats
 
     @property
     def num_matches(self):
@@ -636,7 +659,8 @@ class Match(models.Model):
 
     @property
     def display_name(self):
-        return self.home_team.display_name + ' v ' + self.away_team.display_name
+        return (self.home_team.display_name + ' v ' +
+                self.away_team.display_name)
 
     @property
     def display_result(self):
