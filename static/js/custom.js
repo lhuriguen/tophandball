@@ -59,7 +59,8 @@ function makeSelect2Player(sel) {
                     results: $.map(data, function (item) {
                         return {
                             text: item.fields.first_name + ' ' + item.fields.last_name ,
-                            id: item.pk
+                            id: item.pk,
+                            url: "/data/players/" + item.pk + "/"
                         };
                     })
                 };
@@ -78,6 +79,88 @@ function makeSelect2Player(sel) {
                 });
             }
         }
+    });
+}
+
+function makeSelect2Club(sel) {
+    sel.select2({
+        minimumInputLength: 3,
+        ajax: {
+            url: "/data/api/club_search/",
+            dataType: 'json',
+            type: "GET",
+            quietMillis: 50,
+            data: function (term) {
+                return {
+                    q: term
+                };
+            },
+            results: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            text: item.fields.name,
+                            id: item.pk,
+                            url: "/data/clubs/" + item.pk + "/"
+                        };
+                    })
+                };
+            }
+        },
+        initSelection : function (element, callback) {
+            var id=$(element).val();
+            if (id!=="") {
+                $.ajax("/data/api/club/" + id +"/", {
+                    dataType: "json"
+                }).done(function (data) {
+                    callback({
+                        id: data[0].pk,
+                        text: data[0].fields.name
+                    });
+                });
+            }
+        }
+    });
+}
+
+function makeSelect2Search(sel) {
+    sel.select2({
+        minimumInputLength: 3,
+        ajax: {
+            url: "/data/api/search_all/",
+            dataType: 'json',
+            type: "GET",
+            quietMillis: 50,
+            data: function (term) {
+                return {
+                    q: term
+                };
+            },
+            results: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        var model = item.model;
+                        var url = (model == "data.club" ? "/data/clubs/" : "/data/players/");
+                        var name = (model == "data.club" ? item.fields.name : item.fields.first_name + ' ' + item.fields.last_name);
+                        return {
+                            text: name,
+                            id: item.pk,
+                            url: url + item.pk + "/",
+                            type: model
+                        };
+                    })
+                };
+            }
+        },
+        formatResult : function(item) {
+            var css_class = "";
+            if (item.type == "data.club") {
+                css_class = "fa-group";
+            } else {
+                css_class = "fa-user";
+            }
+            return '<i class="fa ' + css_class + '"></i> ' + item.text
+        },
     });
 }
 
@@ -134,7 +217,14 @@ var main = function() {
 
     $("select").addClass("th-selectable");
     makeSelect2Player($(".select-player"));
+    makeSelect2Club($(".select-club"));
+    makeSelect2Search($(".select-search"));
     makeSelect2($(".th-selectable"));
+
+    $('.th-search-go').on("change", function() {
+        var x = $(this).select2('data');
+        window.location.href = x.url;
+    });
 
     $(".dateinput").datepicker({
         format: 'dd/mm/yyyy',

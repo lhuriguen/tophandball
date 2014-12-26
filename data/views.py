@@ -37,13 +37,12 @@ class ClubIndexView(FavClubsMixin, generic.ListView):
 
     def get_queryset(self):
         queryset = super(ClubIndexView, self).get_queryset()
-        if 'name' in self.request.GET:
-            return queryset.filter(
-                name__icontains=self.request.GET['name'])
-        if 'country' in self.request.GET:
-            return queryset.filter(
-                country=self.request.GET['country'])
-        return queryset
+        f = {}
+        if self.request.GET.get('name'):
+            f['name__icontains'] = self.request.GET['name']
+        if self.request.GET.get('country'):
+            f['country'] = self.request.GET['country']
+        return queryset.filter(**f)
 
     def get_context_data(self, **kwargs):
         context = super(ClubIndexView, self).get_context_data(**kwargs)
@@ -51,8 +50,10 @@ class ClubIndexView(FavClubsMixin, generic.ListView):
         context['popular_list'] = Club.objects.annotate(
             num_fans=Count('fans')).filter(num_fans__gt=0)\
             .order_by('-num_fans')[:5]
-        context['countries'] = Club.objects.values_list('country', flat=True)\
-            .order_by('country').distinct()
+        form = ClubFilterForm(self.request.GET or None)
+        context['form'] = form
+        context['club_field'] = forms.ModelChoiceField(
+            queryset=Club.objects.all())
         return context
 
 
@@ -270,13 +271,18 @@ class PlayerIndexView(generic.ListView):
 
     def get_queryset(self):
         queryset = super(PlayerIndexView, self).get_queryset()
-        if 'country' in self.request.GET and self.request.GET['country']:
-            queryset = queryset.filter(country=self.request.GET['country'])
-        if 'position' in self.request.GET and self.request.GET['position']:
-            queryset = queryset.filter(position=self.request.GET['position'])
+        f = {}
+        if self.request.GET.get('country'):
+            f['country'] = self.request.GET['country']
+        if self.request.GET.get('position'):
+            f['position__in'] = self.request.GET.getlist('position')
+        if self.request.GET.get('first_name'):
+            f['first_name__icontains'] = self.request.GET['first_name']
+        if self.request.GET.get('last_name'):
+            f['last_name__icontains'] = self.request.GET['last_name']
         # if not 'retired' in self.request.GET:
         #     queryset = queryset.exclude(retired=True)
-        return queryset.order_by('last_name')
+        return queryset.filter(**f).order_by('last_name')
 
     def get_context_data(self, **kwargs):
         context = super(PlayerIndexView, self).get_context_data(**kwargs)
@@ -284,9 +290,9 @@ class PlayerIndexView(generic.ListView):
         context['popular_list'] = Player.objects.annotate(
             num_fans=Count('fans')).filter(num_fans__gt=0)\
             .order_by('-num_fans')[:5]
-        context['countries'] = Player.objects.values_list(
-            'country', flat=True).order_by('country').distinct()
         context['positions'] = Player.POSITION_CHOICES
+        form = PlayerFilterForm(self.request.GET or None)
+        context['form'] = form
         if self.request.user.is_authenticated():
             context['user_favs'] = Player.objects.filter(
                 fans__username=self.request.user.username).values_list(
@@ -420,23 +426,48 @@ def player_love(request, player_id):
 from django.core import serializers
 
 
+class ClubJSONView(generic.ListView):
+    model = Club
+
+    def get_queryset(self):
+        base_qs = super(ClubJSONView, self).get_queryset()
+        if self.request.GET.get('q'):
+            return base_qs.filter(name__icontains=self.request.GET['q'])
+        return base_qs
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponse(
+            serializers.serialize('json', self.get_queryset()),
+            content_type='application/json'
+        )
+
+
+class ClubAPIView(generic.DetailView):
+    model = Club
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponse(
+            serializers.serialize('json', [self.get_object()]),
+            content_type='application/json'
+        )
+
+
 class PlayerJSONView(generic.ListView):
     model = Player
 
     def get_queryset(self):
         base_qs = super(PlayerJSONView, self).get_queryset()
-        if 'q' in self.request.GET:
+        if self.request.GET.get('q'):
             words = self.request.GET['q'].split()
-            # Turn list of values into list of Q objects
-            queries = [Q(first_name__icontains=value)
-                       for value in words]
-            queries += [Q(last_name__icontains=value)
-                        for value in words]
+            queries = []
+            for value in words:
+                queries += [Q(first_name__icontains=value) |
+                            Q(last_name__icontains=value)]
             # Take one Q object from the list
             query = queries.pop()
-            # Or the Q object with the ones remaining in the list
+            # And the Q object with the ones remaining in the list
             for item in queries:
-                query |= item
+                query &= item
             return base_qs.filter(query)
         return base_qs
 
@@ -455,6 +486,35 @@ class PlayerAPIView(generic.DetailView):
             serializers.serialize('json', [self.get_object()]),
             content_type='application/json'
         )
+
+
+class SearchJSONView(generic.View):
+
+    def get_clubs(self):
+        return Club.objects.filter(
+            name__icontains=self.request.GET['q'])
+
+    def get_players(self):
+        words = self.request.GET['q'].split()
+        queries = []
+        for value in words:
+            queries += [Q(first_name__icontains=value) |
+                        Q(last_name__icontains=value)]
+        # Take one Q object from the list
+        query = queries.pop()
+        # And the Q object with the ones remaining in the list
+        for item in queries:
+            query &= item
+        return Player.objects.filter(query)
+
+    def get_json(self):
+        if self.request.GET.get('q'):
+            from itertools import chain
+            combined = list(chain(self.get_clubs(), self.get_players()))
+            return serializers.serialize('json', combined)
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponse(self.get_json(), content_type='application/json')
 
 
 class ClubTeamEditView(LoginRequiredMixin, LoveMixin, ModelFormSetView):

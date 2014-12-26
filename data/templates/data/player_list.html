@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load th_extra %}
+{% load th_extra crispy_forms_tags %}
 
 {% block title %}Player index{% endblock %}
 {% block active_player %}active{% endblock %}
@@ -17,17 +17,17 @@
 <div class="th-content">
 <div class="row">
     <div class="col-sm-5 col-md-3">
-        <form action="" method="get" id="search-form">
-            <div class="input-group input-group-lg">
-                <input type="text" class="form-control" id="id_query" name="name" placeholder="Search here!">
-                <span class="input-group-btn">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
-                </span>
-            </div>
-        </form>
-        <p></p>
-        <div id="search-results">
-            {% include "data/_player_search.html" %}
+        <div class="form-group">
+            <input type="text" class="form-control input-lg select-player th-search-go" data-placeholder="Quick Search & Go!">
+        </div>
+        <div class="well">
+            <form id="player-filter">
+                {% crispy form %}
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                    <a href="." class="btn btn-default">Clear Filters</a>
+                </div>
+            </form>
         </div>
         <div class="panel panel-primary">
             <div class="panel-heading">
@@ -42,42 +42,11 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-7 col-md-8">
-        <div class="well">
-            <div class="row">
-                <div class="col-md-7">
-                    <p class="lead">Country</p>
-                    <ul class="list-inline">
-                        <li><a href="{% append_to_get country='',page='' %}" class=""><b>Show all</b></a></li>
-                        {% for country in countries %}
-                        {% if request.GET.country == country %}
-                        <li>{{ country|country_name }}</li>
-                        {% else %}
-                        <li><a href="{% append_to_get country=country,page='' %}">{{ country|country_name }}</a></li>
-                        {% endif %}
-                        {% endfor %}
-                    </ul>
-                </div>
-                <div class="col-md-5">
-                    <p class="lead">Playing position</p>
-                    <ul class="list-inline">
-                        <li><a href="{% append_to_get position='',page='' %}"><b>Show all</b></a></li>
-                        {% for position in positions %}
-                        {% if request.GET.position == position.0 %}
-                        <li>{{ position.1 }}</li>
-                        {% else %}
-                        <li><a href="{% append_to_get position=position.0,page='' %}">{{ position.1 }}</a></li>
-                        {% endif %}
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        </div>
-        {% if request.GET.country or request.GET.position %}
-        <h4><i>Showing <b>{{ paginator.count }}</b>
-        {% if request.GET.position %} {{ request.GET.position|choice_display:positions }}{{ player_list|pluralize }}
-        {% else %} player{{ player_list|pluralize }}{% endif %}
+    <div class="col-sm-7 col-md-9">
+        {% if request.GET.country or request.GET.position or request.GET.first_name or request.GET.last_name %}
+        <h4><i>Showing <b>{{ paginator.count }}</b> player{{ player_list|pluralize }}
         {% if request.GET.country %} from {{ request.GET.country|country_name }}{% endif %}
+        {% if request.GET.first_name or request.GET.last_name %} matching {{ request.GET.first_name }} {{ request.GET.last_name }}{% endif %}
         </i></h4>
         {% else %}
         <h4><i>Showing <b>all</b> players</i></h4>

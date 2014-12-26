@@ -74,10 +74,16 @@ urlpatterns = patterns(
     url(r'^matches/(?P<pk>\d+)/$',
         views.MatchDetailView.as_view(), name='match_detail'),
     # API test
+    url(r'api/club_search/$',
+        views.ClubJSONView.as_view(), name='club_search_api'),
+    url(r'api/club/(?P<pk>\d+)/$',
+        views.ClubAPIView.as_view(), name='club_get_api'),
     url(r'api/player_search/$',
         views.PlayerJSONView.as_view(), name='player_search_api'),
     url(r'api/player/(?P<pk>\d+)/$',
         views.PlayerAPIView.as_view(), name='player_get_api'),
+    url(r'api/search_all/$',
+        views.SearchJSONView.as_view(), name='search_all_api'),
     # Generic unfollow
     url(r'unfollow/$', views.unfollow, name='unfollow')
     )

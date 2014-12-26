@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load th_extra %}
+{% load th_extra crispy_forms_tags %}
 
 {% block title %}Club index{% endblock %}
 {% block active_club %}active{% endblock %}
@@ -17,17 +17,17 @@
 <div class="th-content">
 <div class="row">
     <div class="col-sm-5 col-md-3">
-        <form action="" method="get" id="search-form">
-            <div class="input-group input-group-lg">
-                <input type="text" class="form-control" id="id_query" name="name" placeholder="Search here!">
-                <span class="input-group-btn">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
-                </span>
-            </div>
-        </form>
-        <p></p>
-        <div id="search-results">
-            {% include "data/_club_search.html" %}
+        <div class="form-group">
+            <input type="text" class="form-control input-lg select-club th-search-go" data-placeholder="Quick Search & Go!">
+        </div>
+        <div class="well">
+            <form id="club-filter">
+                {% crispy form %}
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                    <a href="." class="btn btn-default">Clear Filters</a>
+                </div>
+            </form>
         </div>
         <div class="panel panel-primary">
             <div class="panel-heading">
@@ -42,22 +42,9 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-7 col-md-8">
-        <div class="well">
-            <p class="lead">Country</p>
-            <ul class="list-inline">
-                <li><a href="."><b>Show all</b></a></li>
-                {% for country in countries %}
-                {% if request.GET.country == country %}
-                <li>{{ country|country_name }}</li>
-                {% else %}
-                <li><a href="?country={{ country }}">{{ country|country_name }}</a></li>
-                {% endif %}
-                {% endfor %}
-            </ul>
-        </div>
-        {% if request.GET.country %}
-        <h4><i>Showing <b>{{ club_list|length }}</b> club{{ club_list|pluralize }} from {{ request.GET.country|country_name }}</i></h4>
+    <div class="col-sm-7 col-md-9">
+        {% if request.GET.country or request.GET.name %}
+        <h4><i>Showing <b>{{ club_list|length }}</b> club{{ club_list|pluralize }} {% if request.GET.country %}from {{ request.GET.country|country_name }} {% endif %}{% if request.GET.name %}matching {{ request.GET.name }} {% endif %}</i></h4>
         {% else %}
         <h4><i>Showing <b>all</b> clubs</i></h4>
         {% endif %}

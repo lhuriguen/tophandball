@@ -5,7 +5,10 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Row, Field, Div
 from crispy_forms.bootstrap import AppendedText
 
-from .models import *
+from django_countries import countries
+
+from .models import (Player, PlayerContract, PlayerName, Club, ClubName,
+                     Season, Competition)
 from .widgets import SingleImageInput
 
 
@@ -191,7 +194,16 @@ class SeasonForm(forms.Form):
         queryset=Season.objects.all(), empty_label=None)
 
 
-class ClubMatchFilterForm(forms.Form):
+class BasicFilterForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        super(BasicFilterForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.form_tag = False
+        self.helper.disable_csrf = True
+
+
+class ClubMatchFilterForm(BasicFilterForm):
     season = forms.ModelChoiceField(
         queryset=Season.objects.all(),
         empty_label='All Seasons',
@@ -206,11 +218,29 @@ class ClubMatchFilterForm(forms.Form):
         empty_label='All Clubs',
         required=False)
 
-    def __init__(self, *args, **kwargs):
-        super(ClubMatchFilterForm, self).__init__(*args, **kwargs)
-        self.helper = FormHelper(self)
-        self.helper.form_tag = False
-        self.helper.disable_csrf = True
+
+class ClubFilterForm(BasicFilterForm):
+    countries_empty = [('', 'All Countries')] + list(countries)
+
+    country = forms.ChoiceField(
+        choices=countries_empty,
+        required=False)
+    name = forms.CharField(required=False)
+
+
+class PlayerFilterForm(BasicFilterForm):
+    countries_empty = [('', 'All Countries')] + list(countries)
+    positions_empty = [('', 'All Positions')] + list(Player.POSITION_CHOICES)
+
+    country = forms.ChoiceField(
+        choices=countries_empty, required=False)
+    position = forms.MultipleChoiceField(
+        label='Playing Position(s)',
+        choices=Player.POSITION_CHOICES,
+        required=False)
+    first_name = forms.CharField(required=False)
+    last_name = forms.CharField(required=False)
+
 
 # Formsets
 PlayerContractFormSet = inlineformset_factory(
