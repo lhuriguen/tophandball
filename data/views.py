@@ -614,12 +614,18 @@ class MatchDetailView(FavClubsMixin, generic.DetailView):
         valid = self.object and home and away
         if not valid:
             return
-        context['HT'] = (home.halftime_score or '?', away.halftime_score or '?')
-        context['ET1'] = (home.score_et1 or '-', away.score_et1 or '-')
-        context['ET2'] = (home.score_et2 or '-', away.score_et2 or '-')
-        context['7m'] = (home.score_7m or '-', away.score_7m or '-')
-        context['7GI'] = (home.given_7m or '-', away.given_7m or '-')
-        context['7GO'] = (home.goals_7m or '-', away.goals_7m or '-')
+        context['HT'] = (home.halftime_score or '?',
+                         away.halftime_score or '?')
+        context['ET1'] = (home.score_et1 or '-',
+                          away.score_et1 or '-')
+        context['ET2'] = (home.score_et2 or '-',
+                          away.score_et2 or '-')
+        context['7m'] = (home.score_7m or '-',
+                         away.score_7m or '-')
+        context['7GI'] = (home.given_7m or '-',
+                          away.given_7m or '-')
+        context['7GO'] = (home.goals_7m or '-',
+                          away.goals_7m or '-')
 
 
 @login_required
@@ -634,7 +640,8 @@ def unfollow(request):
         object.fans.remove(request.user)
 
         if request.is_ajax():
-            return HttpResponse('{"result": "OK"}', content_type='application/json')
+            return HttpResponse(
+                '{"result": "OK"}', content_type='application/json')
         # Fallback in case JavaScript is disabled.
         return HttpResponseRedirect(reverse('profile:index'))
 

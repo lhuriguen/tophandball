@@ -18,12 +18,12 @@ class Season(models.Model):
     class Meta:
         unique_together = ('year_from', 'year_to')
 
+    def __unicode__(self):
+        return u'%s' % (self.name)
+
     @property
     def name(self):
         return '%s/%s' % (self.year_from, str(self.year_to)[-2:])
-
-    def __unicode__(self):
-        return u'%s' % (self.name)
 
     @staticmethod
     def curr_year():
@@ -153,6 +153,9 @@ class Person(models.Model):
         max_length=1, choices=GENDER_CHOICES, default=FEMALE)
     photo = models.ImageField(upload_to='people', blank=True, null=True)
 
+    class Meta:
+        abstract = True
+
     @property
     def full_name(self):
         "Returns the person's full name."
@@ -171,9 +174,6 @@ class Person(models.Model):
             return self.photo.url
         else:
             return u'http://placehold.it/320x400&text=No+Image'
-
-    class Meta:
-        abstract = True
 
     def has_photo(self):
         if self.photo:
@@ -239,13 +239,13 @@ class Player(Person):
     def __unicode__(self):
         return u'%s' % (self.full_name)
 
-    @property
-    def is_goalkeeper(self):
-        return self.position == Player.GOALKEEPER
-
     def get_absolute_url(self):
         return reverse('data:player_detail',
                        kwargs={'pk': self.pk, 'slug': slugify(self.full_name)})
+
+    @property
+    def is_goalkeeper(self):
+        return self.position == Player.GOALKEEPER
 
     @property
     def current_contract(self):
@@ -268,13 +268,13 @@ class PlayerName(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
 
+    def __unicode__(self):
+        return u'%s - %s %s' % (self.player, self.first_name, self.last_name)
+
     @property
     def full_name(self):
         "Returns the person's full name."
         return '%s %s' % (self.first_name, self.last_name)
-
-    def __unicode__(self):
-        return u'%s - %s %s' % (self.player, self.first_name, self.last_name)
 
 
 class Contract(models.Model):
@@ -335,17 +335,17 @@ class PlayerContract(Contract):
     photo = models.ImageField(
         upload_to=player_contract_filename, blank=True, null=True)
 
+    def __unicode__(self):
+        return u'%s (%s) in %s (%s)' % (
+            self.player.full_name, self.player.position,
+            self.club.name, self.season.name)
+
     @property
     def photo_url(self):
         if self.photo:
             return self.photo.url
         else:
             return self.player.photo_url
-
-    def __unicode__(self):
-        return u'%s (%s) in %s (%s)' % (
-            self.player.full_name, self.player.position,
-            self.club.name, self.season.name)
 
     def is_current(self):
         today = datetime.datetime.today()
@@ -439,6 +439,9 @@ class CompetitionSeason(models.Model):
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
 
+    class Meta:
+        unique_together = ('competition', 'season')
+
     def __unicode__(self):
         return u'%s %s' % (self.competition.name, self.season.name)
 
@@ -467,9 +470,6 @@ class CompetitionSeason(models.Model):
             matches=Count('matchplayerstats')
             ).order_by('-sum_goals')
 
-    class Meta:
-        unique_together = ('competition', 'season')
-
 
 class Stage(models.Model):
     """Represents a round or stage in a competition"""
@@ -490,6 +490,9 @@ class Stage(models.Model):
     is_qualification = models.BooleanField(default=False)
     type = models.CharField(max_length=2, choices=TYPE_CHOICES)
 
+    class Meta:
+        ordering = ['order']
+
     def __unicode__(self):
         return u'%s %s. %s' % (self.comp_season, self.order, self.name)
 
@@ -505,15 +508,15 @@ class Stage(models.Model):
             grouptable__group__stage=self
             ).order_by('name')
 
-    class Meta:
-        ordering = ['order']
-
 
 class Group(models.Model):
     stage = models.ForeignKey(Stage)
     order = models.PositiveSmallIntegerField('Group order')
     name = models.CharField(max_length=30)
     teams = models.ManyToManyField(Club, through='GroupTable')
+
+    class Meta:
+        ordering = ['order']
 
     def __unicode__(self):
         return u'%s - %s' % (self.stage, self.name)
@@ -526,9 +529,6 @@ class Group(models.Model):
         return self.match_set.select_related(
             'home_team', 'away_team').order_by('match_datetime')
 
-    class Meta:
-        ordering = ['order']
-
 
 class GroupTable(models.Model):
     group = models.ForeignKey(Group)
@@ -537,12 +537,12 @@ class GroupTable(models.Model):
     start_points = models.SmallIntegerField(
         default=0, help_text="Additional points to add or take away.")
 
-    def __unicode__(self):
-        return u'%s %s' % (self.group, self.team)
-
     class Meta:
         unique_together = ('group', 'team')
         ordering = ['position']
+
+    def __unicode__(self):
+        return u'%s %s' % (self.group, self.team)
 
     def query(self):
         return Q(home_team=self.team) | Q(away_team=self.team)
@@ -647,12 +647,12 @@ class Match(models.Model):
     referees = models.ManyToManyField('Referee', blank=True)
     delegates = models.ManyToManyField('Delegate', blank=True)
 
+    class Meta:
+        verbose_name_plural = 'matches'
+
     def __unicode__(self):
         return u'%s vs %s on %s' % (
             self.home_team, self.away_team, self.match_datetime)
-
-    class Meta:
-        verbose_name_plural = 'matches'
 
     def get_absolute_url(self):
         return reverse('data:match_detail', kwargs={'pk': self.pk})
@@ -745,6 +745,10 @@ class MatchTeamStats(models.Model):
     two_minutes = models.PositiveSmallIntegerField(blank=True, null=True)
     red_card = models.BooleanField(default=False)
 
+    class Meta:
+        verbose_name_plural = 'team stats'
+        unique_together = ('match', 'club')
+
     def __unicode__(self):
         return u'%s in %s' % (self.club, self.match)
 
@@ -777,10 +781,6 @@ class MatchTeamStats(models.Model):
         except:
             return 0
 
-    class Meta:
-        verbose_name_plural = 'team stats'
-        unique_together = ('match', 'club')
-
 
 class MatchPlayerStats(models.Model):
     match = models.ForeignKey(Match)
@@ -799,12 +799,12 @@ class MatchPlayerStats(models.Model):
     red_card = models.BooleanField(default=False)
     # playing_time = models.FloatField(default=0)
 
-    def __unicode__(self):
-        return u'%s in %s' % (self.player, self.match)
-
     class Meta:
         verbose_name_plural = 'player stats'
         unique_together = ('match', 'club', 'player')
+
+    def __unicode__(self):
+        return u'%s in %s' % (self.player, self.match)
 
 
 class Referee(models.Model):
@@ -817,11 +817,6 @@ class Referee(models.Model):
 
     def __unicode__(self):
         return u'%s (%s)' % (self.name, self.country)
-
-    def save(self, *args, **kwargs):
-        super(Referee, self).save(*args, **kwargs)
-        if self.pair:
-            self.pair.pair = self
 
 
 class Delegate(models.Model):
