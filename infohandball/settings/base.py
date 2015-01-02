@@ -160,8 +160,14 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 CRISPY_FAIL_SILENTLY = not DEBUG
 
 COUNTRIES_OVERRIDE = {
-    'XK': 'Kosovo',
+    # Common names:
     'MK': 'Macedonia',
     'RU': 'Russia',
     'MD': 'Moldova',
+    # Unofficial:
+    'XK': 'Kosovo',
+    'XE': 'England',
+    'XS': 'Scotland',
+    'XW': 'Wales',
+    'EU': 'European Union'
 }
