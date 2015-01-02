@@ -547,7 +547,9 @@ class ClubTeamEditView(LoginRequiredMixin, LoveMixin, ModelFormSetView):
         else:
             self.year = self.request.GET.get('season', '') or Season.curr_year()
         qs = super(ClubTeamEditView, self).get_queryset()
-        return qs.filter(club_id=self.club, season__year_from=self.year)
+        return qs.filter(
+            club_id=self.club, season__year_from=self.year
+            ).order_by('shirt_number')
 
     def get_success_url(self):
         url = reverse('data:club_team', kwargs={'pk': self.club.pk})
