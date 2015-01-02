@@ -6,6 +6,7 @@
 <div class="row">
     <div class="col-md-8">
         <h3>Player statistics:</h3>
+        {% if player_stats %}
         <table id="player-stats" class="table table-condensed">
             <thead>
                 <tr>
@@ -27,12 +28,14 @@
                     <td>{{ p.two_mins }}</td>
                     <td>{{ p.reds }}</td>
                 </tr>
-                {% empty %}
-                <tr><td colspan="5" class="warning text-warning">No data found for the selected season.</td>
-                </tr>
                 {% endfor %}
             </tbody>
         </table>
+        {% else %}
+        <div class="alert alert-warning" role="alert">
+          <i class="fa fa-warning"></i> No data found for the selected season.
+        </div>
+        {% endif %}
     </div>
     <div class="col-md-4 text-right">
         <h3>Average score at home:</h3>
