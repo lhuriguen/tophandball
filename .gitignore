@@ -58,3 +58,4 @@ docs/_build/
 *.old
 .ipynb_checkpoints
 *.ipynb
+media/
