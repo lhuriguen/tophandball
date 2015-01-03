@@ -347,6 +347,13 @@ class PlayerContract(Contract):
         else:
             return self.player.photo_url
 
+    @property
+    def career_photo_url(self):
+        if self.photo:
+            return self.photo.url
+        else:
+            return u'http://placehold.it/320x400&text=No+Image'
+
     def is_current(self):
         today = datetime.datetime.today()
         middle = datetime.date(today.year, 7, 1)
@@ -354,6 +361,20 @@ class PlayerContract(Contract):
         if today < middle:
             season_year -= 1
         return self.season.year_from == season_year
+
+    def get_stats(self):
+        qs = MatchPlayerStats.objects.filter(
+            player=self.player,
+            club=self.club,
+            match__group__stage__comp_season__season=self.season)
+        return qs.aggregate(
+            num_matches=Count('match'),
+            goals=Sum('goals'),
+            saves=Sum('saves'),
+            yellows=Sum('yellow_card'),
+            two_mins=Sum('two_minutes'),
+            reds=Sum('red_card')
+            )
 
 
 class Coach(Person):

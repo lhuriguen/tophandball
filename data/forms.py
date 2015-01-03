@@ -242,6 +242,21 @@ class PlayerFilterForm(BasicFilterForm):
     last_name = forms.CharField(required=False)
 
 
+class PlayerMatchFilterForm(BasicFilterForm):
+    season = forms.ModelChoiceField(
+        queryset=Season.objects.all(),
+        empty_label='All Seasons',
+        required=False)
+    competition = forms.ModelChoiceField(
+        queryset=Competition.objects.all(),
+        empty_label='All Competitions',
+        required=False)
+    club = forms.ModelChoiceField(
+        label='Playing for',
+        queryset=Club.objects.all(),
+        empty_label='All Clubs',
+        required=False)
+
 # Formsets
 PlayerContractFormSet = inlineformset_factory(
     Player, PlayerContract, form=PlayerContractInline,

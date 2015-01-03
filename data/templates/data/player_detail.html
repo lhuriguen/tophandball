@@ -1,4 +1,5 @@
 {% extends "data/base_player.html" %}
+{% load th_extra %}
 {% block active_home %}active{% endblock %}
 {% block specific %}
 
@@ -41,44 +42,36 @@
         </div>
     </div>
     <div class="col-sm-12 col-md-6">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Latest matches</h3>
+        {% for contract in club_career %}
+        <div class="media">
+            <div class="media-left">
+                <img class="img-person" src="{{ contract.career_photo_url }}" alt="Season photo">
             </div>
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Match</th>
-                        {% if player.position == "GK" %}<th><abbr title="Saves"><i class="fa fa-life-ring" ></i></abbr></th>{% endif %}
-                        <th><abbr title="Goals"><i class="fa fa-bullseye" ></i></abbr></th>
-                        <th><abbr title="Yellow card">YC</abbr></th>
-                        <th><abbr title="Two minutes">2'</abbr></th>
-                        <th><abbr title="Red card">RC</abbr></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for ms in matches %}
-                    <tr>
-                        <td><small><strong>{{ ms.match.match_datetime|date:"d/m/Y H:i" }}</strong></small> <a href="{{ ms.match.get_absolute_url }}">{{ ms.match.home_team }} vs {{ ms.match.away_team }}</a><br><small>{{ ms.match.group.stage.comp_season.competition.name }}, {{ ms.match.group.stage.name }}</small>
-                        </td>
-                        {% if player.position == "GK" %}
-                        <td>{{ ms.saves|default_if_none:"?" }}{% if ms.saves_7m %} ({{ ms.saves_7m }}){% endif %}</td>
-                        {% endif %}
-                        <td>{{ ms.goals|default_if_none:"?" }}{% if ms.goals_7m %} ({{ ms.goals_7m }}){% endif %}</td>
-                        <td>{% if ms.yellow_card %}<i class="fa fa-square yellow-card" ></i>{% else %}-{% endif %}</td>
-                        <td>{% if ms.two_minutes > 0 %}{{ ms.two_minutes }}{% else %}-{% endif %}</td>
-                        <td>{% if ms.red_card %}<i class="fa fa-square red-card" ></i>{% else %}-{% endif %}</td>
-                    </tr>
-                    {% empty %}
-                    <tr><td colspan="{% if player.position == "GK" %}6{% else %}5{% endif %}">No matches found.</td></tr>
-                    {% endfor %}
-                    <tr class="info"><td colspan="{% if player.position == "GK" %}6{% else %}5{% endif %}" class="text-center"><a href="#">All matches</a></tr>
-                </tbody>
-            </table>
+            <div class="media-body th-match-header media-top">
+                <div class="th-match-logo" style="background-image: url('{{ contract.club.logo_url }}')"></div>
+                <h4 class="media-heading">{{ contract.season.name }} &ndash; {{ contract.club.name }}
+                {% if contract.arrival_month %}<small>(since {{ contract.get_arrival_month_display }})</small>{% endif %}{% if contract.departure_month %} <small>(until {{ contract.get_departure_month_display }})</small>{% endif %}</h4>
+                <ul class="list-inline">
+                    {% with stats=contract.get_stats %}
+                    <li>{{ stats.num_matches }} {% th_icon_matches %}</li>
+                    {% if player.position == "GK" %}<li>{{ stats.saves|default_if_none:"?" }} {% th_icon_saves %}</li>{% endif %}
+                    <li>{{ stats.goals|default_if_none:"?" }} {% th_icon_goals %}</li>
+                    <li>{{ stats.yellows|default_if_none:"?" }} {% th_icon_yellow %}</li>
+                    <li>{{ stats.two_mins|default_if_none:"?" }} {% th_icon_two_mins %}</li>
+                    <li>{{ stats.reds|default_if_none:"?" }} {% th_icon_red %}</li>
+                    {% endwith %}
+                </ul>
+                <a class="btn btn-link" href="{% url 'data:club_team' pk=contract.club.id %}?season={{ contract.season.year_from }}"><i class="fa fa-group"></i> View team</a>
+                <a class="btn btn-link" href="{% url 'data:player_matches' pk=player.id %}?season={{ contract.season.id }}&club={{ contract.club.id }}"><i class="fa fa-calendar"></i> View matches</a>
+            </div>
         </div>
+        {% if not forloop.last %}
+        <hr>
+        {% endif %}
+        {% endfor %}
     </div>
     <div class="col-sm-6 col-md-3">
-        <div class="panel panel-primary">
+        <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title"><i class="fa fa-group"></i> Current teammates</h3>
             </div>

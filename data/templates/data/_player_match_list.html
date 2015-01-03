@@ -1,0 +1,37 @@
+{% load th_extra %}
+
+<h4><i>Showing <b>{{ match_list|length }}</b> matches</i></h4>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Match</th>
+            <th>Result</th>
+            {% if player.position == "GK" %}<th>{% th_icon_saves %}</th>{% endif %}
+            <th>{% th_icon_goals %}</th>
+            <th>{% th_icon_yellow %}</th>
+            <th>{% th_icon_two_mins %}</th>
+            <th>{% th_icon_red %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ms in match_list %}
+        <tr>
+            <td><small><strong>{{ ms.match.match_datetime|date:"d/m/Y H:i" }}</strong></small> {% th_flag ms.match.home_team.country %} <span class="{% if ms.club == ms.match.home_team %}text-warning mark{% endif %}">{{ ms.match.home_team }}</span> &ndash; <span class="{% if ms.club == ms.match.away_team %}text-warning mark{% endif %}">{{ ms.match.away_team }}</span> {% th_flag ms.match.away_team.country %}<br>
+            <span class="text-info small">{{ ms.match.group.stage.comp_season.competition.name }}, {{ ms.match.group.stage.name }}</span>
+            </td>
+            <td>{{ ms.match.score_home }}:{{ ms.match.score_away }}<br>
+            <a class="small" href="{{ ms.match.get_absolute_url }}"><i class="fa fa-info-circle"></i> View</a>
+            </td>
+            {% if player.position == "GK" %}
+            <td>{{ ms.saves|default_if_none:"?" }}{% if ms.saves_7m %} ({{ ms.saves_7m }}){% endif %}</td>
+            {% endif %}
+            <td>{{ ms.goals|default_if_none:"?" }}{% if ms.goals_7m %} ({{ ms.goals_7m }}){% endif %}</td>
+            <td>{% if ms.yellow_card %}{% th_icon_yellow %}{% else %}-{% endif %}</td>
+            <td>{% if ms.two_minutes > 0 %}{{ ms.two_minutes }}{% else %}-{% endif %}</td>
+            <td>{% if ms.red_card %}{% th_icon_red %}{% else %}-{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="{% if player.position == "GK" %}6{% else %}5{% endif %}">No matches found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>

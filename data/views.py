@@ -131,14 +131,9 @@ class ClubMatchView(LoveMixin, generic.ListView):
 
     def get(self, request, *args, **kwargs):
         if self.request.is_ajax():
-            f = {}
-            if self.request.GET.get('season'):
-                f['group__stage__comp_season__season_id'] = self.request.GET['season']
-            if self.request.GET.get('competition'):
-                f['group__stage__comp_season__competition_id'] = self.request.GET['competition']
-            qs = self.get_queryset().filter(**f)
+            qs = self.get_queryset()
             return render_to_response(
-                'data/_club_match_filter.html',
+                'data/_club_match_list.html',
                 {'match_list': qs, 'club': self.object},
                 context_instance=RequestContext(self.request)
             )
@@ -149,7 +144,7 @@ class ClubMatchView(LoveMixin, generic.ListView):
         context = super(ClubMatchView, self).get_context_data(**kwargs)
         context['club'] = self.object
 
-        form = ClubMatchFilterForm()
+        form = ClubMatchFilterForm(self.request.GET or None)
         form.fields['season'].queryset = Season.objects.filter(
             competitionseason__stage__group__teams=self.object).distinct()
         form.fields['competition'].queryset = Competition.objects.filter(
@@ -161,13 +156,16 @@ class ClubMatchView(LoveMixin, generic.ListView):
 
     def get_queryset(self):
         self.object = get_object_or_404(Club, pk=self.kwargs['pk'])
-        if self.request.is_ajax():
-            if self.request.GET.get('club'):
-                return self.object.get_matches_with_rival(
-                    self.request.GET['club'])
-            return self.object.get_matches()
+        f = {}
+        if self.request.GET.get('season'):
+            f['group__stage__comp_season__season_id'] = self.request.GET['season']
+        if self.request.GET.get('competition'):
+            f['group__stage__comp_season__competition_id'] = self.request.GET['competition']
+        if self.request.GET.get('club'):
+            return self.object.get_matches_with_rival(
+                self.request.GET['club']).filter(**f)
         else:
-            return self.object.get_matches()[:10]
+            return self.object.get_matches().filter(**f)
 
 
 class ClubTeamView(LoveMixin, generic.ListView):
@@ -387,6 +385,50 @@ class PlayerUpdateView(LoginRequiredMixin, LoveMixin, generic.UpdateView):
             self.get_context_data(form=form,
                                   contract_form=contract_form,
                                   names_form=names_form))
+
+
+class PlayerMatchView(LoveMixin, generic.ListView):
+    template_name = 'data/player_matches.html'
+    context_object_name = 'match_list'
+
+    def get(self, request, *args, **kwargs):
+        if self.request.is_ajax():
+            qs = self.get_queryset()
+            return render_to_response(
+                'data/_player_match_list.html',
+                {'match_list': qs, 'player': self.object},
+                context_instance=RequestContext(self.request)
+            )
+        return super(PlayerMatchView, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(PlayerMatchView, self).get_context_data(**kwargs)
+        context['player'] = self.object
+
+        form = PlayerMatchFilterForm(self.request.GET or None)
+        form.fields['season'].queryset = Season.objects.filter(
+            playercontract__player=self.object).distinct(
+            ).order_by('-year_from')
+        form.fields['competition'].queryset = Competition.objects.filter(
+            competitionseason__stage__group__teams__playercontract__player=self.object).distinct()
+        form.fields['club'].queryset = Club.objects.filter(
+            playercontract__player=self.object).distinct()
+        context['form'] = form
+
+        return context
+
+    def get_queryset(self):
+        self.object = get_object_or_404(Player, pk=self.kwargs['pk'])
+        f = {}
+        if self.request.GET.get('season'):
+            f['match__group__stage__comp_season__season_id'] = self.request.GET['season']
+        if self.request.GET.get('competition'):
+            f['match__group__stage__comp_season__competition_id'] = self.request.GET['competition']
+        if self.request.GET.get('club'):
+            f['club_id'] = self.request.GET['club']
+        matches = self.object.matchplayerstats_set.select_related().order_by(
+            '-match__match_datetime').filter(**f)
+        return matches
 
 
 @login_required

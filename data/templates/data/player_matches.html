@@ -1,30 +1,29 @@
-{% extends "data/base_club.html" %}
-{% load tz crispy_forms_tags %}
-
+{% extends "data/base_player.html" %}
+{% load crispy_forms_tags %}
 {% block active_matches %}active{% endblock %}
 {% block specific %}
+
 <div class="row">
     <div class="col-md-3">
         <div class="well">
-            <form id="club-match-filter">
+            <form id="player-match-filter">
                 {% crispy form %}
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Filter</button>
-                    <a href="" class="btn btn-default">Clear Filters</a>
+                    <a href="." class="btn btn-default">Clear Filters</a>
                 </div>
             </form>
         </div>
     </div>
     <div class="col-md-8">
-        <div id="macth-list" class="list-group">
-            {% include "data/_club_match_list.html" %}
+        <div id="macth-list">
+            {% include "data/_player_match_list.html" %}
         </div>
     </div>
 </div>
-
 {% endblock %}
 {% block extra_script %}
 <script type="text/javascript">
-    $('#id_season, #id_competition, #id_club').on("change", filterClubMatches);
+    $('#id_season, #id_competition, #id_club').on("change", filterPlayerMatches);
 </script>
-{% endblock %}
+{% endblock %}v

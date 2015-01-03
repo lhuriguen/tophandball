@@ -20,19 +20,18 @@ var follow = function() {
     return false;
 };
 
-function search_submit() {
-    var query = $("#id_query").val();
+function filterClubMatches() {
+    var form_data = $("#club-match-filter").serialize();
 
-    $("#search-results").load(
-        "?name=" + encodeURIComponent(query)
-    );
-    $("#id_query").val("");
+    $.get("?", form_data, function(data) {
+        $("#macth-list").html(data);
+    });
 
     return false;
 }
 
-function filterClubMatches() {
-    var form_data = $("#club-match-filter").serialize();
+function filterPlayerMatches() {
+    var form_data = $("#player-match-filter").serialize();
 
     $.get("?", form_data, function(data) {
         $("#macth-list").html(data);
@@ -203,13 +202,6 @@ function genericUnfollow() {
 }
 
 var main = function() {
-
-    $("#search-form").submit(search_submit);
-    $("#club-match-filter").submit(filterClubMatches);
-
-    $("#follow").click(function(e) {
-        e.preventDefault();
-    });
 
     $(".list_follow").submit(follow);
     $("#follow_form").submit(follow);

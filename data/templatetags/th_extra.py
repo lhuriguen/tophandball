@@ -69,3 +69,42 @@ def country_name(value):
         return dict(countries)[value]
     except KeyError:
         return value
+
+
+@register.simple_tag
+def th_icon_matches():
+    return '<abbr title="Matches"><i class="fa fa-calendar"></i></abbr>'
+
+
+@register.simple_tag
+def th_icon_goals():
+    return '<abbr title="Goals"><i class="fa fa-bullseye"></i></abbr>'
+
+
+@register.simple_tag
+def th_icon_saves():
+    return '<abbr title="Saves"><i class="fa fa-life-ring"></i></abbr>'
+
+
+@register.simple_tag
+def th_icon_yellow():
+    return ('<abbr title="Yellow card">'
+            '<i class="fa fa-square yellow-card"></i>'
+            '</abbr>')
+
+
+@register.simple_tag
+def th_icon_two_mins():
+    return '<abbr title="Two minutes"><i class="fa fa-clock-o"></i></abbr>'
+
+
+@register.simple_tag
+def th_icon_red():
+    return ('<abbr title="Red card">'
+            '<i class="fa fa-square red-card"></i>'
+            '</abbr>')
+
+
+@register.inclusion_tag('data/_country_flag.html')
+def th_flag(country):
+    return {'country': country}
