@@ -137,6 +137,9 @@ footer {
 .th-masthead-players {
     background-image: url('../img/players.jpg')
 }
+.th-masthead-comps {
+    background-image: url('../img/screen.jpg')
+}
 .th-card {
     color: #333;
     background-color: #fff;
@@ -235,4 +238,8 @@ a.th-card:focus, a.th-card:hover {
 }
 .th-match-header .page-header {
     border-bottom: 0;
+}
+.th-winner {
+    /*color: #3C763D;*/
+    font-weight: 700;
 }

@@ -201,6 +201,10 @@ class RefereeAdmin(admin.ModelAdmin):
     search_fields = ['name', 'country']
 
 
+class CategoryAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+    filter_horizontal = ('competitions',)
+
 admin.site.register(Season)
 admin.site.register(Club, ClubAdmin)
 admin.site.register(Player, PlayerAdmin)
@@ -213,3 +217,4 @@ admin.site.register(Match, MatchAdmin)
 admin.site.register(Referee, RefereeAdmin)
 admin.site.register(Delegate)
 admin.site.register(MatchTeamStats, MatchTeamStatsAdmin)
+admin.site.register(Category, CategoryAdmin)

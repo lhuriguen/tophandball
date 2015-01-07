@@ -11,6 +11,25 @@ from django.contrib.auth.models import User
 from django_countries.fields import CountryField
 
 
+# Managers
+
+class MatchManager(models.Manager):
+    """
+    Manager that provides upcoming matches.
+    """
+    def upcoming(self):
+        return self.get_queryset().filter(
+            match_datetime__gte=datetime.datetime.now()
+            ).order_by('match_datetime')
+
+    def latest(self):
+        return self.get_queryset().filter(
+            match_datetime__lt=datetime.datetime.now()
+            ).order_by('-match_datetime')
+
+
+# Models
+
 class Season(models.Model):
     year_from = models.PositiveSmallIntegerField(db_index=True)
     year_to = models.PositiveSmallIntegerField()
@@ -404,6 +423,18 @@ class CoachContract(Contract):
             self.coach.full_name, self.club.name, self.season.name)
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+    display_order = models.SmallIntegerField(default=0)
+    competitions = models.ManyToManyField('Competition', blank=True)
+
+    class Meta:
+        verbose_name_plural = 'categories'
+
+    def __unicode__(self):
+        return u'%s' % (self.name)
+
+
 class Competition(models.Model):
     name = models.CharField(max_length=50)
     short_name = models.CharField(max_length=5)
@@ -515,7 +546,8 @@ class Stage(models.Model):
         ordering = ['order']
 
     def __unicode__(self):
-        return u'%s %s. %s' % (self.comp_season, self.order, self.name)
+        return u'%s %s, %s' % (
+            self.comp_season.season, self.comp_season.competition, self.name)
 
     def get_absolute_url(self):
         return reverse('data:stage_detail',
@@ -667,6 +699,8 @@ class Match(models.Model):
     week = models.SmallIntegerField(default=0)
     referees = models.ManyToManyField('Referee', blank=True)
     delegates = models.ManyToManyField('Delegate', blank=True)
+
+    objects = MatchManager()
 
     class Meta:
         verbose_name_plural = 'matches'

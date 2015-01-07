@@ -232,6 +232,7 @@ var main = function() {
     $(window).on("resize", function () {
         $('.modal:visible').each(centerModal);
     });
+
 };
 
 $(document).ready(main);

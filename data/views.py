@@ -602,6 +602,14 @@ class CompIndexView(generic.ListView):
     model = Competition
     context_object_name = 'comp_list'
 
+    def get_context_data(self, **kwargs):
+        context = super(CompIndexView, self).get_context_data(**kwargs)
+        # Upcoming and latest matches.
+        context['upcoming'] = Match.objects.upcoming().select_related()[:5]
+        context['latest'] = Match.objects.latest().select_related()[:5]
+        context['categories'] = Category.objects.select_related().all()
+        return context
+
 
 class CompDetailView(generic.DetailView):
     model = Competition

@@ -1,8 +1,14 @@
+{% load th_extra %}
 <a href="{{ match.get_absolute_url }}" class="list-group-item">
     <h6 class="list-group-item-heading">
-    <b>{{ match.match_datetime|date:"d/m/Y H:i" }}</b> <span class="pull-right"><em>{{ match.location }}</em></span></h6>
-    <h5 class="list-group-item-heading">{% if match.is_home_win %}<span class="text-success"><b>{% endif %}
-    {{ match.home_team.display_name }}{% if match.is_home_win %}</b></span>{% endif %} - {% if match.is_away_win %}<span class="text-success"><b>{% endif %}{{ match.away_team.display_name }}{% if match.is_away_win %}</b></span>{% endif %}
+    <b>{{ match.match_datetime|date:"d/m/Y H:i" }}</b> <span class="pull-right"><em>{{ match.location }}</em></span>
+    </h6>
+    <h5 class="list-group-item-heading">
+    {% th_flag match.home_team.country %}
+    <span class="{% if match.is_home_win %}th-winner{% endif %}">{{ match.home_team.display_name }}</span>
+     &ndash; 
+    <span class="{% if match.is_away_win %}th-winner{% endif %}">{{ match.away_team.display_name }}</span>
+    {% th_flag match.away_team.country %}
     <span class="pull-right">{% if match.is_future %} <span class="label label-info">In {{ match.match_datetime|timeuntil }}</span>
     {% else %}{{ match.display_result }}
     {% endif %}

@@ -9,8 +9,7 @@
         </div>
         <div class="col-sm-2">
             <h5 class="list-group-item-heading">
-            {% if match.is_future %} <span class="label label-info">In {{ match.match_datetime|timeuntil }}</span>
-            {% else %}{{ match.display_result }}
+            {% if not match.is_future %}{{ match.display_result }}
                 {% if match.is_draw %}
                 <span class="label label-warning" title="Draw">D</span>
                 {% elif match.is_home_win and match.home_team == club %}
@@ -24,7 +23,7 @@
             </h5>
         </div>
     </div>
-    <p class="list-group-item-text text-info">{{ match.group.stage.comp_season.season }} {{ match.group.stage.comp_season.competition.name }}, {{ match.group.stage.name }}</p>
+    <p class="list-group-item-text text-info">{{ match.group.stage.comp_season.season }} {{ match.group.stage.comp_season.competition.name }}, {{ match.group.stage.name }} {% if match.is_future %} <span class="label label-info pull-right">In {{ match.match_datetime|timeuntil }}</span>{% endif %}</p>
 </a>
 {% empty %}
 <li class="list-group-item list-group-item-warning">No matches found. Check your filters and try again.</li>
