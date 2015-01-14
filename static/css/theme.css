@@ -32,6 +32,12 @@ footer {
 #header-box h1 {
     padding: 10px;
 }
+#header-box h4 {
+    margin-left: 10px;
+}
+#header-box ul {
+    margin-left: 5px;
+}
 .img-logo {
     max-height: 120px;
     height: auto;
@@ -242,4 +248,8 @@ a.th-card:focus, a.th-card:hover {
 .th-winner {
     /*color: #3C763D;*/
     font-weight: 700;
+}
+.th-section-header {
+    padding: 10px;
+    background-color: #D9EDF7;
 }

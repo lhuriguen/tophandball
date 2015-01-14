@@ -1,7 +1,8 @@
-from django.core.exceptions import ImproperlyConfigured
+from django.core.exceptions import ImproperlyConfigured, ObjectDoesNotExist
+from django.http import Http404
 
 from infohandball.decorators import login_required
-from .models import Club
+from .models import Club, CompetitionSeason
 
 
 class LoveMixin(object):
@@ -55,3 +56,27 @@ class LoginRequiredMixin(object):
     def as_view(cls, **initkwargs):
         view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
         return login_required(view)
+
+
+class CompSeasonMixin(object):
+    model = CompetitionSeason
+    context_object_name = 'comp_season'
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        comp_id = self.kwargs.get('comp_id', None)
+        year = self.kwargs.get('year', None)
+        queryset = queryset.filter(
+            competition__id=comp_id, season__year_from=year)
+        try:
+            # Get the single item from the filtered queryset
+            obj = queryset.get()
+        except ObjectDoesNotExist:
+            raise Http404(("No %(verbose_name)s found matching the query") %
+                          {'verbose_name': queryset.model._meta.verbose_name})
+        return obj
+
+    def get_context_data(self, **kwargs):
+        context = super(CompSeasonMixin, self).get_context_data(**kwargs)
+        context['competition'] = self.object.competition
+        return context

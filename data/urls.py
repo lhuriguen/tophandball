@@ -63,10 +63,13 @@ urlpatterns = patterns(
         views.CompUpdateView.as_view(), name='comp_update'),
     # ex: /data/comp/1/season_year/
     url(r'^comp/(?P<comp_id>\d+)/(?P<year>\d\d\d\d)/$',
-        views.CompSeasonDetailView.as_view(), name='comp_season'),
+        views.CompSeasonRedirectView.as_view(), name='comp_season'),
     # ex: /data/comp/1/season_year/stats/
     url(r'^comp/(?P<comp_id>\d+)/(?P<year>\d\d\d\d)/stats/$',
         views.CompSeasonStatsView.as_view(), name='comp_season_stats'),
+    # ex: /data/comp/1/season_year/teams/
+    url(r'^comp/(?P<comp_id>\d+)/(?P<year>\d\d\d\d)/teams/$',
+        views.CompSeasonTeamsView.as_view(), name='comp_season_teams'),
     # ex: /data/comp/1/season_year/7/
     url(r'^comp/(?P<comp_id>\d+)/(?P<year>\d\d\d\d)/(?P<pk>\d+)/$',
         views.StageDetailView.as_view(), name='stage_detail'),

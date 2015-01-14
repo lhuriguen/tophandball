@@ -12,7 +12,8 @@ from extra_views import ModelFormSetView
 
 from infohandball.decorators import login_required
 from .models import *
-from .mixins import LoveMixin, LoginRequiredMixin, FavClubsMixin
+from .mixins import (LoveMixin, LoginRequiredMixin, FavClubsMixin,
+                     CompSeasonMixin)
 from .forms import *
 
 
@@ -617,13 +618,12 @@ class CompDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(CompDetailView, self).get_context_data(**kwargs)
-        # Prepare context data for latest or selected season
-        year = datetime.datetime.now().year
-        if 's' in self.request.GET:
-            str_year = self.request.GET['s']
-            if str_year.isdigit():
-                year = int(str_year)
-        context['comp_season'] = self.object.get_season_or_latest(year)
+        context['upcoming'] = Match.objects.upcoming(
+            competition=self.object).select_related()[:5]
+        context['latest'] = Match.objects.latest(
+            competition=self.object).select_related()[:5]
+        context['club_times'] = self.object.get_participations()[:5]
+        context['top_scorers'] = self.object.get_top_scorers()[:5]
         return context
 
 
@@ -634,7 +634,38 @@ class CompUpdateView(LoginRequiredMixin, generic.UpdateView):
               'level']
 
 
+class CompSeasonRedirectView(generic.RedirectView):
+
+    def get_redirect_url(self, *args, **kwargs):
+        """
+        Return the url of the current or last stage for the season.
+        """
+        cs = get_object_or_404(CompetitionSeason,
+                               competition=self.kwargs['comp_id'],
+                               season__year_from=self.kwargs['year'])
+        # First we try to get the current stage being played.
+        last = GroupTable.objects.filter(
+            group__stage__comp_season=cs).latest('group__stage__order')
+        if last:
+            stage = last.group.stage
+        else:
+            # We try the last stage by order.
+            stage = Stage.objects.filter(comp_season=cs).latest('order')
+        # Exit if we haven't found anything.
+        if not stage:
+            return None
+        kwargs['pk'] = stage.id
+        try:
+            url = reverse('data:stage_detail', kwargs=kwargs)
+        except NoReverseMatch:
+            return None
+        return url
+
+
 class CompSeasonDetailView(FavClubsMixin, generic.DetailView):
+    """
+    This view has been replaced by CompSeasonRedirectView.
+    """
     model = CompetitionSeason
     context_object_name = 'comp_season'
     template_name = 'data/competition_season.html'
@@ -659,28 +690,11 @@ class CompSeasonDetailView(FavClubsMixin, generic.DetailView):
         return context
 
 
-class CompSeasonStatsView(generic.DetailView):
-    model = CompetitionSeason
-    context_object_name = 'comp_season'
+class CompSeasonStatsView(CompSeasonMixin, generic.DetailView):
     template_name = 'data/competition_season_stats.html'
-
-    def get_object(self):
-        queryset = self.get_queryset()
-        comp_id = self.kwargs.get('comp_id', None)
-        year = self.kwargs.get('year', None)
-        queryset = queryset.filter(
-            competition__id=comp_id, season__year_from=year)
-        try:
-            # Get the single item from the filtered queryset
-            obj = queryset.get()
-        except ObjectDoesNotExist:
-            raise Http404(("No %(verbose_name)s found matching the query") %
-                          {'verbose_name': queryset.model._meta.verbose_name})
-        return obj
 
     def get_context_data(self, **kwargs):
         context = super(CompSeasonStatsView, self).get_context_data(**kwargs)
-        context['competition'] = self.object.competition
         context['player_stats'] = self.object.get_player_stats()
         max_goals = MatchPlayerStats.objects.filter(
             match__group__stage__comp_season=self.object).aggregate(
@@ -696,6 +710,10 @@ class CompSeasonStatsView(generic.DetailView):
             avg_spectators=Avg('spectators'))
 
         return context
+
+
+class CompSeasonTeamsView(CompSeasonMixin, generic.DetailView):
+    template_name = 'data/competition_season_teams.html'
 
 
 class StageDetailView(FavClubsMixin, generic.DetailView):

@@ -1,0 +1,28 @@
+{% extends "data/competition_season.html" %}
+
+{% block section_name %} &bullet; Participants{% endblock %}
+
+{% block stage_detail %}
+<div class="row">
+  <p></p>
+  {% for item in comp_season.get_teams %}
+  <div class="col-xs-4 col-md-2">
+    {% include "data/_club_card.html" %}
+  </div>
+  {% if forloop.counter|divisibleby:6 %}
+  </div>
+  <div class="row">
+  {% elif forloop.counter|divisibleby:3 %}
+  <div class="clearfix visible-sm visible-xs"></div>
+  {% endif %}
+{% endfor %}
+</div>
+{% endblock stage_detail %}
+
+{% block extra_script %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#teams").addClass("active");
+    });
+</script>
+{% endblock %}

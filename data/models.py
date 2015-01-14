@@ -17,15 +17,22 @@ class MatchManager(models.Manager):
     """
     Manager that provides upcoming matches.
     """
-    def upcoming(self):
-        return self.get_queryset().filter(
+    def upcoming(self, competition=None):
+        return self.get_queryset(competition=competition).filter(
             match_datetime__gte=datetime.datetime.now()
             ).order_by('match_datetime')
 
-    def latest(self):
-        return self.get_queryset().filter(
+    def latest(self, competition=None):
+        return self.get_queryset(competition=competition).filter(
             match_datetime__lt=datetime.datetime.now()
             ).order_by('-match_datetime')
+
+    def get_queryset(self, competition=None):
+        qs = super(MatchManager, self).get_queryset()
+        if competition:
+            return qs.filter(
+                group__stage__comp_season__competition=competition)
+        return qs
 
 
 # Models
@@ -484,6 +491,17 @@ class Competition(models.Model):
             return cs[0]
         return None
 
+    def get_participations(self):
+        return Club.objects.filter(
+            grouptable__group__stage__comp_season__competition=self
+            ).annotate(times=Count('grouptable__group__stage__comp_season',
+                                   distinct=True)).order_by('-times')
+
+    def get_top_scorers(self):
+        return Player.objects.filter(
+            matchplayerstats__match__group__stage__comp_season__competition=self
+            ).annotate(goals=Sum('matchplayerstats__goals')).order_by('-goals')
+
 
 class CompetitionSeason(models.Model):
     competition = models.ForeignKey(Competition)
@@ -504,6 +522,11 @@ class CompetitionSeason(models.Model):
 
     def get_stats_url(self):
         return reverse('data:comp_season_stats',
+                       kwargs={'year': self.season.year_from,
+                               'comp_id': self.competition.id})
+
+    def get_teams_url(self):
+        return reverse('data:comp_season_teams',
                        kwargs={'year': self.season.year_from,
                                'comp_id': self.competition.id})
 

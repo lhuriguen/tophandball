@@ -2,54 +2,24 @@
 {% block active_seasons %}active{% endblock %}
 
 {% block specific %}
-<h3>Season {{ comp_season.season.name }}{% block section_name %}{% endblock %}</h3>
-<ul class="nav nav-tabs" role="tablist">
-    <li id="overview"><a href="{{ comp_season.get_absolute_url }}">Overview</a></li>
-    <li id="stages" class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            Stages <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-            {% for st in comp_season.stage_set.all %}
-                <li id="stage-{{ st.id }}"><a href="{{ st.get_absolute_url }}">{{ st.name }}</a></li>
-            {% endfor %}
-        </ul>
-    </li>
-    <li id="stats"><a href="{{ comp_season.get_stats_url }}">Statistics</a></li>
-</ul>
-{% block stage_detail %}
-<h4><b>Participants</b></h4>
-<p>
-<button type="button" title="Show/Hide teams" class="btn btn-default btn-xs" data-toggle="collapse" data-target="#teams">
-  <i class="fa fa-eye-slash"></i> Show/Hide
-</button>
-</p>
-<div id="teams" class="collapse">
-    <div class="row">
-    {% for item in comp_season.get_teams %}
-        <div class="col-xs-4 col-md-2">
-        {% include "data/_club_card.html" %}
-        </div>
-        {% if forloop.counter|divisibleby:6 %}
-        </div>
-        <div class="row">
-        {% elif forloop.counter|divisibleby:3 %}
-        <div class="clearfix visible-sm visible-xs"></div>
-        {% endif %}
-    {% endfor %}
-    </div>
-</div>
-<h4><b>Upcoming matches</b></h4>
-<p>No upcoming matches found.</p>
-<h4><b>Final standing</b></h4>
-<p>No standing found.</p>
-{% endblock stage_detail %}
+<div class="th-content">
+  <h3>Season {{ comp_season.season.name }}{% block section_name %}{% endblock %}</h3>
+  <ul class="nav nav-tabs" role="tablist">
+      <!-- <li id="overview"><a href="{{ comp_season.get_absolute_url }}">Overview</a></li> -->
+      <li id="stages" class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+              Stages <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+              {% for st in comp_season.stage_set.all %}
+                  <li id="stage-{{ st.id }}"><a href="{{ st.get_absolute_url }}">{{ st.name }}</a></li>
+              {% endfor %}
+          </ul>
+      </li>
+      <li id="teams"><a href="{{ comp_season.get_teams_url }}">Teams</a></li>
+      <li id="stats"><a href="{{ comp_season.get_stats_url }}">Statistics</a></li>
+  </ul>
+  {% block stage_detail %}
+  {% endblock stage_detail %}
+  </div>
 {% endblock specific %}
-
-{% block extra_script %}
-<script type="text/javascript">
-    $(document).ready(function() {
-        $("#overview").addClass("active");
-    });
-</script>
-{% endblock %}

@@ -2,33 +2,52 @@
 {% block active_home %}active{% endblock %}
 
 {% block specific %}
-<div class="row">
-    <div class="col-md-3">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <small>
-                    <strong>Short name:</strong> {{ competition.short_name }}<br>
-                    <a href="{{ competition.website }}">Official website</a><br>
-                    {% if competition.is_international %}
-                    <strong>International</strong><br>
-                    {% else %}
-                    <strong>Country:</strong> {{ competition.country }}<br>
-                    {% endif %}    
-                    <strong>Level:</strong> {{ competition.level }}<br>
-                    <hr>
-                    <strong>Seasons:</strong>
-                    <ul class="list-unstyled">
-                    {% for cs in competition.competitionseason_set.all %}
-                        <li>{{ cs.season.name }}</li>
-                    {% empty %}
-                        <li>No seasons found.</li>
-                    {% endfor %}
-                    </ul>
-                    <hr>
-                    <p><i class="fa fa-edit"></i> Is this information wrong or incomplete? You can fix it <a href="#">here</a>.</p>
-                </small>
-            </div>
-        </div>
+<div class="th-content">
+  <div class="row">
+    <div class="col-md-6">
+      <h4>Upcoming matches</h4>
+      <div class="list-group">
+        {% for match in upcoming %}
+          {% include "data/_match_list_item_compact.html" %}
+        {% empty %}
+        <div class="list-group-item list-group-item-warning">No matches found.</div>
+        {% endfor %}
+      </div>
     </div>
+    <div class="col-md-6">
+      <h4>Latest matches</h4>
+      <div class="list-group">
+        {% for match in latest %}
+          {% include "data/_match_list_item_compact.html" %}
+        {% empty %}
+        <div class="list-group-item list-group-item-warning">No matches found.</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+<div class="th-content">
+  <div class="row">
+    <div class="col-md-3">
+      <h3 class="th-section-header">Most participations</h3>
+      <div class="list-unstyled">
+      {% for c in club_times %}
+        <div>
+          <span class="text-danger"><b>{{ c.times }}</b></span> &nbsp; <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+        </div>
+      {% endfor %}
+      </div>
+    </div>
+    <div class="col-md-3">
+      <h3 class="th-section-header">Top scorers</h3>
+      <ul class="list-unstyled">
+      {% for p in top_scorers %}
+        <li>
+          <span class="text-danger"><b>{{ p.goals }}</b></span> &nbsp; <a href="{{ p.get_absolute_url }}">{{ p.last_name }}</a>
+        </li>
+      {% endfor %}
+      </ul>
+    </div>
+  </div>
 </div>
 {% endblock %}
