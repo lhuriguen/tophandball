@@ -1,10 +1,16 @@
 {% load th_extra %}
 {% if paginator and paginator.num_pages > 1 %}
-    <ul class="pagination pagination-sm pagination-index">
-        <li class="{% if not page_obj.has_previous %}disabled{% endif %}"><a href="{% append_to_get page=1 %}">&laquo;</a></li>
-        {% for pnum in paginator.page_range %}
-        <li class="{% if page_obj.number == pnum %}active{% endif %}"><a href="{% append_to_get page=pnum %}">{{ pnum }}</a></li>
-        {% endfor %}
-        <li class="{% if not page_obj.has_next %}disabled{% endif %}"><a href="{% append_to_get page='last' %}">&raquo;</a></li>
-    </ul>
+  <ul class="pagination pagination-sm pagination-index">
+    <li class="{% if not page_obj.has_previous %}disabled{% endif %}"><a href="{% append_to_get page=1 %}">&laquo;</a></li>
+    <li class="{% if not page_obj.has_previous %}disabled{% endif %}"><a href="{% if page_obj.has_previous %}{% append_to_get page=page_obj.previous_page_number %}{% else %}{% append_to_get page=1 %}{% endif %}">&lsaquo;</a></li>
+    {% for pnum in paginator.page_range %}
+      {% if page_obj.number < 7 and pnum < 11 %}
+      <li class="{% if page_obj.number == pnum %}active{% endif %}"><a href="{% append_to_get page=pnum %}">{{ pnum }}</a></li>
+      {% elif pnum >= page_obj.number|add:"-5" and pnum <= page_obj.number|add:"4" %}
+      <li class="{% if page_obj.number == pnum %}active{% endif %}"><a href="{% append_to_get page=pnum %}">{{ pnum }}</a></li>
+      {% endif %}
+    {% endfor %}
+    <li class="{% if not page_obj.has_next %}disabled{% endif %}"><a href="{% if page_obj.has_next %}{% append_to_get page=page_obj.next_page_number %}{% else %}{% append_to_get page='last' %}{% endif %}">&rsaquo;</a></li>
+    <li class="{% if not page_obj.has_next %}disabled{% endif %}"><a href="{% append_to_get page='last' %}">&raquo;</a></li>
+  </ul>
 {% endif %}
