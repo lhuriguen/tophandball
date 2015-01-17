@@ -248,7 +248,7 @@ def club_love(request, club_id):
 
 class PlayerIndexView(generic.ListView):
     model = Player
-    paginate_by = 120
+    paginate_by = 40
 
     def get(self, request, *args, **kwargs):
         if self.request.is_ajax():
