@@ -1,7 +1,6 @@
 from django.core.exceptions import ImproperlyConfigured, ObjectDoesNotExist
 from django.http import Http404
 
-from infohandball.decorators import login_required
 from .models import Club, CompetitionSeason
 
 
@@ -48,14 +47,6 @@ class FavClubsMixin(object):
                 fans__username=self.request.user.username).values_list(
                 'id', flat=True)
         return context
-
-
-class LoginRequiredMixin(object):
-
-    @classmethod
-    def as_view(cls, **initkwargs):
-        view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
-        return login_required(view)
 
 
 class CompSeasonMixin(object):

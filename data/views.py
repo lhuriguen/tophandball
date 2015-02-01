@@ -9,10 +9,11 @@ from django.db.models import Count, Q, Sum, get_model, Avg, Max
 from extra_views import ModelFormSetView
 
 from utils.database import BooleanSum
+from utils.mixins import LoginRequiredMixin
+from utils.decorators import login_required
 
-from infohandball.decorators import login_required
 from .models import *
-from .mixins import (LoveMixin, LoginRequiredMixin, FavClubsMixin,
+from .mixins import (LoveMixin, FavClubsMixin,
                      CompSeasonMixin)
 from .forms import *
 
@@ -777,5 +778,7 @@ def unfollow(request):
 
 
 def index(request):
-    # return HttpResponse("Hello, world. You're at the data index.")
-    return render(request, 'data/index.html', None)
+    """
+    Data index is just a redirect to the main index.
+    """
+    return HttpResponseRedirect('/')

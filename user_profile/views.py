@@ -1,7 +1,8 @@
 from django.views import generic
 from django.core.urlresolvers import reverse
 
-from data.mixins import LoginRequiredMixin
+from utils.mixins import LoginRequiredMixin
+
 from .models import UserProfile
 from .forms import UserProfileForm
 
