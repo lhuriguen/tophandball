@@ -98,6 +98,7 @@ class PlayerContractInline(BasicInlineTable):
     class Meta:
         model = PlayerContract
         widgets = {'photo': SingleImageInput(max_size=50)}
+        fields = '__all__'
 
     def __init__(self, *args, **kwargs):
         super(PlayerContractInline, self).__init__(*args, **kwargs)
@@ -108,6 +109,7 @@ class PlayerNamesInline(BasicInlineTable):
 
     class Meta:
         model = PlayerName
+        fields = '__all__'
 
     def __init__(self, *args, **kwargs):
         super(PlayerNamesInline, self).__init__(*args, **kwargs)
@@ -183,6 +185,7 @@ class ClubNamesInline(BasicInlineTable):
 
     class Meta:
         model = ClubName
+        fields = '__all__'
 
     def __init__(self, *args, **kwargs):
         super(ClubNamesInline, self).__init__(*args, **kwargs)
