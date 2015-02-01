@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from django.shortcuts import render, get_object_or_404, render_to_response
 from django.template import RequestContext
 from django.views import generic
@@ -9,6 +7,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Q, Sum, get_model, Avg, Max
 
 from extra_views import ModelFormSetView
+
+from utils.database import BooleanSum
 
 from infohandball.decorators import login_required
 from .models import *
@@ -198,9 +198,9 @@ class ClubTeamView(LoveMixin, generic.ListView):
             matchplayerstats__club=self.object,
             matchplayerstats__match__group__stage__comp_season__season__year_from=year
             ).annotate(sum_goals=Sum('matchplayerstats__goals'),
-                       yellows=Sum('matchplayerstats__yellow_card'),
+                       yellows=BooleanSum('matchplayerstats__yellow_card'),
                        two_mins=Sum('matchplayerstats__two_minutes'),
-                       reds=Sum('matchplayerstats__red_card')
+                       reds=BooleanSum('matchplayerstats__red_card')
                        ).order_by('-sum_goals')
         return context
 

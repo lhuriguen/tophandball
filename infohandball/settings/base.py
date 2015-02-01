@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
     'django.contrib.humanize',
-    'south',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -52,6 +51,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'extra_views',
     'django_countries',
+    'utils',
     'data',
     'user_profile',
 ]
@@ -73,12 +73,23 @@ WSGI_APPLICATION = 'infohandball.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'infohandball.db'),
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'infohandball.db'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'tophb',
+        'USER': 'leti',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/

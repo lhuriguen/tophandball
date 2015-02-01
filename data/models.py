@@ -10,6 +10,8 @@ from django.contrib.auth.models import User
 
 from django_countries.fields import CountryField
 
+from utils.database import BooleanSum
+
 
 # Managers
 
@@ -343,9 +345,7 @@ class Contract(models.Model):
         abstract = True
 
 
-class PlayerContract(Contract):
-
-    def player_contract_filename(instance, filename):
+def player_contract_filename(instance, filename):
         """
         Construct the filepath to store contract photos.
         Ex: /contracts/2013/cid_pid.ext
@@ -355,6 +355,9 @@ class PlayerContract(Contract):
         return '/'.join([
             'contracts', str(instance.season.year_from), new_file
             ])
+
+
+class PlayerContract(Contract):
 
     player = models.ForeignKey(Player)
     shirt_number = models.PositiveSmallIntegerField(blank=True, default=0)
@@ -397,9 +400,9 @@ class PlayerContract(Contract):
             num_matches=Count('match'),
             goals=Sum('goals'),
             saves=Sum('saves'),
-            yellows=Sum('yellow_card'),
+            yellows=BooleanSum('yellow_card'),
             two_mins=Sum('two_minutes'),
-            reds=Sum('red_card')
+            reds=BooleanSum('red_card')
             )
 
 
@@ -539,9 +542,9 @@ class CompetitionSeason(models.Model):
         return Player.objects.filter(
             matchplayerstats__match__group__stage__comp_season=self).annotate(
             sum_goals=Sum('matchplayerstats__goals'),
-            yellows=Sum('matchplayerstats__yellow_card'),
+            yellows=BooleanSum('matchplayerstats__yellow_card'),
             two_mins=Sum('matchplayerstats__two_minutes'),
-            reds=Sum('matchplayerstats__red_card'),
+            reds=BooleanSum('matchplayerstats__red_card'),
             matches=Count('matchplayerstats')
             ).order_by('-sum_goals')
 
