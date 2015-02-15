@@ -148,7 +148,8 @@ class ClubMatchView(LoveMixin, generic.ListView):
 
         form = ClubMatchFilterForm(self.request.GET or None)
         form.fields['season'].queryset = Season.objects.filter(
-            competitionseason__stage__group__teams=self.object).distinct()
+            competitionseason__stage__group__teams=self.object).distinct(
+            ).order_by('-year_from')
         form.fields['competition'].queryset = Competition.objects.filter(
             competitionseason__stage__group__teams=self.object).distinct()
         form.fields['club'].queryset = Club.objects.exclude(pk=self.object.id)
