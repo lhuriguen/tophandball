@@ -47,13 +47,14 @@ class UserProfileForm(forms.ModelForm):
             Fieldset(
                 'Additional Information',
                 Row(
-                    Field('location', wrapper_class='col-sm-4'),
+                    Field('country', wrapper_class='col-sm-3'),
+                    Field('location', wrapper_class='col-sm-3'),
                     Div(
                         AppendedText('birth_date',
                                      '<i class="fa fa-calendar"></i>'),
-                        css_class='col-sm-4'
+                        css_class='col-sm-3'
                     ),
-                    Field('gender', wrapper_class='col-sm-4')
+                    Field('gender', wrapper_class='col-sm-3')
                 )
             )
         )

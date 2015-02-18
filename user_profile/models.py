@@ -1,7 +1,11 @@
 import hashlib
+
 from django.db import models
 from django.contrib.auth.models import User
+
 from allauth.socialaccount.models import SocialAccount
+
+from django_countries.fields import CountryField
 
 
 class UserProfile(models.Model):
@@ -10,6 +14,7 @@ class UserProfile(models.Model):
     GENDER_CHOICES = ((FEMALE, 'Female'), (MALE, 'Male'))
 
     user = models.OneToOneField(User, related_name='profile')
+    country = CountryField(blank=True, null=True)
     location = models.CharField(max_length=30, blank=True)
     birth_date = models.DateField(blank=True, null=True)
     gender = models.CharField(
