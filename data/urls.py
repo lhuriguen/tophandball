@@ -90,6 +90,9 @@ urlpatterns = patterns(
         views.PlayerAPIView.as_view(), name='player_get_api'),
     url(r'api/search_all/$',
         views.SearchJSONView.as_view(), name='search_all_api'),
+    # ex: /data/comp/1/season_year/map/
+    url(r'^comp/(?P<comp_id>\d+)/(?P<year>\d\d\d\d)/map/$',
+        views.CompSeasonMapView.as_view(), name='comp_season_map'),
     # Generic unfollow
     url(r'unfollow/$', views.unfollow, name='unfollow')
     )

@@ -59,6 +59,10 @@ footer {
     width: auto;
     height: 200px;
 }
+.big-map {
+    width: auto;
+    height: 640px;
+}
 .form-signin {
     max-width: 330px;
     margin: 0 auto;

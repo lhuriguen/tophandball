@@ -1,21 +1,27 @@
 {% extends "data/competition_season.html" %}
+{% load staticfiles %}
 
 {% block section_name %} &bullet; Participants{% endblock %}
 
 {% block stage_detail %}
+<p></p>
 <div class="row">
-  <p></p>
-  {% for item in comp_season.get_teams %}
-  <div class="col-xs-4 col-md-2">
-    {% include "data/_club_card.html" %}
+  <div class="col-md-8">
+    <div id="map" class="big-map thumbnail"></div>
   </div>
-  {% if forloop.counter|divisibleby:6 %}
+  <div class="col-md-4">
+    <table class="table table-condensed table-hover">
+      <tbody>
+        {% for item in comp_season.get_teams %}
+        <tr class="small">
+          <td><img class="th-flag" src="{{ item.country.flag }}" title="{{ item.country.name }}"> <a href="{{ item.get_absolute_url }}">{{ item.name }}</a></td>
+          <td><a title="View team" href="{% url 'data:club_team' pk=item.id %}?season={{ comp_season.season.year_from }}"><i class="fa fa-group"></i></a></td>
+          <td>{% if item.longitude %}<a title="Zoom to marker" href="#" class="th-goto" data-longitude="{{ item.longitude }}" data-latitude="{{ item.latitude }}"><i class="fa fa-map-marker"></i></a>{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
-  <div class="row">
-  {% elif forloop.counter|divisibleby:3 %}
-  <div class="clearfix visible-sm visible-xs"></div>
-  {% endif %}
-{% endfor %}
 </div>
 {% endblock stage_detail %}
 
@@ -23,6 +29,13 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $("#teams").addClass("active");
+        $("a.th-goto").click(function(e){
+          e.preventDefault();
+          var latLng = new google.maps.LatLng($(this).data('latitude'), $(this).data('longitude'));
+          map.panTo(latLng);
+          map.setZoom(8);
+        });
     });
 </script>
+<script type="text/javascript" src="{% static "js/maps.js" %}"></script>
 {% endblock %}

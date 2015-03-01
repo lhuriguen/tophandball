@@ -10,6 +10,8 @@ from django.conf import settings
 
 class Migration(migrations.Migration):
 
+    replaces = [(b'data', '0001_initial'), (b'data', '0002_auto_20150222_1853'), (b'data', '0003_auto_20150222_1940'), (b'data', '0004_auto_20150222_2002')]
+
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
@@ -167,7 +169,7 @@ class Migration(migrations.Migration):
                 ('report_url', models.URLField(blank=True)),
                 ('week', models.SmallIntegerField(default=0)),
                 ('away_team', models.ForeignKey(related_name='away_matches', to='data.Club')),
-                ('delegates', models.ManyToManyField(to='data.Delegate', blank=True)),
+                ('delegates', models.ManyToManyField(to=b'data.Delegate', blank=True)),
                 ('group', models.ForeignKey(to='data.Group')),
                 ('home_team', models.ForeignKey(related_name='home_matches', to='data.Club')),
             ],
@@ -341,7 +343,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='match',
             name='referees',
-            field=models.ManyToManyField(to='data.Referee', blank=True),
+            field=models.ManyToManyField(to=b'data.Referee', blank=True),
             preserve_default=True,
         ),
         migrations.AlterUniqueTogether(
@@ -357,7 +359,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='group',
             name='teams',
-            field=models.ManyToManyField(to='data.Club', through='data.GroupTable'),
+            field=models.ManyToManyField(to=b'data.Club', through='data.GroupTable'),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -373,7 +375,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='competition',
             name='seasons',
-            field=models.ManyToManyField(to='data.Season', through='data.CompetitionSeason'),
+            field=models.ManyToManyField(to=b'data.Season', through='data.CompetitionSeason'),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -397,7 +399,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='club',
             name='coaches',
-            field=models.ManyToManyField(to='data.Coach', through='data.CoachContract', blank=True),
+            field=models.ManyToManyField(to=b'data.Coach', through='data.CoachContract', blank=True),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -409,13 +411,25 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='club',
             name='players',
-            field=models.ManyToManyField(to='data.Player', through='data.PlayerContract', blank=True),
+            field=models.ManyToManyField(to=b'data.Player', through='data.PlayerContract', blank=True),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='category',
             name='competitions',
-            field=models.ManyToManyField(to='data.Competition', blank=True),
+            field=models.ManyToManyField(to=b'data.Competition', blank=True),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='club',
+            name='latitude',
+            field=models.DecimalField(null=True, max_digits=8, decimal_places=6, blank=True),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='club',
+            name='longitude',
+            field=models.DecimalField(null=True, max_digits=9, decimal_places=6, blank=True),
             preserve_default=True,
         ),
     ]

@@ -87,15 +87,15 @@ class ClubAdmin(admin.ModelAdmin):
     fieldsets = [
         (None,
             {'fields': [('name', 'short_name', 'initials'),
-                        ('country', 'address'), 'ehf_id',
-                        'logo', 'admin_thumbnail']}
+                        ('country', 'address', 'latitude', 'longitude'),
+                        'ehf_id', 'logo', 'admin_thumbnail']}
          ),
         ('Links',
             {'fields': ['website', 'twitter', 'facebook'],
              'classes': ['collapse']}
          )
     ]
-    inlines = [ClubNamesInline, PlayerContractInline, CoachContractInline]
+    inlines = [ClubNamesInline, CoachContractInline]
     list_display = ('name', 'country', 'has_logo')
     list_filter = ['country']
     search_fields = ['name']

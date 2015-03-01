@@ -718,6 +718,17 @@ class CompSeasonTeamsView(CompSeasonMixin, generic.DetailView):
     template_name = 'data/competition_season_teams.html'
 
 
+class CompSeasonMapView(CompSeasonMixin, generic.ListView):
+
+    def get(self, request, *args, **kwargs):
+        teams = self.get_object().get_teams()
+        return HttpResponse(
+            serializers.serialize(
+                'json', list(teams), fields=('name', 'latitude', 'longitude')),
+            content_type='application/json'
+        )
+
+
 class StageDetailView(FavClubsMixin, generic.DetailView):
     model = Stage
     queryset = Stage.objects.all().select_related()

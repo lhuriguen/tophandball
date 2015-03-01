@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 from django_countries.fields import CountryField
 
 from utils.database import BooleanSum
+from utils.models import Marker
 
 
 # Managers
@@ -62,7 +63,7 @@ class Season(models.Model):
         return today.year
 
 
-class Club(models.Model):
+class Club(Marker):
     name = models.CharField(max_length=100)
     short_name = models.CharField(
         max_length=15, blank=True,
