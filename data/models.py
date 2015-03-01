@@ -73,9 +73,6 @@ class Club(Marker):
         help_text="For use in matches, ex. GYO, VAR, BUD...")
     country = CountryField()
     ehf_id = models.IntegerField('EHF id', unique=True)
-    address = models.CharField(
-        max_length=200, blank=True,
-        help_text="Separate address items with commas.")
     website = models.URLField(blank=True)
     twitter = models.URLField(blank=True)
     facebook = models.URLField(blank=True)
