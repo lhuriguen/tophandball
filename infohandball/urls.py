@@ -15,7 +15,11 @@ urlpatterns = patterns(
     url(r'^data/', include('data.urls', namespace='data')),
     url(r'^profile/', include('user_profile.urls', namespace='profile')),
     url(r'^admin/', include(admin.site.urls)),
-) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+)
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)
 
 urlpatterns += patterns(
     'django.contrib.flatpages.views',
