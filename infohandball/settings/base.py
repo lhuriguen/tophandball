@@ -174,5 +174,8 @@ COUNTRIES_OVERRIDE = {
     'XE': 'England',
     'XS': 'Scotland',
     'XW': 'Wales',
-    'EU': 'European Union'
+    'EU': 'European Union',
+    # Legacy, for older scrapping only
+    'CS': 'Serbia and Montenegro',
+    'YU': 'Yugoslavia'
 }
