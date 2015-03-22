@@ -36,7 +36,7 @@
     <div class="col-md-12">
       <h3 class="th-section-header">{{ cat.name }}</h3>
       <div class="row">
-      {% for item in cat.competitions.all %}
+      {% for item in cat.get_competitions.all %}
       <div class="col-xs-6 col-md-2">
         {% include "data/_comp_card.html" %}
       </div>

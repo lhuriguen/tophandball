@@ -309,7 +309,7 @@ class PlayerDetailView(LoveMixin, generic.DetailView):
         context = super(PlayerDetailView, self).get_context_data(**kwargs)
         self.player = self.object
         context['club_career'] = self.player.playercontract_set.select_related(
-            'club', 'season').order_by('-season__year_from', '-arrival_month')
+            'club', 'season').order_by('-season__year_from', '-departure_month')
         # Add teammates
         ct = self.player.current_contract
         context['cur_contract'] = ct
@@ -610,7 +610,7 @@ class CompIndexView(generic.ListView):
         # Upcoming and latest matches.
         context['upcoming'] = Match.objects.upcoming().select_related()[:5]
         context['latest'] = Match.objects.latest().select_related()[:5]
-        context['categories'] = Category.objects.select_related().all()
+        context['categories'] = Category.objects.all()
         return context
 
 

@@ -438,9 +438,13 @@ class Category(models.Model):
 
     class Meta:
         verbose_name_plural = 'categories'
+        ordering = ['display_order']
 
     def __unicode__(self):
         return u'%s' % (self.name)
+
+    def get_competitions(self):
+        return self.competitions.order_by('level')
 
 
 class Competition(models.Model):
@@ -491,6 +495,9 @@ class Competition(models.Model):
         if cs:
             return cs[0]
         return None
+
+    def get_seasons(self):
+        return self.seasons.order_by('-year_from')
 
     def get_participations(self):
         return Club.objects.filter(

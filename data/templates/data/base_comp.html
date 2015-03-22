@@ -29,7 +29,7 @@
                 <i class="fa fa-calendar fa-fw"></i> Seasons <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
-                {% for s in competition.seasons.all %}
+                {% for s in competition.get_seasons.all %}
                 <li><a href="{% url 'data:comp_season' comp_id=competition.id year=s.year_from %}">{{ s.name }}</a></li>
                 {% endfor %}
             </ul>
