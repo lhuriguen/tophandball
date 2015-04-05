@@ -195,15 +195,7 @@ class ClubTeamView(LoveMixin, generic.ListView):
         year = self.request.GET.get('season', '') or Season.curr_year()
         context['coach_list'] = CoachContract.objects.select_related(
             'coach').filter(club=self.object, season__year_from=year)
-
-        context['scorers_list'] = Player.objects.filter(
-            matchplayerstats__club=self.object,
-            matchplayerstats__match__group__stage__comp_season__season__year_from=year
-            ).annotate(sum_goals=Sum('matchplayerstats__goals'),
-                       yellows=BooleanSum('matchplayerstats__yellow_card'),
-                       two_mins=Sum('matchplayerstats__two_minutes'),
-                       reds=BooleanSum('matchplayerstats__red_card')
-                       ).order_by('-sum_goals')
+        context['scorers_list'] = self.object.get_scorer_list(year)
         return context
 
     def get_queryset(self):
@@ -637,6 +629,7 @@ class CompUpdateView(LoginRequiredMixin, generic.UpdateView):
 
 
 class CompSeasonRedirectView(generic.RedirectView):
+    permanent = True
 
     def get_redirect_url(self, *args, **kwargs):
         """

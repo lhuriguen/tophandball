@@ -124,6 +124,16 @@ class Club(Marker):
             '-group__stage__comp_season__competition__level',
             '-group__stage__order')
 
+    def get_scorer_list(self, year):
+        return Player.objects.filter(
+            matchplayerstats__club=self,
+            matchplayerstats__match__group__stage__comp_season__season__year_from=year
+            ).annotate(sum_goals=Sum('matchplayerstats__goals'),
+                       yellows=BooleanSum('matchplayerstats__yellow_card'),
+                       two_mins=Sum('matchplayerstats__two_minutes'),
+                       reds=BooleanSum('matchplayerstats__red_card')
+                       ).order_by('-sum_goals')
+
     def address_lines(self):
         if self.address:
             return self.address.split(',')
@@ -405,8 +415,8 @@ class PlayerContract(Contract):
 
 
 class Coach(Person):
-    player = models.ForeignKey(Player, blank=True, null=True, unique=True,
-                               on_delete=models.SET_NULL)
+    player = models.OneToOneField(Player, blank=True, null=True,
+                                  on_delete=models.SET_NULL)
 
     class Meta:
         verbose_name_plural = 'coaches'

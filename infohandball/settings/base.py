@@ -11,11 +11,6 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'k2^0%et8t8+0d+=$-nrrwvz^cdz!bi(xhq!qa&w4ko@221ut@!'
@@ -23,13 +18,39 @@ SECRET_KEY = 'k2^0%et8t8+0d+=$-nrrwvz^cdz!bi(xhq!qa&w4ko@221ut@!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = DEBUG
-
 ALLOWED_HOSTS = []
 
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates')
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                # 'django.template.context_processors.debug',
+                # 'django.template.context_processors.i18n',
+                # 'django.template.context_processors.media',
+                'django.template.context_processors.request',
+                # 'django.template.context_processors.static',
+                # 'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+                'allauth.account.context_processors.account',
+                'allauth.socialaccount.context_processors.socialaccount',
+            ],
+        },
+    },
+]
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    # allauth specific context processors
+    'allauth.account.context_processors.account',
+    'allauth.socialaccount.context_processors.socialaccount',
+)
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -129,16 +150,6 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend'
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.messages.context_processors.messages',
-    # Required by allauth template tags
-    'django.core.context_processors.request',
-    'django.contrib.auth.context_processors.auth',
-    # allauth specific context processors
-    'allauth.account.context_processors.account',
-    'allauth.socialaccount.context_processors.socialaccount',
-)
-
 from django.contrib.messages import constants as message_constants
 MESSAGE_TAGS = {
     message_constants.ERROR: 'danger'
@@ -174,7 +185,7 @@ COUNTRIES_OVERRIDE = {
     'XE': 'England',
     'XS': 'Scotland',
     'XW': 'Wales',
-    'EU': 'European Union',
+    'EU': 'Europe',
     # Legacy, for older scrapping only
     'CS': 'Serbia and Montenegro',
     'YU': 'Yugoslavia'
