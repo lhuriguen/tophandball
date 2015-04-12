@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
-from django.utils.decorators import available_attrs
+from django.utils.decorators import available_attrs, method_decorator
 from django.utils.encoding import force_str
 from django.utils.six.moves.urllib.parse import urlparse
 from django.shortcuts import resolve_url
@@ -75,3 +75,28 @@ def permission_required(perm, login_url=None, raise_exception=False):
         # As the last resort, show the login form
         return False
     return user_passes_test(check_perms, login_url=login_url)
+
+
+def class_decorator(decorator):
+    """
+    usage:
+    in views.py
+
+    from django.views.decorators.cache import cache_control
+    from django.views.generic import View
+    @class_decorator(cache_control(max_age=60))
+    class MyView(View):
+       filename = 'templatefile'
+       def content(self, request):
+           ...
+    """
+    def inner(cls):
+        orig_dispatch = cls.dispatch
+
+        @method_decorator(decorator)
+        def new_dispatch(self, request, *args, **kwargs):
+            return orig_dispatch(self, request, *args, **kwargs)
+
+        cls.dispatch = new_dispatch
+        return cls
+    return inner

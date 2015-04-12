@@ -59,8 +59,8 @@ urlpatterns = patterns(
     url(r'^comp/(?P<pk>\d+)/$',
         views.CompDetailView.as_view(), name='comp_detail'),
     # ex: /data/comp/1/edit/
-    url(r'^comp/(?P<pk>\d+)/edit/$',
-        views.CompUpdateView.as_view(), name='comp_update'),
+    # url(r'^comp/(?P<pk>\d+)/edit/$',
+    #     views.CompUpdateView.as_view(), name='comp_update'),
     # ex: /data/comp/1/season_year/
     url(r'^comp/(?P<comp_id>\d+)/(?P<year>\d\d\d\d)/$',
         views.CompSeasonRedirectView.as_view(), name='comp_season'),

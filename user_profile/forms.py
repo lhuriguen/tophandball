@@ -1,8 +1,12 @@
 from django import forms
+from django.dispatch import receiver
+from django.contrib.auth.models import Group
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Row, Field, Div
 from crispy_forms.bootstrap import AppendedText
+
+from allauth.account.signals import user_signed_up
 
 from .models import UserProfile
 
@@ -68,3 +72,10 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         exclude = ('user',)
+
+
+@receiver(user_signed_up, dispatch_uid="tophandball.allauth.user_signed_up")
+def assign_group_on_sign_up(request, user, **kwargs):
+    g = Group.objects.get(name='Registered')
+    user.groups.add(g)
+    user.save()

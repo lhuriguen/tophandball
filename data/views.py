@@ -1,16 +1,16 @@
-from django.shortcuts import render, get_object_or_404, render_to_response
+from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
 from django.views import generic
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Count, Q, Sum, get_model, Avg, Max
+from django.db.models import Count, Q, get_model, Avg, Max
 
 from extra_views import ModelFormSetView
 
-from utils.database import BooleanSum
 from utils.mixins import LoginRequiredMixin
-from utils.decorators import login_required
+from utils.decorators import (class_decorator, login_required,
+                              permission_required)
 
 from .models import *
 from .mixins import (LoveMixin, FavClubsMixin,
@@ -73,6 +73,7 @@ class ClubDetailView(LoveMixin, generic.DetailView):
         return context
 
 
+@class_decorator(permission_required('data.change_club', raise_exception=True))
 class ClubUpdateView(LoginRequiredMixin, LoveMixin, generic.UpdateView):
     model = Club
     form_class = ClubForm
@@ -316,6 +317,7 @@ class PlayerDetailView(LoveMixin, generic.DetailView):
         return context
 
 
+@class_decorator(permission_required('data.change_player', raise_exception=True))
 class PlayerUpdateView(LoginRequiredMixin, LoveMixin, generic.UpdateView):
     model = Player
     form_class = PlayerForm
@@ -554,6 +556,7 @@ class SearchJSONView(generic.View):
         return HttpResponse(self.get_json(), content_type='application/json')
 
 
+@class_decorator(permission_required('data.change_playercontract', raise_exception=True))
 class ClubTeamEditView(LoginRequiredMixin, LoveMixin, ModelFormSetView):
     model = PlayerContract
     form_class = PlayerContractForm
@@ -622,6 +625,7 @@ class CompDetailView(generic.DetailView):
 
 
 class CompUpdateView(LoginRequiredMixin, generic.UpdateView):
+    # UNUSED
     model = Competition
     template_name_suffix = '_update_form'
     fields = ['name', 'short_name', 'website', 'country', 'is_international',
