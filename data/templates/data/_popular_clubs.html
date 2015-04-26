@@ -1,0 +1,12 @@
+<div class="th-content">
+  <h4>Popular Clubs</h4>
+  <div class="row">
+    {% for item in items %}
+    <div class="col-md-2">
+      <a href="{{ item.get_absolute_url }}" class="thumbnail">
+        <img class="img-logo" src="{{ item.logo_url }}" title="{{ item.name }}">
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</div>

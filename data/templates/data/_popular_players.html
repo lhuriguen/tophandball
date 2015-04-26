@@ -1,0 +1,12 @@
+<div class="th-content">
+  <h4>Popular Players</h4>
+  <div class="row">
+    {% for item in items %}
+    <div class="col-md-2">
+      <a href="{{ item.get_absolute_url }}" class="thumbnail">
+        <img src="{{ item.photo_url }}" title="{{ item.full_name }}">
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</div>

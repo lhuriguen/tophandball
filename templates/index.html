@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-{% load socialaccount %}
+{% load socialaccount th_extra %}
 
 {% block title %}Home{% endblock %}
 {% block active_home %}active{% endblock %}
 
 {% block content %}
-    <div class="page-header">
-        <h1>Welcome to TopHandball!</h1>
-      </div>
-      <p class="lead">This is the home page. It should show featured clubs or players. Maybe a personal dashboard for each user.</p>
+{% th_match_calendar %}
+{% th_birthday_list %}
+{% th_popular_clubs %}
+{% th_popular_players %}
 {% endblock %}

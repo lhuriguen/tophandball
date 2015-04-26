@@ -1,0 +1,24 @@
+<div class="th-content">
+  <div class="row">
+    <div class="col-md-6">
+      <h4>Upcoming matches</h4>
+      <div class="list-group">
+        {% for match in upcoming %}
+          {% include "data/_match_list_item_compact.html" %}
+        {% empty %}
+        <div class="list-group-item list-group-item-warning">No matches found.</div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="col-md-6">
+      <h4>Latest matches</h4>
+      <div class="list-group">
+        {% for match in latest %}
+          {% include "data/_match_list_item_compact.html" %}
+        {% empty %}
+        <div class="list-group-item list-group-item-warning">No matches found.</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>

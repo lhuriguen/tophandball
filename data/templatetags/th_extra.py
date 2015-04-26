@@ -1,6 +1,11 @@
+from datetime import datetime
+
 from django import template
+from django.db.models import Count
 
 from django_countries import countries
+
+from data.models import Match, Player, Club
 
 register = template.Library()
 
@@ -108,3 +113,39 @@ def th_icon_red():
 @register.inclusion_tag('data/_country_flag.html')
 def th_flag(country):
     return {'country': country}
+
+
+@register.inclusion_tag('data/_match_calendar.html')
+def th_match_calendar():
+    # We need context for upcoming and latest matches.
+    upcoming = Match.objects.upcoming().select_related()[:5]
+    latest = Match.objects.latest().select_related()[:5]
+    return {'upcoming': upcoming, 'latest': latest}
+
+
+@register.inclusion_tag('data/_birthday_list.html')
+def th_birthday_list():
+    m, d = datetime.now().month, datetime.now().day
+    p = Player.objects.filter(
+        birth_date__month=m, birth_date__day=d
+        ).exclude(photo__isnull=True).exclude(
+        photo__exact='').order_by('?')[:6]
+    total = Player.objects.filter(
+        birth_date__month=m, birth_date__day=d).count()
+    return {'items': p, 'total': total}
+
+
+@register.inclusion_tag('data/_popular_clubs.html')
+def th_popular_clubs():
+    c = Club.objects.annotate(
+        num_fans=Count('fans')).filter(
+        num_fans__gt=0).order_by('-num_fans')[:6]
+    return {'items': c}
+
+
+@register.inclusion_tag('data/_popular_players.html')
+def th_popular_players():
+    c = Player.objects.annotate(
+        num_fans=Count('fans')).filter(
+        num_fans__gt=0).order_by('-num_fans')[:6]
+    return {'items': c}
