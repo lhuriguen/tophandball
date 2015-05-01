@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'extra_views',
     'django_countries',
+    'reversion',
     'utils',
     'data',
     'user_profile',
@@ -86,6 +87,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'reversion.middleware.RevisionMiddleware',
 )
 
 ROOT_URLCONF = 'infohandball.urls'

@@ -1,5 +1,8 @@
 from django.contrib import admin
-from data.models import *
+
+import reversion
+
+from .models import *
 
 
 class ClubNamesInline(admin.TabularInline):
@@ -83,7 +86,7 @@ class MatchPlayerStatsInline(admin.TabularInline):
     raw_id_fields = ('club', 'player')
 
 
-class ClubAdmin(admin.ModelAdmin):
+class ClubAdmin(reversion.VersionAdmin):
     fieldsets = [
         (None,
             {'fields': [('name', 'short_name', 'initials'),
@@ -102,7 +105,7 @@ class ClubAdmin(admin.ModelAdmin):
     readonly_fields = ('admin_thumbnail',)
 
 
-class PlayerAdmin(admin.ModelAdmin):
+class PlayerAdmin(reversion.VersionAdmin):
     fieldsets = [
         ('Personal information',
             {'fields': [('first_name', 'last_name'),
@@ -120,7 +123,7 @@ class PlayerAdmin(admin.ModelAdmin):
     readonly_fields = ('admin_thumbnail',)
 
 
-class CoachAdmin(admin.ModelAdmin):
+class CoachAdmin(reversion.VersionAdmin):
     fieldsets = [
         ('Personal information',
             {'fields': [('first_name', 'last_name'),

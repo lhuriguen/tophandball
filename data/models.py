@@ -10,6 +10,8 @@ from django.contrib.auth.models import User
 
 from django_countries.fields import CountryField
 
+import reversion
+
 from utils.database import BooleanSum
 from utils.models import Marker
 
