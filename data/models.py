@@ -10,8 +10,6 @@ from django.contrib.auth.models import User
 
 from django_countries.fields import CountryField
 
-import reversion
-
 from utils.database import BooleanSum
 from utils.models import Marker
 
@@ -24,12 +22,12 @@ class MatchManager(models.Manager):
     """
     def upcoming(self, competition=None):
         return self.get_queryset(competition=competition).filter(
-            match_datetime__gte=datetime.datetime.now()
+            match_datetime__gte=timezone.now()
             ).order_by('match_datetime')
 
     def latest(self, competition=None):
         return self.get_queryset(competition=competition).filter(
-            match_datetime__lt=datetime.datetime.now()
+            match_datetime__lt=timezone.now()
             ).order_by('-match_datetime')
 
     def get_queryset(self, competition=None):
@@ -58,7 +56,7 @@ class Season(models.Model):
 
     @staticmethod
     def curr_year():
-        today = datetime.datetime.today()
+        today = timezone.now().today()
         middle = datetime.datetime(today.year, 7, 1)
         if today < middle:
             return today.year - 1
@@ -93,7 +91,7 @@ class Club(Marker):
                        kwargs={'pk': self.pk, 'slug': slugify(self.name)})
 
     def get_current_team(self):
-        today = datetime.datetime.today()
+        today = timezone.now().today()
         middle = datetime.datetime(today.year, 7, 1)
         season_year = today.year
         if today < middle:
@@ -103,7 +101,7 @@ class Club(Marker):
             season__year_from=season_year, departure_month=None)
 
     def get_current_coaches(self):
-        today = datetime.datetime.today()
+        today = timezone.now().today()
         middle = datetime.datetime(today.year, 7, 1)
         season_year = today.year
         if today < middle:
@@ -201,7 +199,7 @@ class Person(models.Model):
 
     @property
     def age(self):
-        today = datetime.date.today()
+        today = timezone.now().today()
         born = self.birth_date
         adjust = ((today.month, today.day) < (born.month, born.day))
         return today.year - born.year - adjust
@@ -287,7 +285,7 @@ class Player(Person):
 
     @property
     def current_contract(self):
-        today = datetime.datetime.today()
+        today = timezone.now().today()
         middle = datetime.datetime(today.year, 7, 1)
         season_year = today.year
         if today < middle:
@@ -394,7 +392,7 @@ class PlayerContract(Contract):
             return u'http://placehold.it/320x400&text=No+Image'
 
     def is_current(self):
-        today = datetime.datetime.today()
+        today = timezone.now().today()
         middle = datetime.date(today.year, 7, 1)
         season_year = today.year
         if today < middle:
@@ -499,7 +497,7 @@ class Competition(models.Model):
     admin_thumbnail.allow_tags = True
 
     def get_season_or_latest(self, year=None):
-        year = year or datetime.datetime.now().year
+        year = year or timezone.now().year
         cs = self.competitionseason_set.filter(season__year_to=year)
         if not cs:
             cs = self.competitionseason_set.order_by(
