@@ -23,6 +23,8 @@ ALLOWED_HOSTS = [
 # Security
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True
+X_FRAME_OPTIONS = 'DENY'
 
 # Performance settings, need testing.
 CONN_MAX_AGE = 60
@@ -33,6 +35,6 @@ TEMPLATE_LOADERS = (
     )),
 )
 
-# Error reporting¶
+# Error reporting
 ADMINS = (('Leti', 'admin@tophandball.com'),)
 MANAGERS = ADMINS
