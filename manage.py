@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 import os
 import sys
+import dotenv
 
 if __name__ == "__main__":
+
+    dotenv.load_dotenv('.env')
     os.environ.setdefault("DJANGO_SETTINGS_MODULE",
                           "infohandball.settings.dev")
 
