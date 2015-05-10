@@ -74,7 +74,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.twitter',
     'bootstrapform',
-    'django_extensions',
     'crispy_forms',
     'extra_views',
     'django_countries',

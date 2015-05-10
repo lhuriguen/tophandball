@@ -35,6 +35,13 @@ TEMPLATE_LOADERS = (
     )),
 )
 
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+#         'LOCATION': '127.0.0.1:11211',
+#     }
+# }
+
 # Error reporting
 ADMINS = (('Leti', 'admin@tophandball.com'),)
 MANAGERS = ADMINS
