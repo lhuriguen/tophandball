@@ -1,5 +1,5 @@
 """
-Django settings for infohandball project.
+Django settings for tophandball project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.6/topics/settings/
@@ -96,9 +96,9 @@ MIDDLEWARE_CLASSES = (
     'reversion.middleware.RevisionMiddleware',
 )
 
-ROOT_URLCONF = 'infohandball.urls'
+ROOT_URLCONF = 'tophandball.urls'
 
-WSGI_APPLICATION = 'infohandball.wsgi.application'
+WSGI_APPLICATION = 'tophandball.wsgi.application'
 
 
 # Database

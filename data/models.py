@@ -7,6 +7,7 @@ from django.db.models import F, Q, Sum, Count
 from django.utils import timezone
 from django.utils.text import slugify
 from django.contrib.auth.models import User
+from django.conf import settings
 
 from django_countries.fields import CountryField
 
@@ -159,7 +160,7 @@ class Club(Marker):
         if self.logo:
             return self.logo.url
         else:
-            return u'http://placehold.it/200x200&text=No+Logo'
+            return settings.STATIC_URL + 'img/no_logo.png'
 
     @property
     def display_name(self):
@@ -479,7 +480,7 @@ class Competition(models.Model):
         if self.logo:
             return self.logo.url
         else:
-            return u'http://placehold.it/200x200&text=No+Logo'
+            return settings.STATIC_URL + 'img/no_logo.png'
 
     def has_logo(self):
         if self.logo:
