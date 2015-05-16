@@ -18,13 +18,14 @@ SERVER_EMAIL = 'support@tophandball.com'
 
 ALLOWED_HOSTS = [
     '.tophandball.com',  # Allow domain and subdomains
+    'localhost',
 ]
 
 # Security
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_HTTPONLY = True
-X_FRAME_OPTIONS = 'DENY'
+# CSRF_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_HTTPONLY = True
+# X_FRAME_OPTIONS = 'DENY'
 
 # Performance settings, need testing.
 CONN_MAX_AGE = 60

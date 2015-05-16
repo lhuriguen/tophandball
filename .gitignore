@@ -60,4 +60,5 @@ docs/_build/
 *.ipynb
 *.json
 *.zip
-.env
+.env*
+*.dump
