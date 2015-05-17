@@ -36,12 +36,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.contrib.auth.context_processors.auth',
-                # 'django.template.context_processors.debug',
-                # 'django.template.context_processors.i18n',
-                # 'django.template.context_processors.media',
                 'django.template.context_processors.request',
-                # 'django.template.context_processors.static',
-                # 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
                 'allauth.account.context_processors.account',
                 'allauth.socialaccount.context_processors.socialaccount',
@@ -161,6 +156,7 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_SIGNUP_FORM_CLASS = 'user_profile.forms.SignupForm'
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 
 SITE_ID = 1
 
