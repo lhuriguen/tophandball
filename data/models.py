@@ -91,6 +91,9 @@ class Club(Marker):
         return reverse('data:club_detail',
                        kwargs={'pk': self.pk, 'slug': slugify(self.name)})
 
+    def get_canonical_url(self):
+        return reverse('data:club_detail', kwargs={'pk': self.pk})
+
     def get_current_team(self):
         today = timezone.now().today()
         middle = datetime.datetime(today.year, 7, 1)
@@ -279,6 +282,9 @@ class Player(Person):
     def get_absolute_url(self):
         return reverse('data:player_detail',
                        kwargs={'pk': self.pk, 'slug': slugify(self.full_name)})
+
+    def get_canonical_url(self):
+        return reverse('data:player_detail', kwargs={'pk': self.pk})
 
     @property
     def is_goalkeeper(self):

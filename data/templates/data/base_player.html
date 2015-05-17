@@ -1,6 +1,20 @@
 {% extends "base.html" %}
-{% load staticfiles %}
-{% block title %}Player: {{ player.full_name }}{% endblock %}
+{% load staticfiles util_tags %}
+
+{% block title %}{{ player.full_name }}{% endblock %}
+{% block extra_head_prefix %}profile: http://ogp.me/ns/profile#{% endblock %}
+{% block head_meta %}
+<link rel="canonical" href="{{ player.get_canonical_url|full_url:request }}">
+<meta property="og:url" content="{{ player.get_canonical_url|full_url:request }}" />
+<meta property="og:type" content="profile" />
+<meta property="og:title" content="{{ player.full_name }}" />
+<meta property="og:description" content="{{ player.full_name }} is a handball player{% if player.country %} from {{ player.country.name }}{% endif %}" />
+{% if player.has_photo %}<meta property="og:image" content="{{ player.photo.url|full_url:request }}" />{% endif %}
+<meta property="profile:first_name" content="{{ player.first_name }}">
+<meta property="profile:last_name" content="{{ player.last_name }}">
+<meta property="profile:gender" content="female">
+{% endblock %}
+
 {% block active_player %}active{% endblock %}
 
 {% block content %}

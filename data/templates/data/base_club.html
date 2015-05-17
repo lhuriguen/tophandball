@@ -1,6 +1,15 @@
 {% extends "base.html" %}
-{% block title %}Club: {{ club.name }}{% endblock %}
+{% load util_tags %}
+{% block title %}{{ club.name }}{% endblock %}
 {% block active_club %}active{% endblock %}
+
+{% block head_meta %}
+<link rel="canonical" href="{{ club.get_canonical_url|full_url:request }}">
+<meta property="og:url" content="{{ club.get_canonical_url|full_url:request }}" />
+<meta property="og:title" content="{{ club.name }}" />
+<meta property="og:description" content="{{ club.name }} is a handball club{% if club.country %} from {{ club.country.name }}{% endif %}" />
+{% if club.has_logo %}<meta property="og:image" content="{{ club.logo.url|full_url:request }}" />{% endif %}
+{% endblock %}
 
 {% block content %}
 <div id="header-box" class="th-content">
