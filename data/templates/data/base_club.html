@@ -12,6 +12,7 @@
 {% endblock %}
 
 {% block content %}
+{% include "data/_facebook_buttons.html" %}
 <div id="header-box" class="th-content">
     <div class="row">
         <div class="col-sm-3 col-md-2">
@@ -21,9 +22,16 @@
         </div>
         <div class="col-sm-9 col-md-10">
             <h1>{{ club.name }} <small>({{ club.country.name }})</small></h1>
-            <form action="{% url 'data:club_love' club.id %}" method="post" id="follow_form">
-                {% include "data/_form_love.html" %}
-            </form>
+            <div class="row">
+                <div class="col-md-3">
+                    <form action="{% url 'data:club_love' club.id %}" method="post" id="follow_form">
+                        {% include "data/_form_love.html" %}
+                    </form>
+                </div>
+                <div class="col-md-3">
+                    <div style="padding: 6px 12px;" class="fb-like" data-href="{{ club.get_canonical_url|full_url:request }}" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -213,7 +213,7 @@ class Person(models.Model):
         if self.photo:
             return self.photo.url
         else:
-            return u'http://placehold.it/320x400&text=No+Image'
+            return u'https://placehold.it/320x400&text=No+Image'
 
     def has_photo(self):
         if self.photo:
@@ -396,7 +396,7 @@ class PlayerContract(Contract):
         if self.photo:
             return self.photo.url
         else:
-            return u'http://placehold.it/320x400&text=No+Image'
+            return u'https://placehold.it/320x400&text=No+Image'
 
     def is_current(self):
         today = timezone.now().today()
