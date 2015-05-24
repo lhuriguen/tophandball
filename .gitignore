@@ -63,3 +63,5 @@ docs/_build/
 .env*
 *.dump
 staticfiles/
+media/*
+!media/.keep
