@@ -46,3 +46,26 @@ TEMPLATE_LOADERS = (
 # Error reporting
 ADMINS = (('Leti', 'admin@tophandball.com'),)
 MANAGERS = ADMINS
+
+# AWS settings
+AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
+AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
+AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_FILE_OVERWRITE = False
+AWS_QUERYSTRING_EXPIRE = 60 * 60 * 24 * 7
+AWS_S3_HOST = 's3.eu-central-1.amazonaws.com'
+
+# TODO See: https://github.com/jschneier/django-storages/issues/47
+# Revert the following and use str after the above-mentioned bug is fixed in
+# either django-storage-redux or boto
+AWS_HEADERS = {
+    'Cache-Control': str.encode(
+        'max-age=%d, s-maxage=%d, must-revalidate' % (
+            AWS_QUERYSTRING_EXPIRE, AWS_QUERYSTRING_EXPIRE))
+}
+
+MEDIAFILES_LOCATION = 'media'
+MEDIA_URL = "https://%s.%s/%s/" % (
+    AWS_S3_HOST, AWS_STORAGE_BUCKET_NAME, MEDIAFILES_LOCATION)
+DEFAULT_FILE_STORAGE = 'utils.custom_storages.MediaStorage'

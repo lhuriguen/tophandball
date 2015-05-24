@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     'extra_views',
     'django_countries',
     'reversion',
+    'storages',
     'utils',
     'data',
     'user_profile',
