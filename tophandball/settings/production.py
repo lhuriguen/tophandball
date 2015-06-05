@@ -18,6 +18,7 @@ SERVER_EMAIL = 'support@tophandball.com'
 
 ALLOWED_HOSTS = [
     '.tophandball.com',  # Allow domain and subdomains
+    os.environ['HOST_IP'],
     # 'localhost',
 ]
 
