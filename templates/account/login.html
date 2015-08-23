@@ -24,7 +24,8 @@
     </form>
   </div>
   <div class="col-md-7">
-    {% if socialaccount.providers %}
+    {% get_providers as socialaccount_providers %}
+    {% if socialaccount_providers %}
     <div class="form-signin">
       <h2 class="form-signin-heading">Don't have an account?</h2>
       <a href="{% url 'account_signup' %}" class="btn btn-lg btn-primary btn-block">Sign up now</a>
